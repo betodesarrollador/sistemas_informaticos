@@ -1,0 +1,125 @@
+/* CSS Document */
+
+*{
+  font-family:Arial, Helvetica, sans-serif;
+  font-size:12.5px;
+  text-align:left; 
+  color:#070457;
+}
+
+.title{
+  font-size:14px;
+  font-weight:bold;
+  text-align:center;
+}
+
+.general{
+  text-align:center;
+}
+
+.resolucion{
+ text-align:right;
+}
+
+label{
+font-weight:bold;
+text-align:left;
+float:left;
+}
+
+.producto{
+  margin-top:15px;
+}
+
+.producto thead th{
+ font-size:12px;
+ font-weight:bold;
+ text-align:center;
+}
+
+.producto tbody td{
+ font-size:12px;
+ text-align:center;
+}
+
+.guiageneral{
+  border-top:1px solid #070457;   
+  border-left:1px solid #070457;   
+  border-right:1px solid #070457;   
+  border-bottom:1px solid #070457;   
+}
+
+.productocelllefttop{
+  font-weight:bold;
+  border-bottom:1px solid #070457;   
+}
+
+.productocellrighttop{
+  border-top:1px solid #070457;
+  border-right:1px solid #070457;
+  border-bottom:1px solid #070457;  
+  font-weight:bold;
+}
+
+.productocellrightbottom{  
+  border-right:1px solid #070457;
+}
+
+.productocellleftbottom{
+  border-bottom:1px solid #070457;  
+}
+
+.productocelllefttop{
+  border-top:1px solid #070457;
+  font-weight:bold;  
+}
+
+.firmas{
+ font-size:12px;
+ font-weight:bold;
+ text-align:center;
+}
+
+
+.saltopagina {
+  page-break-after: always;
+}
+
+.numGuia{
+ font-size:16px;
+ color:#FF0000;
+ font-weight:bold;
+}
+
+.divisionHoja{
+ height:15px;
+}
+
+.tituloOficina{
+  font-size:6px;
+  font-weight:bold;
+}
+
+.tituloGuia{
+  font-size:9px;
+  font-weight:bold;
+  text-align:center;
+}
+
+.firmaObserv{
+  height:35px;
+}
+
+.productosRemesa{
+  height:100px;
+}
+
+.productosGuia td{
+  vertical-align:top;
+  color:#000000;
+}
+
+.content{
+  color:#000000;
+  font-size:12px;
+}

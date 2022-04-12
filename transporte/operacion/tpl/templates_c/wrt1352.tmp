@@ -1,0 +1,71 @@
+<?php /* Smarty version 2.6.26, created on 2013-10-16 15:26:21
+         compiled from anticipos.tpl */ ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+  <head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <?php print $this->_tpl_vars['JAVASCRIPT']; ?>
+
+  <?php print $this->_tpl_vars['TABLEGRIDJS']; ?>
+
+  <?php print $this->_tpl_vars['CSSSYSTEM']; ?>
+
+  <?php print $this->_tpl_vars['TABLEGRIDCSS']; ?>
+
+  <?php print $this->_tpl_vars['TITLETAB']; ?>
+  
+  </head>
+
+  <body>
+	<fieldset>
+        <legend><?php print $this->_tpl_vars['TITLEFORM']; ?>
+</legend>
+		        
+        <?php print $this->_tpl_vars['FORM1']; ?>
+
+        <table align="center" width="100%">
+          <tr>
+            <td align="center">
+			  <table>
+			     <tr>
+				 <td><label>Tipo Anticipo :</label>&nbsp;<?php print $this->_tpl_vars['TIPOANTICIPO']; ?>
+</td>
+				 <td>
+				   <div id="divManifiesto"><label>Manifiesto :</label>&nbsp;<?php print $this->_tpl_vars['MANIFIESTO']; ?>
+<?php print $this->_tpl_vars['MANIFIESTOID']; ?>
+</div>
+				   <div id="divDespacho"><label>Despacho :</label>&nbsp;<?php print $this->_tpl_vars['DESPACHO']; ?>
+<?php print $this->_tpl_vars['DESPACHOID']; ?>
+</div>
+				 </td>
+			  </table>
+          </tr>
+		  <tr>
+		    <td colspan="5" align="center">
+			  <fieldset class="section">
+			    <legend>Anticipos Manifiesto</legend>
+			     <iframe width="100%" name="frameAnticipos" id="frameAnticipos" src=""></iframe>
+			  </fieldset>
+			</td>
+				 
+	      </tr>
+		  <tr><td colspan="5" align="center"><div align="center"><?php print $this->_tpl_vars['IMPRIMIR']; ?>
+&nbsp;<?php print $this->_tpl_vars['LIMPIAR']; ?>
+</div></td></tr>
+		  <tr>
+		    <td colspan="5" align="center">
+			  <fieldset class="section">
+			    <legend>Registro contable<?php print $this->_tpl_vars['ENCABEZADOREGISTROID']; ?>
+</legend>
+			      <div><iframe width="100%" name="frameRegistroContable" id="frameRegistroContable" src=""></iframe></div>
+			  </fieldset>			
+			</td>
+	      </tr>	  
+		  
+    </table>
+		 
+	    <?php print $this->_tpl_vars['FORM1END']; ?>
+
+    </fieldset>
+    
+  </body>
+</html>

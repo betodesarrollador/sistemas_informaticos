@@ -1,0 +1,26 @@
+/* CSS Document */
+
+iframe{
+border:1px solid;
+background:#ffffff;
+width:100%;
+height:150px;
+}
+#iframeSolicitud{
+	height:340px;
+}
+
+#OS0,#RM0,#ST0,#OS1,#RM1,#ST1{
+	display:none;
+}
+#divAnulacion,#divSolicitudFacturas{
+	display:none;
+}
+
+#numeros_agregar {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 80%; max-width: 80%;
+}
+	

@@ -1,0 +1,894 @@
+<?php
+require_once("../../../framework/clases/ControlerClass.php");
+final class MovimientosContables extends Controler{
+	public function __construct(){
+		parent::__construct(3);
+	}
+	public function Main(){
+
+		$this -> noCache();
+
+		require_once("MovimientosContablesLayoutClass.php");  
+		require_once("MovimientosContablesModelClass.php");
+
+		$Layout = new MovimientosContablesLayout($this -> getTitleTab(),$this -> getTitleForm());
+		$Model  = new MovimientosContablesModel();
+
+		$Model  -> SetUsuarioId		($this -> getUsuarioId(),$this -> getOficinaId());
+		$Layout -> setGuardar		($Model -> getPermiso($this -> getActividadId(),'INSERT',$this -> getConex()));
+		$Layout -> setActualizar	($Model -> getPermiso($this -> getActividadId(),'UPDATE',$this -> getConex()));
+		$Layout -> setBorrar		($Model -> getPermiso($this -> getActividadId(),'DELETE',$this -> getConex()));
+		$Layout -> setLimpiar		($Model -> getPermiso($this -> getActividadId(),'CLEAR',$this -> getConex()));
+		$Layout -> setImprimir		($Model -> getPermiso($this -> getActividadId(),'PRINT',$this -> getConex()));		
+		$Layout -> SetAnular		($Model -> getPermiso($this -> getActividadId(),ANULAR,$this -> getConex()));	
+		$Layout -> setCambioEstado  ($Model -> getPermiso($this -> getActividadId(),'STATUS',$this -> getConex()));		
+
+		$Layout -> setCampos($this -> Campos);
+
+		$Layout -> setEstado        ();		
+
+	//LISTA MENU
+		$Layout -> setEmpresas($Model -> getEmpresas($this -> getUsuarioId(),$this -> getConex()));	
+		$Layout -> setTiposDocumento($Model -> getTiposDocumento($this -> getConex()));	
+		$Layout -> setTiposDocumento2($Model -> getTiposDocumento($this -> getConex()));	
+		$Layout -> setFormaPago($Model -> getFormasPago($this -> getConex()));		
+		$Layout -> setUsuarioModifica($this -> getUsuarioNombres());			
+		$Layout -> setUsuarioId($this -> getUsuarioId());		
+		$Layout -> setCausalesAnulacion($Model -> getCausalesAnulacion($this -> getConex()));
+
+		$Layout -> RenderMain();	  
+
+	}
+
+	protected function onclickValidateRow(){
+		require_once("../../../framework/clases/ValidateRowClass.php");
+		$Data = new ValidateRow($this -> getConex(),"ruta",$this ->Campos);
+		$this -> getArrayJSON($Data -> GetData());
+	}
+	protected function onclickSave(){
+
+		require_once("MovimientosContablesModelClass.php");
+		$Model = new MovimientosContablesModel();
+
+		$empresa_id             = $_REQUEST['empresa_id'];
+		$oficina_id             = $_REQUEST['oficina_id'];
+		$estado                 = $_REQUEST['estado'];
+		$fecha                  = $_REQUEST['fecha'];
+		$encabezado_registro_id = $_REQUEST['encabezado_registro_id'];
+		$modifica               = $_REQUEST['modifica'];
+		$nombreModifica         = explode(" ",$modifica);
+
+		$scan_documento = $_FILES['scan_documento'];
+		$nombre = $_FILES['scan_documento']['name'];
+		
+		if($nombre!=''){
+			$nombre_documento = 'scan_documento_'.rand();
+			$dir_file  = $this -> moveUploadedFile($scan_documento,'../../../imagenes/contabilidad/movimientos/',$nombre_documento);
+		}else{
+			$dir_file = '';
+		}
+		if($estado == 'C' && $encabezado_registro_id == 'NULL'){
+			exit('<b>'.$nombreModifica[0].'</b> no se permite Contabilizar este registro aun ');				
+		}else{
+
+			$mesContable     = $Model -> mesContableEstaHabilitado($empresa_id,$oficina_id,$fecha,$this -> getConex());
+			$periodoContable = $Model -> PeriodoContableEstaHabilitado($this -> getConex());
+
+			if($mesContable && $periodoContable){
+
+				$return = $Model -> Save($dir_file,$this -> getOficinaId(),$this -> getUsuarioNombres(),$this -> getUsuarioId(),$this -> Campos,$this -> getConex());
+
+				if(strlen(trim($Model -> GetError())) > 0){
+					exit("Error : ".$Model -> GetError());
+				}else{
+					$this -> getArrayJSON($return);	        
+				}	
+
+			}else{
+
+				if(!$mesContable && !$periodoContable){
+					exit("No se permite guardar en el periodo y mes seleccionado ");
+				}elseif(!$mesContable){
+					exit("No se permite guardar en el mes seleccionado, por favor consulte su contador");			 
+				}else if(!$periodoContable){
+					exit("No se permite guardar en el periodo seleccionado");				   
+				}
+
+			}
+
+		}
+
+	}
+
+	protected function onclickCancellation(){
+
+		require_once("MovimientosContablesModelClass.php");
+
+		$Model = new MovimientosContablesModel();
+
+		$encabezado_registro_id    = $_REQUEST["encabezado_registro_id"];
+
+		$data  = $Model -> getEncabezadoRegistro($encabezado_registro_id,$this -> getConex());
+
+		$fecha = $data[0]['fecha'];  	  
+		$oficina_id = $data[0]['oficina_id'];
+		$empresa_id = $this -> getEmpresaId();
+
+		$mesContable     = $Model -> mesContableEstaHabilitado($empresa_id,$oficina_id,$fecha,$this -> getConex());
+		$periodoContable = $Model -> PeriodoContableEstaHabilitado($this -> getConex());
+
+		if($mesContable && $periodoContable){
+
+			$Model -> cancellation($this -> getConex(),$this -> getUsuarioId());
+
+			if(strlen($Model -> GetError()) > 0){
+				exit('false');
+			}else{
+				exit('true');
+			}
+
+		}else{
+
+			if(!$mesContable && !$periodoContable){
+				exit("No se permite anular en el periodo y mes seleccionado ");
+			}elseif(!$mesContable){
+				exit("No se permite anular en el mes seleccionado");				 
+			}else if(!$periodoContable){
+				exit("No se permite anular en el periodo seleccionado");				   
+			}
+
+		}		
+	}
+
+
+	protected function onclickUpdate(){
+
+		require_once("MovimientosContablesModelClass.php");
+
+		$Model                  = new MovimientosContablesModel();
+		$encabezado_registro_id = $this -> requestData('encabezado_registro_id');
+		$estado                 = trim($_REQUEST['estado']);
+		$empresa_id             = $this -> requestData('empresa_id');
+		$oficina_id             = $this -> requestData('oficina_id');
+		$fecha                  = $this -> requestData('fecha');	
+		
+		$scan_documento = $_FILES['scan_documento'];
+		$nombre = $_FILES['scan_documento']['name'];
+		
+		if($nombre!=''){
+			$nombre_documento = 'scan_documento_'.rand();
+			$dir_file  = $this -> moveUploadedFile($scan_documento,'../../../imagenes/contabilidad/movimientos/',$nombre_documento);
+		}else{
+			$dir_file = '';
+		}
+		
+		if($estado == 'C' || $estado == 'E' ){
+
+			$mesContable     = $Model -> mesContableEstaHabilitado($empresa_id,$oficina_id,$fecha,$this -> getConex());
+			$periodoContable = $Model -> PeriodoContableEstaHabilitado($this -> getConex());
+
+			if($mesContable && $periodoContable){
+            
+			 $estadoActual = $Model -> selectEstadoEncabezadoRegistro($encabezado_registro_id,$this -> getConex());
+			
+				if($estado != $estadoActual){
+
+					if($Model -> registroTieneMovimientos($encabezado_registro_id,$this -> getConex())){
+
+						if($Model -> registroTieneSumasIguales($encabezado_registro_id,$this -> getConex())){
+							$return = $Model -> Update($dir_file,$this -> Campos,$this -> getUsuarioNombres(),$this -> getUsuarioId(),$this -> getConex());
+
+							if(strlen(trim($Model -> GetError())) > 0){
+								exit("Error : ".$Model -> GetError());
+							}else if($return==1){
+								exit('No se puede cambiar de oficina un documento Contable,<br> Esto debido a que se alteran los consecutivos<br> Por favor Verifique');
+							}else if($return==2){
+								exit('No se puede cambiar el Tipo de documento Contable,<br> Esto debido a que se alteran los consecutivos<br> Por favor Verifique');
+							}else{
+								exit('true');
+							}	
+
+						}else{
+							exit('no existen sumas iguales :<b>NO SE CONTABILIZARA</b>');
+						}
+
+					}else{
+						
+						exit('no existen registros :<b>NO SE CONTABILIZARA</b>');
+					}
+				}else{
+					$return = $Model -> Update($dir_file,$this -> Campos,$this -> getUsuarioNombres(),$this -> getUsuarioId(),$this -> getConex());
+						
+							if(strlen(trim($Model -> GetError())) > 0){
+								exit("Error : ".$Model -> GetError());
+							}else if($return==1){
+								exit('No se puede cambiar de oficina un documento Contable,<br> Esto debido a que se alteran los consecutivos<br> Por favor Verifique');
+							}else if($return==2){
+								exit('No se puede cambiar el Tipo de documento Contable,<br> Esto debido a que se alteran los consecutivos<br> Por favor Verifique');
+							}else{
+								exit('true');
+							}	
+				}
+
+			}else{
+
+				if(!$mesContable && !$periodoContable){
+					exit("No se permite modificar en el periodo y mes seleccionado");
+				}elseif(!$mesContable){
+					exit("No se permite modificar en el mes seleccionado");				 
+				}else if(!$periodoContable){
+					exit("No se permite modificar en el periodo seleccionado");				   
+				}
+
+			}		
+
+		}else{
+
+			$Model -> Update($dir_file,$this -> Campos,$this -> getUsuarioNombres(),$this -> getUsuarioId(),$this -> getConex());
+
+			if($Model -> GetNumError() > 0){
+				exit('false');
+			}else{
+				exit('true');
+			}
+
+
+		}
+
+	}
+
+	protected function getEstadoEncabezadoRegistro($Conex=''){ 
+
+		require_once("MovimientosContablesModelClass.php");
+
+		$Model                  = new MovimientosContablesModel();
+		$encabezado_registro_id = $_REQUEST['encabezado_registro_id'];	
+
+		$Estado = $Model -> selectEstadoEncabezadoRegistro($encabezado_registro_id,$this -> getConex());
+
+		exit("$Estado");
+
+	} 
+
+
+
+	protected function preView(){
+
+		require_once("MovimientosContablesLayoutClass.php");
+		require_once("MovimientosContablesModelClass.php");
+		require_once("ImputacionesContablesModelClass.php");
+
+		$Layout   = new MovimientosContablesLayout($this -> getTitleTab(),$this -> getTitleForm());
+		$Model_1  = new MovimientosContablesModel();	 
+		$Model_2  = new ImputacionContableModel();	
+
+		$encabezado_registro_id = $this -> requestData('encabezado_registro_id');
+		$encabezadoRegistro     = $Model_1 -> getEncabezadoRegistro($encabezado_registro_id,$this -> getConex());
+		$movimientosContables   = $Model_2 -> getImputacionesContables($encabezado_registro_id,$this -> getConex());
+
+		$Layout -> setCssInclude("../css/movimientoscontables.css");	 	 
+
+		$Layout -> assign("CSSSYSTEM",	  $Layout -> getCssInclude());	
+		$Layout -> setVar("ENCABEZADOID", $encabezadoRegistro[0]['encabezado_registro_id']);
+		$Layout -> setVar("CONSECUTIVO",  $encabezadoRegistro[0]['consecutivo']);
+		$Layout -> setVar("EMPRESA",      $encabezadoRegistro[0]['empresa']);	
+		$Layout -> setVar("OFICINA",      $encabezadoRegistro[0]['oficina']);		
+		$Layout -> setVar("FECHA",		  $encabezadoRegistro[0]['fecha']);
+		$Layout -> setVar("CONCEPTO",	  $encabezadoRegistro[0]['concepto']);
+		$Layout -> setVar("ESTADO",	      $encabezadoRegistro[0]['estado']);
+		$Layout -> setVar("FECHAREGISTRO",$encabezadoRegistro[0]['fecha']);
+		$Layout -> setVar("DOCUMENTO"    ,$encabezadoRegistro[0]['documento']);	
+		$Layout -> setVar("VALOR"        ,$encabezadoRegistro[0]['valor']);		
+		$Layout -> setVar("FPAGO"        ,$encabezadoRegistro[0]['forma_pago']);			
+		$Layout -> setVar("TEXTOSOPORTE" ,$encabezadoRegistro[0]['texto_soporte']);				
+		$Layout -> setVar("NUMSOPORTE"   ,$encabezadoRegistro[0]['numero_soporte']);					
+		$Layout -> setVar("TEXTOTERCERO" ,$encabezadoRegistro[0]['texto_tercero']);						
+		$Layout -> setVar("TERCERO"      ,$encabezadoRegistro[0]['tercero']);							
+		$Layout -> setVar("PUC"          ,$encabezadoRegistro[0]['puc']);									
+
+		$Layout -> setVar("IMPUTACIONES", $movimientosContables);		
+
+		$Layout	-> RenderLayout('preview.tpl');
+
+	}
+
+//BUSQUEDA
+	protected function onclickFind(){
+		require_once("MovimientosContablesModelClass.php");
+		$Model = new MovimientosContablesModel();
+		$encabezado_registro_id = $_REQUEST['encabezado_registro_id'];
+		$Data = $Model -> getEncabezadoRegistro($encabezado_registro_id,$this -> getConex());
+		$this -> getArrayJSON($Data);
+	}
+
+	protected function generateFileexcel(){
+		require_once("MovimientosContablesModelClass.php");
+		$Model  = new MovimientosContablesModel();
+
+		$encabezado_registro_id = $_REQUEST['encabezado_registro_id'];
+
+		$data = $Model -> generarExcel($encabezado_registro_id,$this -> getConex());		
+
+		$nombre = 'MovimientoContable'.date('Ymd');	  
+
+		$tipo = 'RC';
+
+		$ruta  = $this -> arrayToExcel("RegistrosContables",$tipo,$data,null,"string");
+
+
+		$this -> ForceDownload($ruta,$nombre.'.xls');
+	}
+
+	protected function onchangeSetOptionList(){
+
+		require_once("MovimientosContablesLayoutClass.php");  
+		require_once("MovimientosContablesModelClass.php");	
+		require_once("../../../framework/clases/ListaDependiente.php");    
+
+		$Layout = new MovimientosContablesLayout($this -> getTitleTab(),$this -> getTitleForm());
+		$Model  = new MovimientosContablesModel();
+		$list   = new ListaDependiente();
+
+		if(isset($_REQUEST['empresa_id'])){
+			$list = new ListaDependiente($this -> getConex(),'oficina_id',array(table=>'oficina',value=>'oficina_id',text=>
+				'codigo_centro,nombre',concat=>'-',order=>'codigo_centro,nombre'),$this -> Campos);		
+
+			$list -> getList();									   
+		}else if(isset($_REQUEST['periodo_contable_id'])){
+			$list = new ListaDependiente($this -> getConex(),'mes_contable_id',array(table=>'mes_contable',value=>'mes_contable_id',
+				text=>'mes,nombre',concat=>'-'),$this -> Campos);	
+			$list -> getList();																			 
+		}else if(isset($_REQUEST['forma_pago_id'])){
+			
+  	         $forma_pago_id = $this -> requestData('forma_pago_id');															 
+  	         $data          = $Model -> selectCuentasFormaPago($forma_pago_id,$this -> getConex());																			 
+
+  	         $field[puc_id] = array(
+  	         	name	=>'puc_id',
+  	         	id		=>'puc_id',
+  	         	type	=>'select',
+  	         	options	=>$data,
+  	         	datatype=>array(
+  	         		type	=>'integer'),
+  	         	transaction=>array(
+  	         		table	=>array('encabezado_de_registro'),
+  	         		type	=>array('column'))	
+  	         );
+
+
+  	         print $Layout -> getObjectHtml($field[puc_id]);
+
+
+
+  	     }
+
+
+  	 } 
+
+  	 protected function setTitulosDocumento(){
+
+  	 	require_once("MovimientosContablesModelClass.php");
+
+  	 	$Model             = new MovimientosContablesModel();
+  	 	$tipo_documento_id = $_REQUEST['tipo_documento_id'];
+
+  	 	$data = $Model -> getTitulosDocumento($tipo_documento_id,$this -> getConex());
+
+  	 	$this -> getArrayJSON($data);
+
+  	 }
+
+  	 protected function getTotalDebitoCredito(){
+
+  	 	require_once("MovimientosContablesModelClass.php");
+
+  	 	$Model = new MovimientosContablesModel();
+
+  	 	$encabezado_registro_id = $_REQUEST['encabezado_registro_id'];
+
+  	 	$data = $Model -> getTotalDebitoCredito($encabezado_registro_id,$this -> getConex());
+
+  	 	$this -> getArrayJSON($data);  
+
+  	 }
+
+  	 protected function onclickPrint(){
+		require_once("Imp_DocumentoClass.php");
+		require_once("MovimientosContablesModelClass.php");
+
+		   $Model = new MovimientosContablesModel();
+		   $encabezado_registro_id = $_REQUEST['encabezado_registro_id'];
+		   
+		   $modulo = $Model->getModulo($encabezado_registro_id,$this -> getConex());
+
+		   $modulo = $modulo == '' ? 'CONTABILIDAD' : $modulo;
+		   
+  	 	$print = new Imp_Documento();
+  	 	$print -> printOut($this -> getConex(),$modulo);  
+  	 }  
+
+  	 protected function setCampos(){
+    /*****************************************
+            	 datos sesion
+            	 *****************************************/  
+
+            	 $this -> Campos[fecha_registro] = array(
+            	 	name	=>'fecha_registro',
+            	 	id		=>'fecha_registro',
+            	 	type	=>'hidden',
+            	 	value   =>date("Y-m-d H:m"),
+            	 	datatype=>array(
+            	 		type	=>'text'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+            	 );
+
+            	 $this -> Campos[modifica] = array(
+            	 	name	=>'modifica',
+            	 	id		=>'modifica',
+            	 	type	=>'hidden',
+            	 	datatype=>array(
+            	 		type	=>'text'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+            	 );	
+
+            	 $this -> Campos[usuario_id] = array(
+            	 	name	=>'usuario_id',
+            	 	id		=>'usuario_id',
+            	 	type	=>'hidden',
+            	 	datatype=>array(
+            	 		type	=>'integer'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+            	 );
+
+
+            	 $this -> Campos[fecha_registro_static] = array(
+            	 	name	=>'fecha_registro_static',
+            	 	id		=>'fecha_registro_static',
+            	 	type	=>'hidden',
+            	 	value   =>date("Y-m-d H:m"),
+            	 	datatype=>array(
+            	 		type	=>'text')
+            	 );
+
+            	 $this -> Campos[modifica_static] = array(
+            	 	name	=>'modifica_static',
+            	 	id		=>'modifica_static',
+            	 	type	=>'hidden',
+            	 	datatype=>array(
+            	 		type	=>'text')
+            	 );	
+
+            	 $this -> Campos[usuario_id_static] = array(
+            	 	name	=>'usuario_id_static',
+            	 	id		=>'usuario_id_static',
+            	 	type	=>'hidden',
+            	 	datatype=>array(
+            	 		type	=>'integer')
+            	 );				
+
+            	 /*****************************************/
+
+            	 $this -> Campos[encabezado_registro_id] = array(
+            	 	name	=>'encabezado_registro_id',
+            	 	id		=>'encabezado_registro_id',
+            	 	type	=>'hidden',
+            	 	required=>'no',
+            	 	value   =>$_REQUEST['encabezado_registro_id'],
+            	 	datatype=>array(
+            	 		type	=>'autoincrement',
+            	 		length	=>'20'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('primary_key'))
+            	 );
+
+            	 $this -> Campos[consecutivo] = array(
+            	 	name	=>'consecutivo',
+            	 	id		=>'consecutivo',
+					 type	=>'text',
+					 Boostrap => 'si',
+            	 	value	=>'',
+            	 	size    =>'7',
+            	 	readonly=>'yes',
+            	 	datatype=>array(
+            	 		type	=>'integer',
+            	 		length	=>'9'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+            	 );
+
+            	 $this -> Campos[empresa_id] = array(
+            	 	name	=>'empresa_id',
+            	 	id		=>'empresa_id',
+					 type	=>'select',
+					 Boostrap => 'si',
+            	 	required=>'yes',
+            	 	options	=>array(),
+            	 	selected=>$this -> getEmpresaId(),
+            	 	datatype=>array(
+            	 		type	=>'integer',
+            	 		length	=>'9'),
+            	 	setoptionslist=>array(childId=>'oficina_id'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))	
+            	 );
+
+            	 $this -> Campos[oficina_id] = array(
+            	 	name	=>'oficina_id',
+            	 	id		=>'oficina_id',
+					 type	=>'select',
+					 Boostrap => 'si',
+            	 	required=>'yes',
+            	 	options	=>array(),
+            	 	selected=>$this -> getOficinaId(),
+            	 	datatype=>array(
+            	 		type	=>'integer',
+            	 		length	=>'9'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+            	 );	
+
+            	 $this -> Campos[fecha] = array(
+            	 	name	=>'fecha',
+            	 	id		=>'fecha',
+					 type	=>'text',
+					 Boostrap => 'si',
+            	 	required=>'yes',
+            	 	datatype=>array(
+            	 		type	=>'date'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+            	 );
+
+            	 $this -> Campos[periodo_contable_id] = array(
+            	 	name	=>'periodo_contable_id',
+            	 	id		=>'periodo_contable_id',
+            	 	datatype=>array(type=>'integer'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+            	 );
+
+            	 $this -> Campos[mes_contable_id] = array(
+            	 	name	=>'mes_contable_id',
+            	 	id		=>'mes_contable_id',
+            	 	datatype=>array(type=>'integer'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+            	 );	
+
+            	 $this -> Campos[tipo_documento_id] = array(
+            	 	name	=>'tipo_documento_id',
+            	 	id		=>'tipo_documento_id',
+					 type	=>'select',
+					 Boostrap => 'si',
+            	 	required=>'yes',
+            	 	options	=>array(),
+            	 	datatype=>array(
+            	 		type	=>'integer'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+				 );	
+				 
+				 $this -> Campos[tipo_documento_id2] = array(
+					name	=>'tipo_documento_id2',
+					id		=>'tipo_documento_id2',
+					type	=>'select',
+					options	=>array(),
+					datatype=>array(
+						type	=>'integer')
+				);
+
+            	 $this -> Campos[forma_pago_id] = array(
+            	 	name	=>'forma_pago_id',
+            	 	id		=>'forma_pago_id',
+					 type	=>'select',
+					 Boostrap => 'si',
+            	 	options	=>array(),
+            	 	datatype=>array(
+            	 		type	=>'integer'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column')),
+            	 	setoptionslist=>array(childId=>'puc_id')	
+            	 );		
+
+            	 $this -> Campos[valor] = array(
+            	 	name	=>'valor',
+            	 	id		=>'valor',
+					 type	=>'text',
+					 value	=>'',
+					 Boostrap => 'si',
+            	 	size    =>'12',
+            	 	required=>'yes',
+            	 	datatype=>array(
+            	 		type	=>'numeric',
+            	 		length	=>'15',
+            	 		presicion=>'2'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+            	 );
+
+            	 $this -> Campos[numero_soporte] = array(
+            	 	name	=>'numero_soporte',
+            	 	id		=>'numero_soporte',
+					 type	=>'text',
+					 Boostrap =>'si',
+            	 	value	=>'',
+            	 	datatype=>array(
+            	 		type	=>'text',
+            	 		length	=>'15'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+            	 );		
+
+
+            	 $this -> Campos[concepto] = array(
+            	 	name	=>'concepto',
+            	 	id		=>'concepto',
+					 type	=>'text',
+					 Boostrap => 'si',
+            	 	value	=>'',
+            	 	required=>'yes',
+            	 	size    =>'30',
+            	 	datatype=>array(
+            	 		type	=>'text'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+            	 );	
+				 
+            	 $this -> Campos[modulo] = array(
+            	 	name	 =>'modulo',
+            	 	id		 =>'modulo',
+					type	 =>'text',
+				    Boostrap =>'si',
+					size     =>'25',
+            	 	disabled =>'yes',
+            	 	datatype=>array(
+            	 		type	=>'text')
+            	 );	
+
+            	 $nombre_documento = 'scan_documento_'.rand();		
+
+            	 $this -> Campos[scan_documento] = array(
+            	 	name	=>'scan_documento',
+            	 	id		=>'scan_documento',
+            	 	type	=>'file',
+            	 	value	=>'',
+            	 	path	=>'imagenes/contabilidad/movimientos/',
+            	 	size	=>'70',
+//		required=>'yes',		
+            	 	datatype=>array(
+            	 		type	=>'file'),
+            	 	namefile=>array(
+            	 		field	=>'yes',
+            	 		text	=> $nombre_documento)
+            	 );		
+
+            	 $this -> Campos[tercero] = array(
+            	 	name	=>'tercero',
+            	 	id		=>'tercero',
+					 type	=>'text',
+					 Boostrap => 'si',
+            	 	size    => '50',
+            	 	suggest=>array(
+            	 		name	=>'tercero_disponible',
+            	 		setId	=>'tercero_hidden')
+            	 );
+
+            	 $this -> Campos[tercero_id] = array(
+            	 	name	=>'tercero_id',
+            	 	id		=>'tercero_hidden',
+            	 	type	=>'hidden',
+            	 	required=>'yes',
+            	 	datatype=>array(
+            	 		type	=>'numeric'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+            	 );		
+
+            	 $this -> Campos[puc_id] = array(
+            	 	name	=>'puc_id',
+            	 	id		=>'puc_id',
+					 type	=>'select',
+					 Boostrap => 'si',
+            	 	options =>array(),
+            	 	datatype=>array(type=>'integer'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+            	 );			
+
+            	 $this -> Campos[estado] = array(
+            	 	name	=>'estado',
+            	 	id		=>'estado',
+					 type	=>'select',
+					 Boostrap => 'si',
+            	 	required=>'yes',
+            	 	options	=>array(
+            	 		array(value=>'E',text=>'EDICION',selected=>'E'),
+            	 		array(value=>'C',text=>'CONTABILIZADO')),
+            	 	datatype=>array(
+            	 		type	=>'alphanum'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+            	 );	
+
+            	 $this -> Campos[anulado] = array(
+            	 	name	=>'anulado',
+            	 	id		=>'anulado',	
+            	 	type	=>'hidden',
+            	 	value	=>0,
+            	 	datatype=>array(
+            	 		type	=>'integer'),
+            	 	transaction=>array(
+            	 		table	=>array('encabezado_de_registro'),
+            	 		type	=>array('column'))
+            	 );	
+
+
+	/*****************************************
+	        Campos Anulacion Registro
+	        *****************************************/
+
+
+	        $this -> Campos[fecha_log] = array(
+	        	name	=>'fecha_log',
+	        	id		=>'fecha_log',
+	        	type	=>'text',
+	        	size    =>'17',
+	        	value   =>date("Y-m-d H:m"),
+	        	datatype=>array(
+	        		type	=>'text'),
+	        	transaction=>array(
+	        		table	=>array('log_registro_contable'),
+	        		type	=>array('column'))
+	        );	
+
+	        $this -> Campos[causal_anulacion_id] = array(
+	        	name	=>'causal_anulacion_id',
+	        	id		=>'causal_anulacion_id',
+				type	=>'select',
+				Boostrap => 'si',
+	        	// required=>'yes',
+	        	options	=>array(),
+	        	datatype=>array(
+	        		type	=>'integer'),
+	        	transaction=>array(
+	        		table	=>array('log_registro_contable'),
+	        		type	=>array('column'))
+	        );		
+
+
+	        $this -> Campos[observaciones] = array(
+	        	name	=>'observaciones',
+	        	id		=>'observaciones',
+	        	type	=>'textarea',
+	        	value	=>'',
+	        	// required=>'yes',
+	        	datatype=>array(
+	        		type	=>'text'),
+	        	transaction=>array(
+	        		table	=>array('log_registro_contable'),
+	        		type	=>array('column'))
+	        );	
+
+
+
+	//botones
+	        $this -> Campos[guardar] = array(
+	        	name	=>'guardar',
+	        	id		=>'guardar',
+	        	type	=>'button',
+	        	value   =>'Continuar',
+	        	property=>array(
+	        		name	=>'save_ajax',
+	        		onsuccess=>'MovimientosContablesOnSave')
+	        );
+
+	        $this -> Campos[actualizar] = array(
+	        	name	=>'actualizar',
+	        	id		=>'actualizar',
+	        	type	=>'button',
+	        	value	=>'Actualizar',
+	        	disabled=>'disabled',
+	        	property=>array(
+	        		name	=>'update_ajax',
+	        		onsuccess=>'MovimientosContablesOnUpdate')
+	        );
+
+	        $this -> Campos[borrar] = array(
+	        	name	=>'borrar',
+	        	id		=>'borrar',
+	        	type	=>'button',
+	        	value	=>'Borrar',
+	        	disabled=>'disabled',
+	        	property=>array(
+	        		name	=>'delete_ajax',
+	        		onsuccess=>'MovimientosContablesOnDelete')
+	        );
+
+	        $this -> Campos[anular] = array(
+	        	name	=>'anular',
+	        	id		=>'anular',
+	        	type	=>'button',
+	        	value	=>'Anular',
+	        	onclick =>'onclickCancellation(this.form)'
+	        );	
+
+	        $this -> Campos[limpiar] = array(
+	        	name	=>'limpiar',
+	        	id		=>'limpiar',
+	        	type	=>'reset',
+	        	value	=>'Limpiar',
+	        	onclick => 'MovimientosContablesOnReset()'
+	        );	
+
+	        $this -> Campos[contabilizar] = array(
+	        	name	=>'contabilizar',
+	        	id		=>'contabilizar',
+	        	type	=>'button',
+	        	value	=>'Contabilizar',
+	        	onclick =>'OnclickContabilizar(this.form)'
+	        );		
+
+	        $this -> Campos[imprimir] = array(
+	        	name	   =>'imprimir',
+	        	id		   =>'imprimir',
+	        	type	   =>'print',
+	        	value	   =>'Imprimir',
+	        	displayoptions => array(
+	        		form        => 0,
+	        		beforeprint => 'beforePrint',
+	        		title       => 'Impresion Comprobantes Contables',
+	        		width       => '900',
+	        		height      => '600'
+	        	)
+	        );	
+
+	        $this -> Campos[generar_excel] = array(
+	        	name   =>'generar_excel',
+	        	id   =>'generar_excel',
+	        	type   =>'button',
+	        	value   =>'Descargar Excel'
+	        );
+
+
+	//busqueda
+	$this -> Campos[busqueda] = array(
+		name	=>'busqueda',
+		id		=>'busqueda',
+		type	=>'text',
+		size	=>'85',
+		placeholder=>'ESCRIBA EL CONSECUTIVO DEL DOCUMENTO CONTABLE',												
+		//tabindex=>'1',
+		suggest=>array(
+			name	=>'movimientos_contables',
+			setId	=>'encabezado_registro_id',
+			onclick	=>'setDataFormWithResponse',
+			form    => 0)
+	);		
+
+	        $this -> SetVarsValidate($this -> Campos);
+	    }
+
+
+	}
+	new MovimientosContables();

@@ -1,0 +1,16 @@
+div#map {
+    position : relative;
+}
+ 
+div#crosshair {
+    position: absolute;
+    top: 167px;
+    height: 19px;
+    width: 19px;
+    left: 50%;
+    margin-left: -8px;
+    display: block;
+	background:url(/roa/seguimiento/parametros_modulo/media/images/forms/crosshair.gif);
+    background-position: center center;
+    background-repeat: no-repeat;
+}

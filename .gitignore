@@ -1,0 +1,11 @@
+
+/framework/clases/ConexionClass.php
+/archivos
+*.sql
+*.xlsx
+*.xls
+*.gif
+*.pdf
+error_log
+
+frameworkAntiguo/

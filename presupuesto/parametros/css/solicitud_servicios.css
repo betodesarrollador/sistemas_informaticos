@@ -1,0 +1,28 @@
+/* CSS Document */
+iframe{
+border:1px solid;
+background:#ffffff;
+width:100%;
+height:250px;
+}
+
+#saveDetallesSoliServi, #deleteDetallesSoliServi{
+padding:2px;
+cursor: pointer;
+}
+
+
+#messages{
+  width:50%;
+}
+
+#fileUpload{
+  width:5%;
+  text-align:right;
+  padding-right:25px;
+}
+
+#detailToolbar{
+  width:45%;
+  text-align:right;
+}

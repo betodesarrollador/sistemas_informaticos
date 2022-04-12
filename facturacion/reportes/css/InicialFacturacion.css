@@ -1,0 +1,89 @@
+.valor_facturado {
+    background: #fff;
+    width: 332px;
+    height: 160px;
+    border-radius: 5px;
+    color: #6e6e6e;
+    align-content: center;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    box-shadow: 0px 0px 10px -2px;
+}
+
+.cuadro {
+    background-color: rgb(81, 142, 255);
+    width: 110px;
+    height: 160px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    color: #ffffff;
+    align-content: center;
+    text-align: center;
+    font-size: 60px;
+}
+
+.cuadro1 {
+    background-color: rgb(2, 228, 104);
+    width: 110px;
+    height: 160px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    color: #ffffff;
+    align-content: center;
+    text-align: center;
+    font-size: 60px;
+}
+
+.cuadro2 {
+    background-color: rgb(255, 158, 31);
+    width: 110px;
+    height: 160px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    color: #ffffff;
+    align-content: center;
+    text-align: center;
+    font-size: 60px;
+}
+
+.div_center {
+    color: #6e6e6e;
+    align-content: center;
+    text-align: center;
+    font-size: 15px;
+    padding: 15px;
+}
+
+.tablas_facturas {
+    background: #fff;
+    width: 475px;
+    height: 300px;
+    border-radius: 5px;
+    color: #6e6e6e;
+    align-content: center;
+    margin-top: 30px;
+    margin-left: 10px;
+    margin-right: 4px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    box-shadow: 0px 0px 10px -2px;
+}
+
+.center_cabecera {
+    background: rgb(228, 228, 228);
+    width: 475px;
+    height: 40px;
+    text-align: center;
+    color: #333;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 9px;
+}
+
+.center_table {
+    background: rgb(228, 228, 228);
+    text-align: center;
+    padding: 5px;
+}

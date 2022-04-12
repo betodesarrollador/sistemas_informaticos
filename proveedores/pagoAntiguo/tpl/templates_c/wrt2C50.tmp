@@ -1,0 +1,177 @@
+<?php /* Smarty version 2.6.26, created on 2013-10-16 15:45:01
+         compiled from pago.tpl */ ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"> 
+  <?php print $this->_tpl_vars['JAVASCRIPT']; ?>
+
+  <?php print $this->_tpl_vars['TABLEGRIDJS']; ?>
+
+  <?php print $this->_tpl_vars['CSSSYSTEM']; ?>
+ 
+  <?php print $this->_tpl_vars['TABLEGRIDCSS']; ?>
+
+  <?php print $this->_tpl_vars['TITLETAB']; ?>
+
+</head>
+
+<body>
+    <fieldset>
+        <legend><?php print $this->_tpl_vars['TITLEFORM']; ?>
+</legend>
+		<div id="table_find"><table><tr><td><label>Busqueda : </label></td><td><?php print $this->_tpl_vars['BUSQUEDA']; ?>
+</td></tr></table></div>    
+        <?php print $this->_tpl_vars['FORM1']; ?>
+
+        <table align="center" width="90%">
+            <tr>
+        	    <td width="15%"><label>Forma de Pago :</label></td>
+            	<td align="left"><?php print $this->_tpl_vars['PAGO']; ?>
+</td>
+	            <td><label>Tipo de Documento : </label></td>
+    	        <td><?php print $this->_tpl_vars['DOCID']; ?>
+</td>
+            </tr>
+            <tr>
+                <td><label>Proveedor : </label></td>
+                <td><?php print $this->_tpl_vars['PROVEEDOR']; ?>
+<?php print $this->_tpl_vars['PROVEEDORID']; ?>
+</td>
+                <td><label>Nit / Identificaci&oacute;n : </label></td>
+                <td><?php print $this->_tpl_vars['PROVEEDORNIT']; ?>
+</td>
+            </tr>
+            <tr>
+            	<td><label>Buscar Facturas</label>&nbsp;<img src="../../../framework/media/images/grid/magb.png" id="Buscar" title="Buscar Facturas Pendientes Proveedor"/></td>
+                <td><?php print $this->_tpl_vars['CONCEPTOFACTU']; ?>
+<?php print $this->_tpl_vars['CAUSACIONFACTU']; ?>
+<?php print $this->_tpl_vars['VALORESCAUSACION']; ?>
+</td>
+                <td><label>Fecha de pago : </label></td>
+                <td><?php print $this->_tpl_vars['FECHA']; ?>
+</td>
+            </tr>
+        
+            <tr>
+                <td><label>Valor Pago : </label></td>
+                <td><?php print $this->_tpl_vars['VALORPAGO']; ?>
+</td>
+                <td><label>No de Cheque (Si aplica):</label></td>
+                <td><?php print $this->_tpl_vars['NUMCHEQUE']; ?>
+</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+			  <td><label>Doc Contable No :</label></td>
+			  <td ><?php print $this->_tpl_vars['NUMSOPORTE']; ?>
+<?php print $this->_tpl_vars['ABONOID']; ?>
+<?php print $this->_tpl_vars['USUARIOID']; ?>
+<?php print $this->_tpl_vars['FECHAINGRESO']; ?>
+<?php print $this->_tpl_vars['OFICINAID']; ?>
+<?php print $this->_tpl_vars['ESTADO']; ?>
+<?php print $this->_tpl_vars['ENCABEZADOID']; ?>
+</td>
+            </tr>
+
+            <tr>
+                <td colspan="4" align="center">
+                    <table width="100%">
+                        <tr>
+                            <td id="loading" width="15%">&nbsp;</td>
+                            <td width="60%" align="center"><?php print $this->_tpl_vars['GUARDAR']; ?>
+&nbsp;<?php print $this->_tpl_vars['ACTUALIZAR']; ?>
+&nbsp;<?php print $this->_tpl_vars['ANULAR']; ?>
+&nbsp;<?php print $this->_tpl_vars['REVERSAR']; ?>
+&nbsp;<?php print $this->_tpl_vars['IMPRIMIR']; ?>
+&nbsp;<?php print $this->_tpl_vars['LIMPIAR']; ?>
+</td>
+                            <td width="15%" align="right" >
+                                <img src="../../../framework/media/images/grid/save.png" id="saveDetallepuc" title="Guardar Seleccionados"/>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+		<table width="100%">
+			<tr><td colspan="7"><iframe id="detalles" frameborder="0" marginheight="0" marginwidth="0"></iframe></td></tr>
+          	<tr>
+                <td align="left" width="20%"><?php print $this->_tpl_vars['CONTABILIZAR']; ?>
+</td>
+                <td align="center" width="30%"><b>Ctrl+t = Tercero Ctrl+c=Concepto</b></td>
+                <td align="right"  width="10%"></td>
+                <td width="10%"><label>DEBITO :</label></td>
+                <td width="10%"><span id="totalDebito">0</span></td>
+                <td width="10%"><label>CREDITO:</label></td>
+                <td width="10%"><span id="totalCredito">0</span></td>
+                
+            </tr>    
+		</table>        
+		<?php print $this->_tpl_vars['FORM1END']; ?>
+
+        <div id="divSolicitudFacturas">
+            <iframe id="iframeSolicitud"></iframe>
+        </div>
+        
+	</fieldset>
+	<fieldset><?php print $this->_tpl_vars['GRIDPAGO']; ?>
+</fieldset>   
+    <div id="divAnulacion">
+      <form>
+        <table>       
+          <tr>
+            <td><label>Fecha / Hora :</label></td>
+            <td><?php print $this->_tpl_vars['FECHALOG']; ?>
+<?php print $this->_tpl_vars['ANULUSUARIOID']; ?>
+<?php print $this->_tpl_vars['OFICINAANUL']; ?>
+</td>
+          </tr>          
+          <tr>
+            <td><label>Causal :</label></td>
+            <td><?php print $this->_tpl_vars['CAUSALESID']; ?>
+</td>
+          </tr>
+          <tr>
+            <td><label>Descripcion :</label></td>
+            <td><?php print $this->_tpl_vars['OBSERVACIONES']; ?>
+</td>
+          </tr> 
+          <tr>
+            <td colspan="2" align="center"><?php print $this->_tpl_vars['ANULAR']; ?>
+</td>
+          </tr>                    
+        </table>
+      </form>
+    </div>
+
+    <div id="divReversar">
+      <form>
+        <table>       
+          <tr>
+            <td><label>Fecha / Hora :</label></td>
+            <td><?php print $this->_tpl_vars['FECHALOGREV']; ?>
+<?php print $this->_tpl_vars['REVERUSUARIOID']; ?>
+</td>
+          </tr>          
+          <tr>
+            <td><label>Documento :</label></td>
+            <td><?php print $this->_tpl_vars['REVDOCID']; ?>
+</td>
+          </tr> 
+          
+          <tr>
+            <td><label>Descripcion :</label></td>
+            <td><?php print $this->_tpl_vars['OBSERVACIONESREV']; ?>
+</td>
+          </tr> 
+          <tr>
+            <td colspan="2" align="center"><?php print $this->_tpl_vars['REVERSAR']; ?>
+</td>
+          </tr>                    
+        </table>
+      </form>
+    </div>
+    
+</body>
+</html>

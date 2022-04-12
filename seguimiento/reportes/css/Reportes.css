@@ -1,0 +1,25 @@
+/* CSS Document */
+
+
+.pendiente{
+	background:#FF0000; color:#FFF; font-weight:bold;
+	height:15px;
+	padding:2px;
+	cursor:pointer;
+	
+}
+.conruta{
+	background:#3CF; color:#FFF; font-weight:bold;
+	height:15px;
+	padding:2px;
+	cursor:pointer;
+}
+.transito{
+	background:#0C3; font-weight:bold;
+	height:15px;
+	padding:2px;
+	cursor:pointer;	
+}
+img{
+	cursor:pointer;
+}
