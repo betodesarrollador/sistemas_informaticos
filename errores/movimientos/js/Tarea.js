@@ -66,12 +66,12 @@ function setDataFormWithResponse() {
 
                 var observacion_cierre = data[0]['observacion_cierre'];
 
-                if(descripcion.length > 0){
+                if(descripcion){
 
                     tinymce.get('descripcion').setContent(descripcion);
                 }
 
-                if(observacion_cierre.length > 0){
+                if(observacion_cierre){
 
                     tinymce.get('observacion_cierre').setContent(observacion_cierre);
                 }
