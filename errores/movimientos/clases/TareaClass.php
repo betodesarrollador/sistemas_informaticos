@@ -666,7 +666,6 @@ final class Tarea extends Controler
             name => 'descripcion',
             id => 'descripcion',
             type => 'textarea',
-            required => 'yes',
             text_uppercase    =>'no',
             cols => '150',
             rows => '5',
