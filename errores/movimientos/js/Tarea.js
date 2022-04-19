@@ -3,7 +3,7 @@
 $(document).ready(function () {
 
     tinymce.init({
-        selector: '#descripcion',
+        selector: '#descripcion,#observacion_cierre',
         entity_encoding: "raw",
         height : "500",
         plugins: 'image code'
@@ -31,8 +31,10 @@ function setDataFormWithResponse() {
                 var archivo = data[0]['archivo'];
                 var estado = data[0]['estado'];
                 var descripcion = data[0]['descripcion'];
+                var observacion_cierre = data[0]['observacion_cierre'];
 
                 tinymce.get('descripcion').setContent(descripcion);
+                tinymce.get('observacion_cierre').setContent(observacion_cierre);
 
                 var all_clientes = data[0]['all_clientes'];
 
@@ -182,6 +184,7 @@ function TareaOnReset(formulario) {
     $("#refresh_QUERYGRID_Tarea").click();
 
     tinymce.get('descripcion').setContent('');
+    tinymce.get('observacion_cierre').setContent('');
 
     if ($('#guardar')) $('#guardar').attr("disabled", "");
     if ($('#actualizar')) $('#actualizar').attr("disabled", "true");

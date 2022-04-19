@@ -18,24 +18,6 @@ final class PanelTareasModel extends Db
 
     }
 
-    public function selectValores($Conex)
-    {
-
-        $select = "SELECT
-		         (SELECT CONCAT_WS(' ',t.primer_nombre,t.segundo_nombre,t.primer_apellido,t.segundo_apellido, t.razon_social) FROM tercero t, cliente c WHERE t.tercero_id=c.tercero_id AND c.cliente_id=p.cliente_id)AS cliente,
-				 p.cliente_id,
-				 p.nombre,
-				 (SELECT GROUP_CONCAT(DISTINCT f.nombre SEPARATOR ',<br><br> ') FROM fase f, actividad_fase a WHERE f.proyecto_id=p.proyecto_id AND f.fase_id=a.fase_id)AS fase,
-				 (SELECT GROUP_CONCAT(DISTINCT a.nombre SEPARATOR ',<br><br> ') FROM actividad_fase a, fase f WHERE a.fase_id = f.fase_id AND f.proyecto_id=p.proyecto_id)AS actividad,
-				 ((SELECT count(a.actividad_id) FROM actividad_fase a, fase f WHERE a.estado = 2 AND a.fase_id = f.fase_id AND f.proyecto_id=p.proyecto_id)*100/(SELECT count(a.actividad_id) FROM actividad_fase a, fase f WHERE a.fase_id = f.fase_id AND f.proyecto_id=p.proyecto_id))AS avance,
-				  (SELECT CONCAT_WS(' ',t.primer_nombre,t.segundo_nombre,t.primer_apellido,t.segundo_apellido, t.razon_social) FROM tercero t, usuario u WHERE t.tercero_id=u.tercero_id AND u.usuario_id=p.usuario_id)AS usuario
-
-		       FROM proyecto p";
-
-        $result = $this->DbFetchAll($select, $Conex, true);
-
-        return $result;
-    }
 
 	#Tabla principal de tareas
     public function selectActividades($consul_tipo_tarea, $Conex)

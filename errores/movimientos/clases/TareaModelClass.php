@@ -532,9 +532,9 @@ final class TareaModel extends Db
 
                                 m.estado,
 
-                                m.all_clientes
+                                m.all_clientes,
 
-
+                                m.observacion_cierre
 
                           FROM actividad_programada m WHERE m.actividad_programada_id = $actividad_programada_id";
 

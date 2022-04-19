@@ -19,6 +19,14 @@ $(document).ready(function () {
      
      })   */
 
+     tinymce.init({
+        selector: '#observacion_cierre',
+        entity_encoding: "raw",
+        height : "500",
+        plugins: 'image code'
+
+    });
+
     $('#detalles').on('click', '.btn-info', function () {
         var actividad_id = $(this).parents("tr").find("#actividad_id").val();
         console.log('actividad_id : ', actividad_id);
@@ -557,7 +565,7 @@ function guardarCierre() {
 
     var actividad_id = $("#actividad_id_modal_cierre").val();
     var fecha_cierre_real = $("#fecha_cierre").val();
-    var observacion_cierre = $("#observacion_cierre").val();
+    var observacion_cierre = tinymce.get('observacion_cierre').getContent();
     var commit = $("#commit").val();
     var justificacion_git = $("#justificacion_git").val();
 
@@ -565,9 +573,12 @@ function guardarCierre() {
 
         var QueryString = "ACTIONCONTROLER=guardarCierre&actividad_id=" + actividad_id + "&observacion_cierre=" + observacion_cierre + "&fecha_cierre_real=" + fecha_cierre_real + "&commit=" + commit + "&justificacion_git=" + justificacion_git;
 
+        console.log('QueryString : ', QueryString);
+
         $.ajax({
             url: "PanelTareasClass.php",
             data: QueryString,
+            type: 'POST',
             beforeSend: function () {
 
                 Swal.fire({
@@ -582,7 +593,8 @@ function guardarCierre() {
                 if (resp == 'true') {
 
                     Swal.fire('¡Se cerró exitosamente la tarea!');
-                    $("#observacion_cierre,#fecha_cierre,#commit,#justificacion_git").val('');
+                    $("#fecha_cierre,#commit,#justificacion_git").val('');
+                    tinymce.get('observacion_cierre').setContent('');
 
                     var table = $('#detalles').DataTable();
 

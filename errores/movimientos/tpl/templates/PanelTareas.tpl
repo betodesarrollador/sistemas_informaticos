@@ -3,6 +3,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <script src="../../../framework/clases/tinymce_4.4.1_dev/tinymce/js/tinymce/tinymce.min.js"></script>
     {$JAVASCRIPT} {$CSSSYSTEM} {$TITLETAB}
 </head>
 
@@ -221,7 +222,7 @@
 
     <!--modal cierre-->
     <div class="modal fade" id="exampleModalCierre" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Cerrar Actividad</h5>
@@ -234,11 +235,11 @@
                         <div class="form-group">
                             <input type="hidden" id="actividad_id_modal_cierre" value="" />
                             <label for="fecha_cierre" class="col-form-label">Fecha Cierre:</label>
-                            <input type="date" class="form-control" id="fecha_cierre" required />
+                            <input type="date" class="form-control" id="fecha_cierre" value="{$smarty.now|date_format:'%Y-%m-%d'}" required />
                         </div>
                         <div class="form-group">
-                            <label for="observacion_cierre" class="col-form-label">Observación Cierre:</label>
-                            <textarea class="form-control" id="observacion_cierre" required></textarea>
+                            <label for="observacion_cierre" class="col-form-label">Descripcion Cierre:</label>
+                            <textarea class="form-control" name="observacion_cierre" id="observacion_cierre" required></textarea>
                         </div>
 
                         <div class="form-group">

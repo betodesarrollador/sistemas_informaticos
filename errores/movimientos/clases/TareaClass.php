@@ -508,7 +508,7 @@ final class Tarea extends Controler
         $actividad_programada_id = $_REQUEST['actividad_programada_id'];
         $fecha_cierre = date("Y-m-d H:i:s");
         $fecha_cierre_real = $_REQUEST['fecha_cierre_real'];
-        $observacion_cierre = $_REQUEST['observacion_cierre'];
+        $observacion_cierre = htmlentities($_REQUEST["observacion_cierre"]);
 
         $Model->SaveCierre($actividad_programada_id, $fecha_cierre, $fecha_cierre_real, $observacion_cierre, $this->getUsuarioId(), $this->getConex());
 
@@ -667,6 +667,20 @@ final class Tarea extends Controler
             id => 'descripcion',
             type => 'textarea',
             required => 'yes',
+            text_uppercase    =>'no',
+            cols => '150',
+            rows => '5',
+            datatype => array(
+                type => 'text'),
+            transaction => array(
+                table => array('actividad_programada'),
+                type => array('column')),
+        );
+
+        $this->Campos[observacion_cierre] = array(
+            name => 'observacion_cierre',
+            id => 'observacion_cierre',
+            type => 'textarea',
             text_uppercase    =>'no',
             cols => '150',
             rows => '5',
@@ -856,14 +870,6 @@ final class Tarea extends Controler
                 type => 'date'),
         );
 
-        $this->Campos[observacion_cierre] = array(
-            name => 'observacion_cierre',
-            id => 'observacion_cierre',
-            type => 'textarea',
-            //size    =>'20',
-            datatype => array(
-                type => 'text'),
-        );
 
         $this->Campos[usuario_cierre_id] = array(
             name => 'usuario_cierre_id',
