@@ -352,8 +352,6 @@ final class PanelTareasModel extends Db
 
         $result = $this->query($update, $Conex, true);
 
-		die('update success');
-
        return $this->getCorreos($Conex,$actividad_id);
 
 

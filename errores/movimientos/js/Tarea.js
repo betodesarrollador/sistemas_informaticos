@@ -50,7 +50,7 @@ function setDataFormWithResponse() {
 
 
 
-            try {
+          
 
 
 
@@ -66,17 +66,17 @@ function setDataFormWithResponse() {
 
                 var observacion_cierre = data[0]['observacion_cierre'];
 
+                if(descripcion.length > 0){
 
+                    tinymce.get('descripcion').setContent(descripcion);
+                }
 
-                tinymce.get('descripcion').setContent(descripcion);
+                if(observacion_cierre.length > 0){
 
-                tinymce.get('observacion_cierre').setContent(observacion_cierre);
-
-
+                    tinymce.get('observacion_cierre').setContent(observacion_cierre);
+                }
 
                 var all_clientes = data[0]['all_clientes'];
-
-
 
                 if (all_clientes == 'SI') {
 
@@ -188,11 +188,7 @@ function setDataFormWithResponse() {
 
 
 
-            } catch (e) {
-
-                alertJquery(resp, "Error :" + e);
-
-            }
+            
 
 
 
