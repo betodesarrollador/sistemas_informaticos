@@ -44,6 +44,11 @@ final class tablaPanelTareas extends Controler
                 $estado = "<div class='alert alert-warning'>" . $Data[$i]["estado"] . "</div>";
                 $button_cierre = '';
 
+            }else if ($Data[$i]["estado"] == 'PENDIENTE POR SOCIALIZAR') {
+
+                $estado = "<div class='alert alert-secondary'>" . $Data[$i]["estado"] . "</div>";
+                
+
             } else {
 
                 $estado = "<div class='alert alert-danger'>" . $Data[$i]["estado"] . "</div>";
@@ -98,11 +103,6 @@ final class tablaPanelTareas extends Controler
                 "' . str_replace($search, $replace, $descripcion) . '", 
                 "' . $Data[$i]['fecha_inicial'] . '",
                 "' . $Data[$i]['fecha_final'] . '",
-                "' . $Data[$i]['fecha_inicial_real'] . '",
-                "' . $Data[$i]['fecha_final_real'] . '",
-                "' . $Data[$i]['fecha_cierre_real'] . '",
-                "' . $Data[$i]['cod_commit'] . '",
-                "' . $Data[$i]['justificacion_git'] . '",
                 "' . $archivo . '"
               ],';
 
@@ -259,7 +259,12 @@ final class tablaPanelTareas extends Controler
                 $estado = "<div class='alert alert-warning'>" . $Data[$i]["estado"] . "</div>";
                 
 
-            } else {
+            } else if ($Data[$i]["estado"] == 'PENDIENTE POR SOCIALIZAR') {
+
+                $estado = "<div class='alert alert-secondary'>" . $Data[$i]["estado"] . "</div>";
+                
+
+            }else {
 
                 $estado = "<div class='alert alert-danger'>" . $Data[$i]["estado"] . "</div>";
 
@@ -276,6 +281,75 @@ final class tablaPanelTareas extends Controler
                 "' . $Data[$i]['cliente'] . '",
                 "' . $Data[$i]['fecha_inicial'] . '",
                 "' . $Data[$i]['fecha_final'] . '"
+              ],';
+
+        }
+
+        $datosJson = substr($datosJson, 0, -1);
+
+        $datosJson .= ']
+
+        }';
+
+        return $datosJson;
+
+    }
+
+    public function getDetallesPendientesSocializar($consul_tipo_tarea)
+    {
+
+        require_once "PanelTareasModelClass.php";
+
+        $Model = new PanelTareasModel();
+
+        $consul = " AND a.estado = 3";
+        
+        $Data = $Model -> selectTareas($this -> getConex(),$consul,$consul_tipo_tarea);
+
+        if (count($Data) == 0) {
+
+            return '{"data": []}';
+
+        }
+
+        $datosJson = '{
+        "data": [';
+
+        for ($i = 0; $i < count($Data); $i++) {
+
+            if ($Data[$i]["estado"] == 'ACTIVO') {
+
+                $estado = "<div class='alert alert-success'>" . $Data[$i]["estado"] . "</div>";
+
+            } else if ($Data[$i]["estado"] == 'INACTIVO') {
+
+                $estado = "<div class='alert alert-warning'>" . $Data[$i]["estado"] . "</div>";
+                
+
+            } else if ($Data[$i]["estado"] == 'PENDIENTE POR SOCIALIZAR') {
+
+                $estado = "<div class='alert alert-secondary'>" . $Data[$i]["estado"] . "</div>";
+                
+
+            } else {
+
+                $estado = "<div class='alert alert-danger'>" . $Data[$i]["estado"] . "</div>";
+
+            }
+
+            $button_cierre = "<button type='button' class='btn btn-success' id='cerrar' data-toggle='modal' onclick='Finalizar(".$Data[$i]["codigo"].")'><i class='fa fa-check-square'></i></button>";
+
+            $actividad_programada_id = "<a href='TareaClass.php?actividad_programada_id=".$Data[$i]["codigo"]."' target='_blank'>".$Data[$i]["codigo"]." </a>";
+
+            $datosJson .= '[
+                "' . $Data[$i]['tipo_tarea'] . '",
+                "' . $Data[$i]['responsable'] . '",
+                "' . $estado . '",
+                "<b>' . $actividad_programada_id . '<b>",
+                "' . $Data[$i]['cliente'] . '",
+                "' . $Data[$i]['fecha_inicial'] . '",
+                "' . $Data[$i]['fecha_final'] . '",
+                "' . $button_cierre . '"
               ],';
 
         }
@@ -366,6 +440,12 @@ final class tablaPanelTareas extends Controler
         if (isset($_REQUEST['tareas_finalizadas'])) {
 
             $data = $this->getDetallesFinalizadas($consul_tipo_tarea);
+        }
+
+        #Tareas pendientes por socializar 
+        if (isset($_REQUEST['tareas_pendiente_socializar'])) {
+
+            $data = $this->getDetallesPendientesSocializar($consul_tipo_tarea);
         }
 
         #Tareas para entregar hoy 

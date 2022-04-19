@@ -70,6 +70,10 @@ $(document).ready(function () {
         guardarCierre();
     });
 
+    $("#pendiente_socializar").click(function () {
+        pendienteSocializar();
+    });
+
     //Table Avances
     table_avances = $('#detalles_responsables').DataTable({
         //responsive: true,
@@ -147,6 +151,41 @@ $(document).ready(function () {
         ordering: false,
         //"processing": true,
         "ajax": "datatable-panelTareas.ajax.php?tareas_finalizadas=true&tipo_tarea_id=" + tipo_tarea_id,
+        "language": {
+
+            "sProcessing": "Procesando...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar:",
+            "sUrl": "",
+            "sInfoThousands": ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+
+        }
+    });
+
+    //Table tareas pendientes por socializar
+    table_pendientes_socializar = $('#tareas_pendiente_socializar').DataTable({
+        //responsive: true,
+        "lengthMenu": [[5, 25, 50, -1], [5, 25, 50, "Todas"]],
+        ordering: false,
+        //"processing": true,
+        "ajax": "datatable-panelTareas.ajax.php?tareas_pendiente_socializar=true&tipo_tarea_id=" + tipo_tarea_id,
         "language": {
 
             "sProcessing": "Procesando...",
@@ -289,7 +328,7 @@ $(document).ready(function () {
                 columns: ':visible'
             }
         }, */
-        {
+       /*  {
             extend   : 'colvisGroup',
             text     : 'Mostrar todas las columas',
             className: "btn-primary btn-sm",
@@ -301,7 +340,7 @@ $(document).ready(function () {
             className : "btn-warning btn-sm",
             show      : [ 0,2,3,4,10,6,7,9],
             hide      : [ 1,8,5,11,12,13,14,15,16,17]
-        }
+        } */
         ],
 
         "columnDefs": [
@@ -365,6 +404,7 @@ $(document).ready(function () {
         table_avances.ajax.url('datatable-panelTareas.ajax.php?detalles_responsables=true&tipo_tarea_id=' + tipo_tarea_id).load();
         table_vencidas.ajax.url('datatable-panelTareas.ajax.php?tareas_vencidas=true&tipo_tarea_id=' + tipo_tarea_id).load();
         table_finalizadas.ajax.url('datatable-panelTareas.ajax.php?tareas_finalizadas=true&tipo_tarea_id=' + tipo_tarea_id).load();
+        table_pendientes_socializar.ajax.url('datatable-panelTareas.ajax.php?tareas_pendiente_socializar=true&tipo_tarea_id=' + tipo_tarea_id).load();
         table_actuales.ajax.url('datatable-panelTareas.ajax.php?tareas_actuales=true&tipo_tarea_id=' + tipo_tarea_id).load(); 
 
     }, 90000);
@@ -461,6 +501,7 @@ function cargaNewPanel(radio) {
     table_avances.ajax.url('datatable-panelTareas.ajax.php?detalles_responsables=true&tipo_tarea_id=' + tipo_tarea_id).load();
     table_vencidas.ajax.url('datatable-panelTareas.ajax.php?tareas_vencidas=true&tipo_tarea_id=' + tipo_tarea_id).load();
     table_finalizadas.ajax.url('datatable-panelTareas.ajax.php?tareas_finalizadas=true&tipo_tarea_id=' + tipo_tarea_id).load();
+    table_pendientes_socializar.ajax.url('datatable-panelTareas.ajax.php?tareas_pendiente_socializar=true&tipo_tarea_id=' + tipo_tarea_id).load();
     table_actuales.ajax.url('datatable-panelTareas.ajax.php?tareas_actuales=true&tipo_tarea_id=' + tipo_tarea_id).load();
 
     setTimeout(function () {
@@ -547,6 +588,107 @@ function guardarCierre() {
 
                     table.row(row).remove().draw();
 
+
+                } else {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Atención',
+                        html: resp,
+                    })
+                }
+
+            }
+
+        });
+    } else {
+
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Atención',
+            text: '¡Por favor digita una fecha!',
+        })
+    }
+}
+
+function Finalizar(actividad_id){
+
+    var QueryString = "ACTIONCONTROLER=finalizar&actividad_id=" + actividad_id;
+
+    $.ajax({
+        url: "PanelTareasClass.php",
+        data: QueryString,
+        beforeSend: function () {
+
+            Swal.fire({
+                title: "Cargando cierre.."
+            });
+
+            Swal.showLoading()
+
+        },
+        success: function (resp) {
+
+            if (resp == 'true') {
+
+                Swal.fire('¡Tarea finalizada con exito !');
+
+                table_pendientes_socializar.ajax.url('datatable-panelTareas.ajax.php?tareas_pendiente_socializar=true&tipo_tarea_id=' + tipo_tarea_id).load();
+
+                table_finalizadas.ajax.url('datatable-panelTareas.ajax.php?tareas_finalizadas=true&tipo_tarea_id=' + tipo_tarea_id).load();
+
+            } else {
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Atención',
+                    html: resp,
+                })
+            }
+
+        }
+
+    });
+
+}
+
+function pendienteSocializar() {
+
+    var actividad_id = $("#actividad_id_modal_cierre").val();
+    var fecha_cierre_real = $("#fecha_cierre").val();
+    var observacion_cierre = $("#observacion_cierre").val();
+    var commit = $("#commit").val();
+    var justificacion_git = $("#justificacion_git").val();
+
+    if (fecha_cierre_real != '') {
+
+        var QueryString = "ACTIONCONTROLER=pendienteSocializar&actividad_id=" + actividad_id + "&observacion_cierre=" + observacion_cierre + "&fecha_cierre_real=" + fecha_cierre_real + "&commit=" + commit + "&justificacion_git=" + justificacion_git;
+
+        $.ajax({
+            url: "PanelTareasClass.php",
+            data: QueryString,
+            beforeSend: function () {
+
+                Swal.fire({
+                    title: "Cargando cierre.."
+                });
+
+                Swal.showLoading()
+
+            },
+            success: function (resp) {
+
+                if (resp == 'true') {
+
+                    Swal.fire('¡Se cambio el estado de la tarea [Pendiente por socializar]!');
+                    $("#observacion_cierre,#fecha_cierre,#commit,#justificacion_git").val('');
+
+                    var table = $('#detalles').DataTable();
+
+                    table.row(row).remove().draw();
+
+                    table_pendientes_socializar.ajax.url('datatable-panelTareas.ajax.php?tareas_pendiente_socializar=true&tipo_tarea_id=' + tipo_tarea_id).load();
 
                 } else {
 

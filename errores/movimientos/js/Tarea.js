@@ -2,24 +2,12 @@
 
 $(document).ready(function () {
 
-    $("#divCierre").css("display", "none");
-    if ($('#cerrar')) $('#cerrar').attr("disabled", "true");
+    tinymce.init({
+        selector: '#descripcion',
+        entity_encoding: "raw",
+        height : "500",
+        plugins: 'image code'
 
-    resetDetalle('detalleTarea');
-    $("#saveDetalles").click(function () {
-        window.frames[0].saveDetallesSoliServi();
-    });
-
-    $("#deleteDetalles").click(function () {
-        window.frames[0].deleteDetallesSoliServi();
-    });
-
-    $("#saveTerceros").click(function () {
-        window.frames[1].saveDetallesSoliServi();
-    });
-
-    $("#deleteTerceros").click(function () {
-        window.frames[1].deleteDetallesSoliServi();
     });
 
     var actividad_programada_id = $("#actividad_programada_id").val();
@@ -42,6 +30,10 @@ function setDataFormWithResponse() {
                 var actividad_programada_id = data[0]['actividad_programada_id'];
                 var archivo = data[0]['archivo'];
                 var estado = data[0]['estado'];
+                var descripcion = data[0]['descripcion'];
+
+                tinymce.get('descripcion').setContent(descripcion);
+
                 var all_clientes = data[0]['all_clientes'];
 
                 if (all_clientes == 'SI') {
@@ -97,7 +89,7 @@ function setDataFormWithResponse() {
                     if ($('#cerrar')) $('#cerrar').attr("disabled", "");
                 }
 
-                cambioCliente();
+                cambioCliente(true);
 
             } catch (e) {
                 alertJquery(resp, "Error :" + e);
@@ -189,6 +181,8 @@ function TareaOnReset(formulario) {
     resetDetalle('detalleTarea');
     $("#refresh_QUERYGRID_Tarea").click();
 
+    tinymce.get('descripcion').setContent('');
+
     if ($('#guardar')) $('#guardar').attr("disabled", "");
     if ($('#actualizar')) $('#actualizar').attr("disabled", "true");
     if ($('#borrar')) $('#borrar').attr("disabled", "true");
@@ -233,7 +227,7 @@ function all_cliente() {
 
     }
 
-    cambioCliente();
+    cambioCliente(false);
 
 }
 
@@ -305,15 +299,20 @@ function enviarEmail(tipo) {
 
 }
 
-function cambioCliente() {
-    if (document.getElementById('all_clientes').checked == true) {
-        document.getElementById('all_clientes').checked = false;
-        $('#all_clientes').val('NO');
+function cambioCliente(bandera) {
+
+    if(bandera){
+
+        if (document.getElementById('all_clientes').checked == true) {
+            document.getElementById('all_clientes').checked = false;
+            $('#all_clientes').val('NO');
+        }
+
     }
 
     var cliente_id = $("#cliente_id").val();
 
-    if (cliente_id != 'NULL') {
+    if (cliente_id != 'NULL' && cliente_id != '' && cliente_id != null) {
 
         var QueryString = "ACTIONCONTROLER=getCorreosCliente&cliente_id=" + cliente_id + "&rand=" + Math.random();
 

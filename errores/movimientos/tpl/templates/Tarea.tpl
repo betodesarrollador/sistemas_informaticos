@@ -2,6 +2,7 @@
 
 <head>
     <link rel="stylesheet" href="../../../framework/css/bootstrap1.css">
+    <script src="../../../framework/clases/tinymce_4.4.1_dev/tinymce/js/tinymce/tinymce.min.js"></script>
     {$JAVASCRIPT}
     {$TABLEGRIDJS}
     {$CSSSYSTEM}
@@ -62,9 +63,13 @@
                 <td>{$RESPONSABLEID}{$RESPONSABLE}</td>
 
             </tr>
+
             <tr>
-                <td><label>Descripcion: </label></td>
-                <td colspan="5">{$DESCRIPCION}</td>
+                <td colspan="5"><label>Descripcion: </label></td>
+            </tr>
+
+            <tr>
+                <td colspan="6">{$DESCRIPCION}</td>
             </tr>
 
             <tr>

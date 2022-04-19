@@ -65,7 +65,7 @@ final class PanelTareasModel extends Db
 				IF($reponsable IS NULL, 'POR ASIGNAR / EN ESPERA',$reponsable)AS responsable,
 				 (SELECT CONCAT_WS(' ',t.primer_nombre,t.segundo_nombre,t.primer_apellido,t.segundo_apellido,t.razon_social) FROM tercero t WHERE t.tercero_id=a.creador_id)AS creador,
 		         a.nombre,
-		         (CASE a.estado WHEN 1 THEN 'ACTIVO' WHEN 0 THEN 'INACTIVO' ELSE 'CERRADO' END)AS estado,
+		         (CASE a.estado WHEN 1 THEN 'ACTIVO' WHEN 0 THEN 'INACTIVO' WHEN 3 THEN 'PENDIENTE POR SOCIALIZAR' ELSE 'CERRADO' END) AS estado,
 				 a.descripcion,
 				 a.fecha_inicial,
 				 a.fecha_final,
@@ -123,7 +123,7 @@ final class PanelTareasModel extends Db
 					ELSE 'BAJA'
 					END) AS nombre_prioridad,
 
-				(CASE a.estado WHEN 1 THEN 'ACTIVO' WHEN 0 THEN 'INACTIVO' ELSE 'CERRADO' END)AS estado,
+				(CASE a.estado WHEN 1 THEN 'ACTIVO' WHEN 0 THEN 'INACTIVO' WHEN 3 THEN 'PENDIENTE POR SOCIALIZAR' ELSE 'CERRADO' END) AS estado,
 				 datediff(curdate(),a.fecha_final) AS dias_retraso,
 				 a.fecha_cierre_real
 
@@ -194,7 +194,13 @@ final class PanelTareasModel extends Db
         $update = "UPDATE actividad_programada SET estado = 2, fecha_cierre='$fecha_cierre', fecha_cierre_real='$fecha_cierre_real', observacion_cierre='$observacion_cierre',usuario_cierre_id=$usuario_id,justificacion_git='$justificacion_git',cod_commit='$cod_commit' WHERE actividad_programada_id=$actividad_id";
         $result = $this->query($update, $Conex, true);
 
-        $tipo_tarea_id = "(SELECT tipo_tarea_id FROM actividad_programada WHERE actividad_programada_id = $actividad_id)";
+       return $this->getCorreos($Conex,$actividad_id);
+
+    }
+
+	public function getCorreos($Conex,$actividad_id){
+
+		$tipo_tarea_id = "(SELECT tipo_tarea_id FROM actividad_programada WHERE actividad_programada_id = $actividad_id)";
         $tercero_correo = "
 		(CASE
 			WHEN   $tipo_tarea_id='1' THEN '209'
@@ -254,6 +260,35 @@ final class PanelTareasModel extends Db
         $result = $this->DbFetchAll($select, $Conex, true);
 
         return $result;
+
+	}
+
+    public function pendienteSocializar($usuario_id, $Conex)
+    {
+
+        $actividad_id = $_REQUEST['actividad_id'];
+        $observacion_cierre = $_REQUEST['observacion_cierre'];
+        $fecha_cierre_real = $_REQUEST['fecha_cierre_real'];
+        $cod_commit = $_REQUEST['commit'];
+        $justificacion_git = $_REQUEST['justificacion_git'];
+        $fecha_cierre = date("Y-m-d H:i:s");
+
+        $update = "UPDATE actividad_programada SET estado = 3, fecha_cierre='$fecha_cierre', fecha_cierre_real='$fecha_cierre_real', observacion_cierre='$observacion_cierre',usuario_cierre_id=$usuario_id,justificacion_git='$justificacion_git',cod_commit='$cod_commit' WHERE actividad_programada_id=$actividad_id";
+
+        $result = $this->query($update, $Conex, true);
+
+    }
+
+    public function finalizar($Conex)
+    {
+
+        $actividad_id = $_REQUEST['actividad_id'];
+       
+        $update = "UPDATE actividad_programada SET estado = 2 WHERE actividad_programada_id = $actividad_id";
+
+        $result = $this->query($update, $Conex, true);
+
+		return $this->getCorreos($Conex,$actividad_id);
 
     }
 

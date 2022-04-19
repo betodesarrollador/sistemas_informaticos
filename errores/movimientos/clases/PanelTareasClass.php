@@ -173,7 +173,7 @@ final class PanelTareas extends Controler{
          if(!$enviar_mail) die('error enviando correo :'.$enviar_mail);
    }
 
-   public function guardarCierre($Conex=''){
+   public function guardarCierre(){
   
       require_once("PanelTareasModelClass.php"); 
      
@@ -197,6 +197,39 @@ final class PanelTareas extends Controler{
 
          print 'true';
       } 
+      
+   }
+
+   public function pendienteSocializar(){
+  
+      require_once("PanelTareasModelClass.php"); 
+     
+	   $Model = new PanelTareasModel();
+	
+      $data  = $Model -> pendienteSocializar($this->getUsuarioId(),$this -> getConex());
+
+      print 'true';
+      
+   }
+
+   public function finalizar(){
+  
+      require_once("PanelTareasModelClass.php"); 
+     
+	   $Model = new PanelTareasModel();
+	
+      $data  = $Model -> finalizar($this -> getConex());
+
+      for ($i=0; $i < count($data); $i++) { 
+
+         if($data[$i]['email']!=''){
+
+            $this->sendCorreos($data,$i);
+         }
+
+      }
+
+      print 'true';
       
    }
 

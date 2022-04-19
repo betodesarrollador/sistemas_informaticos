@@ -133,6 +133,35 @@
         </div>
     </div>
 
+    {* Tareas pendientes por socializar *}
+
+    <div class="pos-f-t">
+        <nav class="alert alert-secondary" style="margin-top: 15px; padding: 0;">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglePendienteSocializar" aria-controls="navbarTogglePendienteSocializar" aria-label="Toggle navigation">
+                <i class="fa fa-list"></i>&emsp;Tareas pendientes por socializar
+            </button>
+        </nav>
+        <div class="collapse detalle_actividad" id="navbarTogglePendienteSocializar" id="detalle_actividad">
+            <br />
+            <div class="table-responsive">
+                <table id="tareas_pendiente_socializar" class="table table-sm table-hover" width="99%">
+                    <thead>
+                        <tr>
+                            <th>Tipo tarea</th>
+                            <th>Responsables</th>
+                            <th>Estado</th>
+                            <th>Codigo</th>
+                            <th>Cliente</th>
+                            <th>Fecha inicio</th>
+                            <th>Fecha fin</th>
+                            <th>Finalizar</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <hr />
 
     <br />
@@ -153,15 +182,9 @@
                         <th>Tarea</th>
                         <th>Asiganada por</th>
                         <th>Responsable</th>
-                        {* <th>Estado</th> *}
                         <th>Observacion</th>
                         <th>Fecha Inicio</th>
                         <th>Fecha Fin</th>
-                        <th>Fecha Inicio Real</th>
-                        <th>Fecha Fin Real</th>
-                        <th>Fecha Cierre Real</th>
-                        <th>Codigo(s) commit</th>
-                        <th>Observacion commit</th>
                         <th>Adjunto</th>
                     </tr>
                 </thead>
@@ -231,7 +254,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" data-dismiss="modal" id="guardar_cierre">Cerrar Actividad</button>
+                    <button type="button" class="btn btn-warning"   data-dismiss="modal" id="pendiente_socializar">Pendiente por socializar</button>
+                    <button type="button" class="btn btn-primary"   data-dismiss="modal" id="guardar_cierre">Cerrar Actividad</button>
                 </div>
             </div>
         </div>

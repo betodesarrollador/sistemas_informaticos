@@ -790,7 +790,7 @@ final class Tarea extends Controler
             id => 'estado',
             type => 'select',
             Boostrap => 'si',
-            options => array(array(value => '1', text => 'ACTIVO', selected => '1'), array(value => '0', text => 'INACTIVO'), array(value => '2', text => 'CERRADO')),
+            options => array(array(value => '1', text => 'ACTIVO', selected => '1'), array(value => '0', text => 'INACTIVO'), array(value => '2', text => 'CERRADO'), array(value => '3', text => 'FINALIZADA/PENDIENTE POR ENTREGAR')),
             required => 'yes',
             datatype => array(
                 type => 'integer'),
@@ -936,6 +936,7 @@ final class Tarea extends Controler
             tabindex => '14',
             onclick => "enviarEmail('F')",
         );
+        
 
         $this->Campos[enviar_email_inicio] = array(
             name => 'enviar_email_inicio',
