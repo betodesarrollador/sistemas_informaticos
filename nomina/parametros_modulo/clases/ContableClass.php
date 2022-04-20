@@ -261,6 +261,21 @@ final class Contable extends Controler{
 		 	type =>array('column'))
    );
 
+	$this -> Campos[tipo_novedad_documento] = array(
+		name =>'tipo_novedad_documento',
+		id  =>'tipo_novedad_documento',
+		type =>'select',
+		Boostrap =>'si',
+		options => array(array(value=>'V',text=>'DEVENGADO',selected=>'V'),array(value=>'D',text=>'DEDUCIDO')),
+		required=>'yes',
+		datatype=>array(
+			type =>'text',
+			length =>'2'),
+		transaction=>array(
+				table =>array('concepto_area'),
+				type =>array('column'))
+	);
+
 		$this -> Campos[parametros_envioNomina_id] = array(
 			name =>'parametros_envioNomina_id',
 			id  =>'parametros_envioNomina_id',

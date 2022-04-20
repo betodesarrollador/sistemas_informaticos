@@ -214,6 +214,9 @@ function PagoOnSave(formulario,resp){
 		if($('#limpiar'))    	$('#limpiar').attr("disabled","");	
 		getTotalDebitoCredito(abono_nomina_id);
 		alertJquery("Guardado Exitosamente","Pago Nomina");
+
+		setDataFormWithResponse();
+
    }else{
 	       alertJquery(resp,"Pago");
 		   if($('#guardar'))    	$('#guardar').attr("disabled",""); //habbilita si es errado

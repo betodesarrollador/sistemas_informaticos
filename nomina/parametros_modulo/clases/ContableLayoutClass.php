@@ -82,6 +82,8 @@ final class ContableLayout extends View{
 	
 	$this	->	assign("TIPONOVEDAD",					$this	->	objectsHtml	->	GetobjectHtml($this	->	fields[tipo_novedad]));
 
+	$this	->	assign("TIPONOVEDADDOC",					$this	->	objectsHtml	->	GetobjectHtml($this	->	fields[tipo_novedad_documento]));
+
 	if($this -> Guardar)
 		$this -> assign("GUARDAR",	$this -> objectsHtml -> GetobjectHtml($this -> fields[guardar]));
 	

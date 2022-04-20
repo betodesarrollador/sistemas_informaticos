@@ -85,6 +85,7 @@ final class NovedadLayout extends View{
      $this -> assign("FACTPROID",  			$this -> objectsHtml -> GetobjectHtml($this -> fields[factura_proveedor_id]));
      $this -> assign("DOCCONTABLE",  			$this -> objectsHtml -> GetobjectHtml($this -> fields[doc_contable]));
      $this -> assign("LIQFINAL",  			$this -> objectsHtml -> GetobjectHtml($this -> fields[liquidacion_final]));
+     $this -> assign("PORPAGAR",  			$this -> objectsHtml -> GetobjectHtml($this -> fields[por_pagar]));
 
      if($this -> Guardar)    
 	   $this -> assign("GUARDAR",$this -> objectsHtml -> GetobjectHtml($this -> fields[guardar]));	 	 	 

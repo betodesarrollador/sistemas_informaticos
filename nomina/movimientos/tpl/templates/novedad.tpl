@@ -103,7 +103,7 @@
                     <table width="100%">
                         <tr>
                             <td><label>Documento Soporte : </label></td>
-                            <td colspan="3" >{$SPORTEANEXO}{$ENCREGID}{$FACTPROID}</td>                                                        
+                            <td colspan="3" >{$SPORTEANEXO}{$ENCREGID}{$FACTPROID}{$PORPAGAR}</td>                                                        
                         </tr>
                         <tr>
                             <td><label>Tipo Documento : </label></td>

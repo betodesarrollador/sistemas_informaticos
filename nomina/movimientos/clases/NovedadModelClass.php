@@ -125,6 +125,9 @@ final class NovedadModel extends Db{
 		}
 
 		$this -> Begin($Conex);
+
+
+		/* SE ANULA POR REQUERIMIENTO 966
 		//factura proveedor ok
 		$factura_proveedor_id    = $this -> DbgetMaxConsecutive("factura_proveedor","factura_proveedor_id",$Conex,true,1);
 		$insert = "INSERT INTO factura_proveedor (factura_proveedor_id,valor_factura_proveedor,fecha_factura_proveedor,vence_factura_proveedor,concepto_factura_proveedor,proveedor_id,fuente_servicio_cod,usuario_id,oficina_id,ingreso_factura_proveedor,estado_factura_proveedor) 
@@ -141,7 +144,7 @@ final class NovedadModel extends Db{
 		$item_factura_proveedor_id    = $this -> DbgetMaxConsecutive("item_factura_proveedor","item_factura_proveedor_id",$Conex,true,1);
 		$insert = "INSERT INTO item_factura_proveedor (item_factura_proveedor_id,factura_proveedor_id,puc_id,tercero_id,numero_identificacion,digito_verificacion,centro_de_costo_id,codigo_centro_costo,desc_factura_proveedor,deb_item_factura_proveedor,	cre_item_factura_proveedor,contra_factura_proveedor) 
 						VALUES ($item_factura_proveedor_id,$factura_proveedor_id,$contra_puc_id,$tercero_id1,$numero_identificacion1,$digito_verificacion1,$centro_de_costo_id1,$codigo_centro_costo1,'$concepto', $debito_contra,$credito_contra,1)"; 
-		$this -> query($insert,$Conex,true);			
+		$this -> query($insert,$Conex,true);			 */
 
 		//contable  ok
 		$encabezado_registro_id    = $this -> DbgetMaxConsecutive("encabezado_de_registro","encabezado_registro_id",$Conex,true,1);
@@ -162,10 +165,11 @@ final class NovedadModel extends Db{
 		$this -> query($insert,$Conex,true);			
 
 
+		/* SE ANULA POR REQUERIMIENTO 966
 		$update = "UPDATE factura_proveedor SET  estado_factura_proveedor='C', encabezado_registro_id=$encabezado_registro_id WHERE factura_proveedor_id=$factura_proveedor_id"; 
-		$this -> query($update,$Conex,true);			
+		$this -> query($update,$Conex,true); */			
 
-		$update = "UPDATE novedad_fija SET  factura_proveedor_id=$factura_proveedor_id, encabezado_registro_id=$encabezado_registro_id WHERE novedad_fija_id=$novedad_fija_id"; 
+		$update = "UPDATE novedad_fija SET  /* factura_proveedor_id=$factura_proveedor_id,  */encabezado_registro_id=$encabezado_registro_id WHERE novedad_fija_id=$novedad_fija_id"; 
 		$this -> query($update,$Conex,true);			
 
 		$this -> Commit($Conex);
@@ -215,7 +219,7 @@ final class NovedadModel extends Db{
 		(SELECT CONCAT_WS(' ',t.razon_social,t.primer_nombre,t.segundo_nombre,t.primer_apellido,t.segundo_apellido)	AS tercero FROM tercero t WHERE t.tercero_id=n.tercero_id )AS tercero,
 		(SELECT consecutivo FROM encabezado_de_registro WHERE encabezado_registro_id=n.encabezado_registro_id) AS doc_contable
 		FROM novedad_fija n WHERE n.novedad_fija_id = $novedad_fija_id";
-		$result = $this -> DbFetchAll($select,$Conex);
+		$result = $this -> DbFetchAll($select,$Conex,true);
 		return $result;
 	}
 
@@ -246,7 +250,15 @@ final class NovedadModel extends Db{
 		return $Query;
 	}
 
+	public function getGeneraDocumento($concepto_area_id,$Conex){
 
+		$select = "SELECT contabiliza FROM concepto_area WHERE concepto_area_id = $concepto_area_id";
+
+		$result = $this -> DbFetchAll($select,$Conex);
+
+		return $result;
+
+	}
 
 }
 ?>

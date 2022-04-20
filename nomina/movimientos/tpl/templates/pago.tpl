@@ -50,7 +50,7 @@
             </tr>
             <tr>
             	<td><label>Buscar Pendientes: </label>&nbsp;<img src="../../../framework/media/images/grid/magb.png" id="Buscar" title="Buscar Facturas Pendientes Proveedor"/></td>
-                <td>{$CONCEPTONOMI}{$CAUSACIONNOMI}{$CAUSACIONPRIMA}{$CAUSACIONCESANTIAS}{$CAUSACIONINTCESANTIAS}{$CAUSACIONLIQ}{$CAUSACIONVACACIONES}{$VALORESCAUSACION}{$VALORESPAGO}{$VALORESPAGOPRIMAS}{$VALORESPAGOCESANTIAS}{$VALORESPAGOINTCESANTIAS}{$VALORESPAGOVACACIONES}{$VALORESPAGOLIQ}</td>
+                <td>{$CONCEPTONOMI}{$CAUSACIONNOMI}{$CAUSACIONPRIMA}{$CAUSACIONCESANTIAS}{$CAUSACIONINTCESANTIAS}{$CAUSACIONLIQ}{$CAUSACIONVACACIONES}{$CAUSACIONNOV}{$VALORESCAUSACION}{$VALORESPAGO}{$VALORESPAGOPRIMAS}{$VALORESPAGOCESANTIAS}{$VALORESPAGOINTCESANTIAS}{$VALORESPAGOVACACIONES}{$VALORESPAGOLIQ}{$VALORESPAGONOV}</td>
                 <td><label>Fecha de pago : </label></td>
                 <td>{$FECHA}</td>
             </tr>
@@ -88,6 +88,12 @@
             <tr>
                  <td><label>Valor Pago Liquidacion Final : </label></td>
                 <td>{$VALORPAGOLIQ}</td>
+                <td colspan="2">&nbsp;</td>
+            </tr>
+
+            <tr>
+                 <td><label>Valor Pago Novedad : </label></td>
+                <td>{$VALORPAGONOV}</td>
                 <td colspan="2">&nbsp;</td>
             </tr>
             

@@ -116,8 +116,43 @@ $(document).ready(function(){
   	}
 	
   });
+
+ 	$("#concepto_area_id").change(function(){ 
+		validaGeneraDocumento();
+	});
   
 });
+
+function validaGeneraDocumento(){
+
+	var concepto_area_id = $("#concepto_area_id").val();
+
+	var QueryString   = 'ACTIONCONTROLER=validaGeneraDocumento&concepto_area_id='+concepto_area_id;
+
+	$.ajax({
+		url        : "NovedadClass.php?rand="+Math.random(),
+		data       : QueryString,
+		
+		success    : function(resp){
+			try{
+
+				var data = resp;
+				
+				if (data == 'SI') {console.log('entra');
+					$("#por_pagar").val('1');	
+				}else{
+					$("#por_pagar").val('0');
+				}
+
+			}catch(e){
+
+			alertJquery("Se presento un error :"+e,"Try Catch");
+
+			}
+		} 
+	});
+
+}
 
 
 function showTable(){
@@ -214,7 +249,9 @@ function NovedadOnSave(formulario,resp){
 			if($('#limpiar'))    $('#limpiar').attr("disabled","");
 			$("#refresh_QUERYGRID_novedad").click();			
 			alertJquery("Se ingreso Exitosamente la Novedad","Registrar Novedad");
-		
+			
+			setDataFormWithResponse();
+
 		}else{
 			alertJquery("Ocurrio una inconsistencia : "+resp,"Registrar Novedad");
 		}

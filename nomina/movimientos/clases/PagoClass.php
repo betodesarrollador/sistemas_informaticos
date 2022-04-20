@@ -95,22 +95,33 @@ final class Pago extends Controler{
   }
   
 
-  protected function onclickSave(){
+  	protected function onclickSave(){
 
-	require_once("PagoModelClass.php");
-	$Model = new PagoModel();
-	$empresa_id = $this -> getEmpresaId();
-	$return = $Model -> Save($empresa_id,$this -> getOficinaId(),$this -> Campos,$this -> getConex());
-	if(strlen(trim($Model -> GetError())) > 0){
-		exit("Error : ".$Model -> GetError());
-	}else{
-		if(is_numeric($return)){
-			exit("$return");
-	  	}else{
-	  		exit('false');
+		require_once("PagoModelClass.php");
+		$Model = new PagoModel();
+		$empresa_id = $this -> getEmpresaId();
+
+		$usuario_id = $this -> getUsuarioId();
+
+		$empleados = $_REQUEST['empleados'];
+		$causaciones_abono_nov = $_REQUEST['causaciones_abono_nov'];
+
+
+		if($empleados == 'T' && $causaciones_abono_nov != '' ){
+			exit('No se puede Aplicar esta Novedad a Todos los Empleados en un solo proceso, <br>esto debido a que los saldos causados en novedades tiene una Causacion por cada Registro.');				
 		}
-	}
-  }
+
+		$return = $Model -> Save($empresa_id,$this -> getOficinaId(), $usuario_id,$this -> Campos,$this -> getConex());
+		if(strlen(trim($Model -> GetError())) > 0){
+			exit("Error : ".$Model -> GetError());
+		}else{
+			if(is_numeric($return)){
+				exit("$return");
+			}else{
+				exit('false');
+			}
+		}
+  	}
 
   protected function onclickUpdate(){
  
@@ -738,6 +749,45 @@ final class Pago extends Controler{
 		
 	);
 
+	$this -> Campos[causaciones_abono_nov] = array(
+		name	=>'causaciones_abono_nov',
+		id		=>'causaciones_abono_nov',
+		type	=>'hidden',
+		datatype=>array(
+			type	=>'alphanum',
+			length	=>'350'),
+		transaction=>array(
+			table	=>array('abono_nomina'),
+			type	=>array('column'))
+	);
+
+	$this -> Campos[valores_abono_nov] = array(
+		name	=>'valores_abono_nov',
+		id		=>'valores_abono_nov',
+		type	=>'hidden',
+		datatype=>array(
+			type	=>'alphanum',
+			length	=>'350'),
+		transaction=>array(
+			table	=>array('abono_nomina'),
+			type	=>array('column'))
+	);
+
+	$this -> Campos[valor_abono_nov] = array(
+		name	=>'valor_abono_nov',
+		id		=>'valor_abono_nov',
+		type	=>'text',
+		Boostrap =>'si',
+		readonly=>'yes',
+	 	datatype=>array(
+			type	=>'numeric',
+			length	=>'20',
+			presicion=>3),
+		transaction=>array(
+			table	=>array('abono_nomina'),
+			type	=>array('column'))		
+		
+	);
 
 	$this -> Campos[usuario_id] = array(
 		name	=>'usuario_id',

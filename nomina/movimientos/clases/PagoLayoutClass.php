@@ -81,6 +81,7 @@ final class PagoLayout extends View
         $this->assign("VALORPAGOINTCESANTIAS", $this->objectsHtml->GetobjectHtml($this->fields[valor_abono_int_cesantias]));
         $this->assign("VALORPAGOTOTAL", $this->objectsHtml->GetobjectHtml($this->fields[valor_abono_total]));
         $this->assign("VALORPAGOLIQ", $this->objectsHtml->GetobjectHtml($this->fields[valor_abono_liq]));
+        $this->assign("VALORPAGONOV", $this->objectsHtml->GetobjectHtml($this->fields[valor_abono_nov]));
 
         $this->assign("CONCEPTONOMI", $this->objectsHtml->GetobjectHtml($this->fields[concepto_abono_nomina]));
         $this->assign("FECHAINGRESO", $this->objectsHtml->GetobjectHtml($this->fields[ingreso_abono_nomina]));
@@ -92,6 +93,7 @@ final class PagoLayout extends View
         $this->assign("CAUSACIONVACACIONES", $this->objectsHtml->GetobjectHtml($this->fields[causaciones_abono_vacaciones]));
         $this->assign("CAUSACIONINTCESANTIAS", $this->objectsHtml->GetobjectHtml($this->fields[causaciones_abono_int_cesantias]));
         $this->assign("CAUSACIONLIQ", $this->objectsHtml->GetobjectHtml($this->fields[causaciones_abono_liq]));
+        $this->assign("CAUSACIONNOV", $this->objectsHtml->GetobjectHtml($this->fields[causaciones_abono_nov]));
 
         $this->assign("VALORESPAGO", $this->objectsHtml->GetobjectHtml($this->fields[valores_abono_nomina]));
         $this->assign("VALORESPAGOPRIMAS", $this->objectsHtml->GetobjectHtml($this->fields[valores_abono_primas]));
@@ -99,6 +101,7 @@ final class PagoLayout extends View
         $this->assign("VALORESPAGOVACACIONES", $this->objectsHtml->GetobjectHtml($this->fields[valores_abono_vacaciones]));
         $this->assign("VALORESPAGOINTCESANTIAS", $this->objectsHtml->GetobjectHtml($this->fields[valores_abono_int_cesantias]));
         $this->assign("VALORESPAGOLIQ", $this->objectsHtml->GetobjectHtml($this->fields[valores_abono_liq]));
+        $this->assign("VALORESPAGONOV", $this->objectsHtml->GetobjectHtml($this->fields[valores_abono_nov]));
 
         $this->assign("FECHAINIPAGO", $this->objectsHtml->GetobjectHtml($this->fields[fecha_pago_ini]));
         $this->assign("FECHAFINPAGO", $this->objectsHtml->GetobjectHtml($this->fields[fecha_pago_fin]));

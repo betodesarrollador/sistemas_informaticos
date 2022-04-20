@@ -80,6 +80,13 @@ final class SolicFacturasLayout extends View
 
     }
 
+    public function SetSolicNovDoc($detalles)
+    {
+
+        $this->assign("DETALLESNOVEDAD", $detalles);
+
+    }
+
     public function RenderMain()
     {
 

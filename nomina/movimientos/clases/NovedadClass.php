@@ -200,7 +200,7 @@ final class Novedad extends Controler{
 	$proveedor  = $Model -> selectDataProveedor($contrato_id,$this -> getConex());
 	
 	if($si_empleado=='ALL' && $Data['contabiliza']=='SI' ){
-		exit('No se puede Aplicar esta Novedad a Todos los Empleados en un solo proceso, <br>esto debido a que el Tipo de Novedad Genera una Causacion en Proveedores por cada Registro.');				
+		exit('No se puede Aplicar esta Novedad a Todos los Empleados en un solo proceso, <br>esto debido a que el Tipo de Novedad Genera una Causacion por cada Registro.');				
 	}
 	
 	if(!is_numeric($proveedor) && $Data['contabiliza']=='SI' ){
@@ -277,6 +277,19 @@ final class Novedad extends Controler{
 		$print = new Imp_Novedad();
 		$print -> printOut($this->getEmpresaId(), $this->getConex());
   
+	}
+
+	protected function validaGeneraDocumento(){
+
+		require_once("NovedadModelClass.php");	    
+    	$Model = new NovedadModel();
+
+		$concepto_area_id = $_REQUEST['concepto_area_id'];
+		
+		$generaDocumento = $Model -> getGeneraDocumento($concepto_area_id,$this -> getConex());
+		
+		exit($generaDocumento[0][contabiliza]);
+
 	}
 
 
@@ -596,6 +609,16 @@ final class Novedad extends Controler{
 		 	table =>array('novedad_fija'),
 		 	type =>array('column'))
    );
+
+	$this -> Campos[por_pagar] = array(
+		name =>'por_pagar',
+		id =>'por_pagar',
+		type =>'hidden',
+		datatype=>array(type=>'integer'),
+		transaction=>array(
+			table =>array('novedad_fija'),
+			type =>array('column'))
+	);
 
 	/**********************************
  	             Botones

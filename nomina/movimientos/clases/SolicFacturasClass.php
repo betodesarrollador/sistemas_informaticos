@@ -44,6 +44,7 @@ final class SolicFacturas extends Controler
             $Layout->SetSolicCesantias($Model->getSolicCesantias($consul_emp, $empleados, $this->getConex()));
             $Layout->SetSolicIntCesantias($Model->getSolicIntCesantias($consul_emp, $empleados, $this->getConex()));
             $Layout->SetSolicLiqFinal($Model->getSolicLiqFinal($consul_emp, $empleados, $this->getConex()));
+            $Layout->SetSolicNovDoc($Model->getSolicNovDoc($empleado_id, $desde, $hasta ,$this->getConex()));
 
         } else {
 
@@ -53,6 +54,7 @@ final class SolicFacturas extends Controler
             $Layout->SetSolicCesantias(array());
             $Layout->SetSolicIntCesantias(array());
             $Layout->SetSolicLiqFinal(array());
+            $Layout->SetSolicNovDoc(array());
 
         }
 

@@ -310,4 +310,25 @@ final class SolicFacturasModel extends Db
         return $result;
     }
 
+	public function getSolicNovDoc($empleado_id, $desde, $hasta, $Conex)
+    {
+		$consul_empleado = ($empleado_id != '') ? " AND c.empleado_id = $empleado_id " : "" ;
+
+        $select = "SELECT er.encabezado_registro_id,er.consecutivo AS consecutivo_documento,CONCAT_WS('-',c.prefijo,c.numero_contrato) AS contrato,
+			CONCAT_WS('-',t.numero_identificacion,CONCAT_WS(' ',t.primer_nombre,t.primer_apellido)) AS empleado,er.fecha,
+			ic.credito AS valor_neto,ic.credito AS saldo,0 AS abono,ic.credito AS valor_pagar
+			FROM novedad_fija nf
+			INNER JOIN concepto_area ca ON nf.concepto_area_id =  ca.concepto_area_id 
+			INNER JOIN encabezado_de_registro er ON nf.encabezado_registro_id = er.encabezado_registro_id AND nf.tipo_documento_id = er.tipo_documento_id
+			INNER JOIN contrato c ON nf.contrato_id = c.contrato_id 
+			INNER JOIN tercero t ON nf.tercero_id = t.tercero_id
+			INNER JOIN imputacion_contable ic ON er.encabezado_registro_id = ic.encabezado_registro_id AND ca.puc_contra_id = ic.puc_id
+			WHERE ca.contabiliza = 'SI' AND er.estado = 'C' AND er.fecha BETWEEN '$desde' AND '$hasta' 
+			AND ca.tipo_novedad_documento = 'V' AND nf.por_pagar = 1 ".$consul_empleado;
+
+        $result = $this->DbFetchAll($select, $Conex, true);
+
+        return $result;
+    }
+
 }

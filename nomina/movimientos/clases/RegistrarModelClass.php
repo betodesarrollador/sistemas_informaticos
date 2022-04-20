@@ -1291,7 +1291,7 @@ final class RegistrarModel extends Db{
 
 				FROM novedad_fija n, concepto_area c
 
-				WHERE n.contrato_id=$contrato_id AND n.estado='A' AND n.fecha_inicial >= '$fecha_inicial' AND n.fecha_final <= '$fecha_final' AND c.concepto_area_id=n.concepto_area_id";
+				WHERE n.contrato_id=$contrato_id AND n.estado='A' AND ('$fecha_inicial' BETWEEN n.fecha_inicial AND n.fecha_final AND '$fecha_final' BETWEEN n.fecha_inicial AND n.fecha_final) AND c.concepto_area_id=n.concepto_area_id";
 
 				
 

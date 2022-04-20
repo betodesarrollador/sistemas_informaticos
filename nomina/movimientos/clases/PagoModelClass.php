@@ -96,7 +96,7 @@ final class PagoModel extends Db
 
     }
 
-    public function Save($empresa_id, $oficina_id, $Campos, $Conex)
+    public function Save($empresa_id, $oficina_id, $usuario_id, $Campos, $Conex)
     {
 
         $this->Begin($Conex);
@@ -112,6 +112,7 @@ final class PagoModel extends Db
         $causaciones_abono_int_cesantias = $this->requestDataForQuery('causaciones_abono_int_cesantias', 'integer');
         $causaciones_abono_vacaciones = $this->requestDataForQuery('causaciones_abono_vacaciones', 'integer');
         $causaciones_abono_liq = $this->requestDataForQuery('causaciones_abono_liq', 'integer');
+        $causaciones_abono_nov = $this->requestDataForQuery('causaciones_abono_nov', 'integer');
 
         $valores_abono_nomina = $this->requestDataForQuery('valores_abono_nomina', 'integer');
         //
@@ -120,6 +121,7 @@ final class PagoModel extends Db
         $valores_abono_int_cesantias = $this->requestDataForQuery('valores_abono_int_cesantias', 'integer');
         $valores_abono_vacaciones = $this->requestDataForQuery('valores_abono_vacaciones', 'integer');
         $valores_abono_liq = $this->requestDataForQuery('valores_abono_liq', 'integer');
+        $valores_abono_nov = $this->requestDataForQuery('valores_abono_nov', 'integer');
 
         $valor_abono_nomina = $this->requestDataForQuery('valor_abono_nomina', 'integer');
         $valor_abono_primas = $this->requestDataForQuery('valor_abono_primas', 'integer');
@@ -127,6 +129,7 @@ final class PagoModel extends Db
         $valor_abono_int_cesantias = $this->requestDataForQuery('valor_abono_int_cesantias', 'integer');
         $valor_abono_vacaciones = $this->requestDataForQuery('valor_abono_vacaciones', 'integer');
         $valor_abono_liq = $this->requestDataForQuery('valor_abono_liq', 'integer');
+        $valor_abono_nov = $this->requestDataForQuery('valor_abono_nov', 'integer');
 
         $empleado_id = $this->requestDataForQuery('empleado_id', 'integer');
 
@@ -145,13 +148,16 @@ final class PagoModel extends Db
         $causacion_int_cesantias_id = str_replace("'", "", $causaciones_abono_int_cesantias);
         $causacion_vacaciones_id = str_replace("'", "", $causaciones_abono_vacaciones);
         $causacion_liq_id = str_replace("'", "", $causaciones_abono_liq);
+        $causacion_nov_id = str_replace("'", "", $causaciones_abono_nov);
 
         $causacion_id = explode(',', $causacion_id);
         //
         $causacion_primas_id = explode(',', $causacion_primas_id);
         $causacion_cesantias_id = explode(',', $causacion_cesantias_id);
         $causacion_int_cesantias_id = explode(',', $causacion_int_cesantias_id);
+        $causacion_vacaciones_id = explode(',', $causacion_vacaciones_id);
         $causacion_liq_id = explode(',', $causacion_liq_id);
+        $causacion_nov_id = explode(',', $causacion_nov_id);
 
         $final_credito_pago = 0;
         $final_debito_pago = 0;
@@ -808,97 +814,216 @@ final class PagoModel extends Db
 		 $valor_tot_pago = 0;
 		 $j = 0;
  
-		 foreach ($causacion_liq_id as $causaciones) {
- 
-			 if ($causaciones > 0) {
- 
-				 $valor_pago_ind = str_replace(".", "", $valores_id[$j]);
-				 $valor_pago_ind = str_replace(",", ".", $valor_pago_ind);
-				 $valor_tot_pago = $valor_tot_pago + $valor_pago_ind;
- 
-				 $j++;
- 
-				 $debito_pago = '';
-				 $credito_pago = '';
-				 $debito_contra = '';
-				 $credito_contra = '';
- 
-				 $select_contra = "SELECT c.puc_id,
-									IF(i.credito>0,'C','D') AS natu_bien_servicio,
-									c.requiere_centro_costo,
-									c.requiere_tercero,
-									l.fecha_registro,
-									(SELECT e.tercero_id FROM contrato co, empleado e WHERE co.contrato_id=l.contrato_id AND e.empleado_id=co.empleado_id) AS tercero_id,
-									(SELECT t.numero_identificacion FROM contrato co, empleado e, tercero t WHERE co.contrato_id=l.contrato_id AND e.empleado_id=co.empleado_id AND t.tercero_id=e.tercero_id) AS numero_identificacion,
-									(SELECT t.digito_verificacion FROM contrato co, empleado e, tercero t WHERE co.contrato_id=l.contrato_id AND e.empleado_id=co.empleado_id AND t.tercero_id=e.tercero_id) AS digito_verificacion,
-									(SELECT co.centro_de_costo_id FROM contrato co WHERE co.contrato_id=l.contrato_id ) AS centro_de_costo_id,
-									(SELECT cc.codigo FROM contrato co, centro_de_costo cc WHERE co.contrato_id=l.contrato_id AND cc.centro_de_costo_id=co.centro_de_costo_id ) AS codigo_centro_costo,
- 
-									(SELECT centro_de_costo_id FROM centro_de_costo WHERE oficina_id=$oficina_id LIMIT 1 ) AS centro_de_costo_id1,
-									(SELECT codigo FROM centro_de_costo WHERE oficina_id=$oficina_id LIMIT 1  ) AS codigo_centro_costo1,
-									i.concepto,
-									(SELECT TRIM(nombre) FROM puc WHERE puc_id=c.puc_id) AS nombre_puc
-									FROM liquidacion_definitiva l,   puc c, liq_def_puc i
-									WHERE l.liquidacion_definitiva_id=$causaciones AND i.liquidacion_definitiva_id=l.liquidacion_definitiva_id  AND i.credito > 0  AND c.puc_id=i.puc_id ORDER BY i.liq_def_puc_id DESC LIMIT 1";
- 
-				 $result_contra = $this->DbFetchAll($select_contra, $Conex, true);
- 
-				 $puc_contra = $result_contra[0]['puc_id'];
-				 $natu_contra = $result_contra[0]['natu_bien_servicio'];
-				 $nombre_contra = 'CANC.: ' . $result_contra[0]['concepto'] . ' ' . $result_contra[0]['fecha_registro'];
-				 $fact_comp .= $result_contra[0]['concepto'] . ',';
-				 $tercero_id = $result_contra[0]['requiere_tercero'] == 1 ? $result_contra[0]['tercero_id'] : 'NULL';
-				 $tercero_id = $tercero_id > 0 ? $tercero_id : 'NULL';
-				 $numero_identificacion = $result_contra[0]['requiere_tercero'] == 1 ? $result_contra[0]['numero_identificacion'] : 'NULL';
-				 $digito_verificacion = $result_contra[0]['requiere_tercero'] == 1 ? $result_contra[0]['digito_verificacion'] : 'NULL';
- 
-				 if (!strlen(trim($numero_identificacion)) > 0 && $result_contra[0]['requiere_tercero'] == 1) {
-					 exit('No posee Numero de Identificacion el tercero Empleado');
-				 }
- 
-				 if (!strlen(trim($digito_verificacion)) > 0) {
-					 $digito_verificacion = 'NULL';
-				 }
- 
-				 $centro_costo = $result_contra[0]['requiere_centro_costo'] == 1 ? $result_contra[0]['centro_de_costo_id1'] : 'NULL';
-				 $codigo_centro_costo = $result_contra[0]['requiere_centro_costo'] == 1 ? "'" . $result_contra[0]['codigo_centro_costo1'] . "'" : 'NULL';
- 
-				 if ($natu_contra == 'D') {
-					 $debito_contra = 0;
-					 $credito_contra = $valor_pago_ind;
-				 } else {
-					 $debito_contra = $valor_pago_ind;
-					 $credito_contra = 0;
-				 }
- 
-				 if ($natu_tipo == 'D') {
-					 $debito_pago = $valor_pago_ind;
-					 $final_debito_pago = $final_debito_pago + $debito_pago;
-					 $credito_pago = 0;
-				 } else {
-					 $debito_pago = 0;
-					 $credito_pago = $valor_pago_ind;
-					 $final_credito_pago = $final_credito_pago + $credito_pago;
-				 }
- 
-				 $relacion_abono_nomina_id = $this->DbgetMaxConsecutive("relacion_abono_nomina", "relacion_abono_nomina_id", $Conex, true, 1);
- 
-				 $insert_item = "INSERT INTO relacion_abono_nomina (relacion_abono_nomina_id,liquidacion_definitiva_id,abono_nomina_id,rel_valor_abono_nomina)
-						VALUES ($relacion_abono_nomina_id,$causaciones,$abono_nomina_id,'$valor_pago_ind')";
-				 $this->query($insert_item, $Conex, true);
- 
-				 $item_abono_nomina_id = $this->DbgetMaxConsecutive("item_abono_nomina", "item_abono_nomina_id", $Conex, true, 1);
- 
-				 $debito_contra = intVal($debito_contra);
-				 $credito_contra = intVal($credito_contra);
- 
-				 $insert_contra = "INSERT INTO 	item_abono_nomina (
+        foreach ($causacion_liq_id as $causaciones) {
+
+            if ($causaciones > 0) {
+
+                $valor_pago_ind = str_replace(".", "", $valores_id[$j]);
+                $valor_pago_ind = str_replace(",", ".", $valor_pago_ind);
+                $valor_tot_pago = $valor_tot_pago + $valor_pago_ind;
+
+                $j++;
+
+                $debito_pago = '';
+                $credito_pago = '';
+                $debito_contra = '';
+                $credito_contra = '';
+
+                $select_contra = "SELECT c.puc_id,
+                                IF(i.credito>0,'C','D') AS natu_bien_servicio,
+                                c.requiere_centro_costo,
+                                c.requiere_tercero,
+                                l.fecha_registro,
+                                (SELECT e.tercero_id FROM contrato co, empleado e WHERE co.contrato_id=l.contrato_id AND e.empleado_id=co.empleado_id) AS tercero_id,
+                                (SELECT t.numero_identificacion FROM contrato co, empleado e, tercero t WHERE co.contrato_id=l.contrato_id AND e.empleado_id=co.empleado_id AND t.tercero_id=e.tercero_id) AS numero_identificacion,
+                                (SELECT t.digito_verificacion FROM contrato co, empleado e, tercero t WHERE co.contrato_id=l.contrato_id AND e.empleado_id=co.empleado_id AND t.tercero_id=e.tercero_id) AS digito_verificacion,
+                                (SELECT co.centro_de_costo_id FROM contrato co WHERE co.contrato_id=l.contrato_id ) AS centro_de_costo_id,
+                                (SELECT cc.codigo FROM contrato co, centro_de_costo cc WHERE co.contrato_id=l.contrato_id AND cc.centro_de_costo_id=co.centro_de_costo_id ) AS codigo_centro_costo,
+
+                                (SELECT centro_de_costo_id FROM centro_de_costo WHERE oficina_id=$oficina_id LIMIT 1 ) AS centro_de_costo_id1,
+                                (SELECT codigo FROM centro_de_costo WHERE oficina_id=$oficina_id LIMIT 1  ) AS codigo_centro_costo1,
+                                i.concepto,
+                                (SELECT TRIM(nombre) FROM puc WHERE puc_id=c.puc_id) AS nombre_puc
+                                FROM liquidacion_definitiva l,   puc c, liq_def_puc i
+                                WHERE l.liquidacion_definitiva_id=$causaciones AND i.liquidacion_definitiva_id=l.liquidacion_definitiva_id  AND i.credito > 0  AND c.puc_id=i.puc_id ORDER BY i.liq_def_puc_id DESC LIMIT 1";
+
+                $result_contra = $this->DbFetchAll($select_contra, $Conex, true);
+
+                $puc_contra = $result_contra[0]['puc_id'];
+                $natu_contra = $result_contra[0]['natu_bien_servicio'];
+                $nombre_contra = 'CANC.: ' . $result_contra[0]['concepto'] . ' ' . $result_contra[0]['fecha_registro'];
+                $fact_comp .= $result_contra[0]['concepto'] . ',';
+                $tercero_id = $result_contra[0]['requiere_tercero'] == 1 ? $result_contra[0]['tercero_id'] : 'NULL';
+                $tercero_id = $tercero_id > 0 ? $tercero_id : 'NULL';
+                $numero_identificacion = $result_contra[0]['requiere_tercero'] == 1 ? $result_contra[0]['numero_identificacion'] : 'NULL';
+                $digito_verificacion = $result_contra[0]['requiere_tercero'] == 1 ? $result_contra[0]['digito_verificacion'] : 'NULL';
+
+                if (!strlen(trim($numero_identificacion)) > 0 && $result_contra[0]['requiere_tercero'] == 1) {
+                    exit('No posee Numero de Identificacion el tercero Empleado');
+                }
+
+                if (!strlen(trim($digito_verificacion)) > 0) {
+                    $digito_verificacion = 'NULL';
+                }
+
+                $centro_costo = $result_contra[0]['requiere_centro_costo'] == 1 ? $result_contra[0]['centro_de_costo_id1'] : 'NULL';
+                $codigo_centro_costo = $result_contra[0]['requiere_centro_costo'] == 1 ? "'" . $result_contra[0]['codigo_centro_costo1'] . "'" : 'NULL';
+
+                if ($natu_contra == 'D') {
+                    $debito_contra = 0;
+                    $credito_contra = $valor_pago_ind;
+                } else {
+                    $debito_contra = $valor_pago_ind;
+                    $credito_contra = 0;
+                }
+
+                if ($natu_tipo == 'D') {
+                    $debito_pago = $valor_pago_ind;
+                    $final_debito_pago = $final_debito_pago + $debito_pago;
+                    $credito_pago = 0;
+                } else {
+                    $debito_pago = 0;
+                    $credito_pago = $valor_pago_ind;
+                    $final_credito_pago = $final_credito_pago + $credito_pago;
+                }
+
+                $relacion_abono_nomina_id = $this->DbgetMaxConsecutive("relacion_abono_nomina", "relacion_abono_nomina_id", $Conex, true, 1);
+
+                $insert_item = "INSERT INTO relacion_abono_nomina (relacion_abono_nomina_id,liquidacion_definitiva_id,abono_nomina_id,rel_valor_abono_nomina)
+                    VALUES ($relacion_abono_nomina_id,$causaciones,$abono_nomina_id,'$valor_pago_ind')";
+                $this->query($insert_item, $Conex, true);
+
+                $item_abono_nomina_id = $this->DbgetMaxConsecutive("item_abono_nomina", "item_abono_nomina_id", $Conex, true, 1);
+
+                $debito_contra = intVal($debito_contra);
+                $credito_contra = intVal($credito_contra);
+
+                $insert_contra = "INSERT INTO 	item_abono_nomina (
+                                item_abono_nomina_id,
+                                abono_nomina_id,
+                                relacion_abono_nomina_id,
+                                puc_id,
+                                tercero_id,
+                                    numero_identificacion,
+                                digito_verificacion,
+                                centro_de_costo_id,
+                                codigo_centro_costo,
+                                descripcion,
+                                debito,
+                                credito)
+                        VALUES (
+                                $item_abono_nomina_id,
+                                $abono_nomina_id,
+                                $relacion_abono_nomina_id,
+                                $puc_contra,
+                                $tercero_id,
+                                $numero_identificacion,
+                                $digito_verificacion,
+                                $centro_costo,
+                                $codigo_centro_costo,
+                                '$nombre_contra',
+                                '$debito_contra',
+                                '$credito_contra'
+                        )";
+
+                        
+                $this->query($insert_contra, $Conex, true);
+
+            }
+
+        }
+
+
+        #foreach  para novedad con documento.
+
+        $valores_id = str_replace("'", "", $valores_abono_nov);
+        $valores_id = explode('=', $valores_id);
+        $valor_tot_pago = 0;
+        $j = 0;
+
+        foreach ($causacion_nov_id as $causaciones) {
+
+            if ($causaciones > 0) {
+
+                $valor_pago_ind = str_replace(".", "", $valores_id[$j]);
+                $valor_pago_ind = str_replace(",", ".", $valor_pago_ind);
+                $valor_tot_pago = $valor_tot_pago + $valor_pago_ind;
+
+                $j++;
+
+                $debito_pago = '';
+                $credito_pago = '';
+                $debito_contra = '';
+                $credito_contra = '';
+
+                $select_contra = "SELECT p.puc_id,p.naturaleza,p.requiere_centro_costo,p.requiere_tercero,nf.fecha_inicial,t.tercero_id,t.numero_identificacion,
+                                        t.digito_verificacion,ic.centro_de_costo_id,ic.codigo_centro_costo,
+                                        (SELECT centro_de_costo_id FROM centro_de_costo WHERE oficina_id=$oficina_id LIMIT 1 ) AS centro_de_costo_id1,
+                                        (SELECT codigo FROM centro_de_costo WHERE oficina_id=$oficina_id LIMIT 1  ) AS codigo_centro_costo1,
+                                        nf.concepto,nf.novedad_fija_id
+                                FROM novedad_fija nf
+                                    INNER JOIN concepto_area ca ON nf.concepto_area_id =  ca.concepto_area_id
+                                    INNER JOIN encabezado_de_registro er ON nf.encabezado_registro_id = er.encabezado_registro_id
+                                    INNER JOIN contrato c ON nf.contrato_id = c.contrato_id 
+                                    INNER JOIN tercero t ON nf.tercero_id = t.tercero_id
+                                    INNER JOIN imputacion_contable ic ON er.encabezado_registro_id = ic.encabezado_registro_id AND ca.puc_contra_id = ic.puc_id
+                                    INNER JOIN puc p ON ic.puc_id = p.puc_id
+                                WHERE er.encabezado_registro_id = $causaciones";
+
+
+                $result_contra = $this->DbFetchAll($select_contra, $Conex, true);
+
+                $puc_contra = $result_contra[0]['puc_id'];
+                $natu_contra = $result_contra[0]['naturaleza'];
+                $nombre_contra = 'CANC.: ' . $result_contra[0]['concepto'] . ' ' . $result_contra[0]['fecha_inicial'];
+                $fact_comp .= $result_contra[0]['concepto'] . ',';
+                $tercero_id = $result_contra[0]['requiere_tercero'] == 1 ? $result_contra[0]['tercero_id'] : 'NULL';
+                $tercero_id = $tercero_id > 0 ? $tercero_id : 'NULL';
+                $numero_identificacion = $result_contra[0]['requiere_tercero'] == 1 ? $result_contra[0]['numero_identificacion'] : 'NULL';
+                $digito_verificacion = $result_contra[0]['requiere_tercero'] == 1 ? $result_contra[0]['digito_verificacion'] : 'NULL';
+                $novedad_fija_id = $result_contra[0]['novedad_fija_id'];
+
+                if (!strlen(trim($numero_identificacion)) > 0 && $result_contra[0]['requiere_tercero'] == 1) {
+                    exit('No posee Numero de Identificacion el tercero Empleado');
+                }
+
+                if (!strlen(trim($digito_verificacion)) > 0) {
+                    $digito_verificacion = 'NULL';
+                }
+
+                $centro_costo = $result_contra[0]['requiere_centro_costo'] == 1 ? $result_contra[0]['centro_de_costo_id1'] : 'NULL';
+                $codigo_centro_costo = $result_contra[0]['requiere_centro_costo'] == 1 ? "'" . $result_contra[0]['codigo_centro_costo1'] . "'" : 'NULL';
+
+                if ($natu_contra == 'D') {
+                    $debito_contra = 0;
+                    $credito_contra = $valor_pago_ind;
+                } else {
+                    $debito_contra = $valor_pago_ind;
+                    $credito_contra = 0;
+                }
+
+                if ($natu_tipo == 'D') {
+                    $debito_pago = $valor_pago_ind;
+                    $final_debito_pago = $final_debito_pago + $debito_pago;
+                    $credito_pago = 0;
+                } else {
+                    $debito_pago = 0;
+                    $credito_pago = $valor_pago_ind;
+                    $final_credito_pago = $final_credito_pago + $credito_pago;
+                }
+
+                
+                $item_abono_nomina_id = $this->DbgetMaxConsecutive("item_abono_nomina", "item_abono_nomina_id", $Conex, true, 1);
+
+                $debito_contra = intVal($debito_contra);
+                $credito_contra = intVal($credito_contra);
+
+                $insert_contra = "INSERT INTO 	item_abono_nomina (
 									item_abono_nomina_id,
 									abono_nomina_id,
-									relacion_abono_nomina_id,
 									puc_id,
 									tercero_id,
-									 numero_identificacion,
+								 	numero_identificacion,
 									digito_verificacion,
 									centro_de_costo_id,
 									codigo_centro_costo,
@@ -908,7 +1033,6 @@ final class PagoModel extends Db
 							VALUES (
 									$item_abono_nomina_id,
 									$abono_nomina_id,
-									$relacion_abono_nomina_id,
 									$puc_contra,
 									$tercero_id,
 									$numero_identificacion,
@@ -919,13 +1043,25 @@ final class PagoModel extends Db
 									'$debito_contra',
 									'$credito_contra'
 							)";
+                $this->query($insert_contra, $Conex, true);
 
-							
-				 $this->query($insert_contra, $Conex, true);
- 
-			 }
- 
-		 }
+                $fecha_registro = date("Y-m-d H:m");
+
+                $update_abono_nomina = "UPDATE abono_nomina SET encabezado_registro_id=$causaciones,
+                            estado_abono_nomina= 'C',
+                            con_usuario_id = $usuario_id,
+                            con_fecha_abono_nomina='$fecha_registro'
+                            WHERE abono_nomina_id =$abono_nomina_id";
+
+                $this->query($update_abono_nomina, $Conex, true);
+
+                
+                $update_novedad_fija = "UPDATE novedad_fija SET por_pagar = 0 WHERE novedad_fija_id = $novedad_fija_id";
+
+                $this->query($update_novedad_fija, $Conex, true);
+
+            }
+        }
 
         $puc_tipo = $result_tipo[0][puc_id];
         $pucnom_tipo = 'CANCELA NOMINA.: ' . $result_prov[0]['empleado'];
@@ -1283,7 +1419,7 @@ final class PagoModel extends Db
 					(SELECT CONCAT_WS(' ',primer_nombre,segundo_nombre,primer_apellido,segundo_apellido,razon_social) AS empleado FROM tercero t, empleado e WHERE e.empleado_id=a.empleado_id AND  t.tercero_id=e.tercero_id) AS empleado,
 					(SELECT CONCAT_WS(' - ',(SELECT nombre FROM forma_pago WHERE forma_pago_id=c.forma_pago_id ),(SELECT CONCAT_WS(' ',codigo_puc,nombre) AS nombre FROM puc WHERE puc_id=c.puc_id )) AS text FROM cuenta_tipo_pago c WHERE c.cuenta_tipo_pago_id=a.cuenta_tipo_pago_id) AS forma_pago,
 					a.concepto_abono_nomina,
-					a.valor_abono_nomina,
+					a.valor_abono_nomina + a.valor_abono_cesantias + a.valor_abono_int_cesantias + a.valor_abono_liq +a.valor_abono_nov AS valor_abono_nomina + a.valor_abono_cesantias + a.valor_abono_int_cesantias + a.valor_abono_liq +a.valor_abono_nov AS valor_abono_nomina,
 					CASE a.estado_abono_nomina  WHEN 'A' THEN 'ACTIVA' WHEN 'I' THEN 'ANULADA' ELSE 'CONTABILIZADA' END AS	estado_abono_nomina
 			FROM abono_nomina a
 		 ORDER BY a.fecha DESC LIMIT 0,1000";

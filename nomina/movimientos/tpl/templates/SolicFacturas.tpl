@@ -261,6 +261,45 @@
           {/foreach}	
         </tbody>
       </table>
+
+      <!------------------------------------------------   NOVEDADES CON DOCUMENTO   -------------------------------------------------------->
+      <br><br>
+      <table align="center" id="tableNov" width="99%">
+        <thead>
+          <tr>
+            <th colspan="10">SALDOS CAUSADOS EN NOVEDADES</th>
+          </tr>
+          <tr>
+            <th><input type="checkbox" id="checkedAllNov"></th>
+            <th>DOC_#</th>
+            <th>CONTRATO</th>
+            <th>EMPLEADO</th>
+            <th>FECHA DOCUMENTO</th>           
+            <th>VALOR NETO</th> 
+            <th>SALDO</th>        
+            <th>ABONOS</th>
+            <th>VALOR A PAGAR</th>        
+          </tr>
+        </thead>
+        <tbody>
+          {foreach name=detalles from=$DETALLESNOVEDAD item=i}
+          <tr>
+            <td>       
+                <input type="checkbox" name="det_nov" onClick="checkRow(this);"  value="{$i.encabezado_registro_id}" />
+                <input type="hidden" name="encabezado_registro_id" value="{$i.encabezado_registro_id}" class="required" /> 
+            </td>
+            <td>{$i.consecutivo_documento}</td>
+            <td>{$i.contrato}</td>
+            <td>{$i.empleado}&nbsp;</td>
+            <td>{$i.fecha}</td>
+            <td class="no_requerido"><input type="text" name="valor_neto" class="numeric no_requerido" value="{$i.valor_neto}" size="13" readonly /></td>
+            <td class="no_requerido"><input type="text" name="saldo" class="numeric no_requerido" value="{$i.saldo}" size="13" readonly /></td>            
+            <td class="no_requerido"><input type="text" name="abonos" class="numeric no_requerido" value="{if $i.abono eq ''}0{else}{$i.abono}{/if}" size="13" readonly /></td>            
+            <td><input type="text" name="pagar" class="numeric required" value="{$i.valor_pagar}" size="13" /></td>            
+          </tr> 
+          {/foreach}	
+        </tbody>
+      </table>
       
   </body>
 </html>
