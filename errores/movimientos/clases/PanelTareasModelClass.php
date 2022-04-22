@@ -500,6 +500,8 @@ final class PanelTareasModel extends Db
 
         $observacion_cierre = $_REQUEST['observacion_cierre'];
 
+        $observacion_cierre = addslashes($observacion_cierre);
+
         $fecha_cierre_real = $_REQUEST['fecha_cierre_real'];
 
         $cod_commit = $_REQUEST['commit'];
@@ -511,8 +513,6 @@ final class PanelTareasModel extends Db
 
 
         $update = "UPDATE actividad_programada SET estado = 3, fecha_cierre='$fecha_cierre', fecha_cierre_real='$fecha_cierre_real', observacion_cierre='$observacion_cierre',usuario_cierre_id=$usuario_id,justificacion_git='$justificacion_git',cod_commit='$cod_commit' WHERE actividad_programada_id=$actividad_id";
-
-
 
         $result = $this->query($update, $Conex, true);
 
