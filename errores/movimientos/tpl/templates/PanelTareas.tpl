@@ -116,7 +116,7 @@
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleActuales" aria-controls="navbarToggleActuales" aria-label="Toggle navigation">
 
-                <i class="fa fa-list"></i>&emsp;Tareas para entregar hoy
+                <i class="fa fa-list"></i>&emsp;Tareas para entregar hoy <b id="total_tareas_actuales"></b>
 
             </button>
 
@@ -166,7 +166,7 @@
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleSinEntregar" aria-controls="navbarToggleSinEntregar" aria-label="Toggle navigation">
 
-                <i class="fa fa-list"></i>&emsp;Tareas sin entregar (Con retraso)
+                <i class="fa fa-list"></i>&emsp;Tareas sin entregar (Con retraso) <b id="total_tareas_retraso"></b>
 
             </button>
 
@@ -224,7 +224,7 @@
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleFinalizadas" aria-controls="navbarToggleFinalizadas" aria-label="Toggle navigation">
 
-                <i class="fa fa-list"></i>&emsp;Tareas finalizadas
+                <i class="fa fa-list"></i>&emsp;Tareas finalizadas <b id="total_tareas_finalizadas"></b>
 
             </button>
 
@@ -280,7 +280,7 @@
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglePendienteSocializar" aria-controls="navbarTogglePendienteSocializar" aria-label="Toggle navigation">
 
-                <i class="fa fa-list"></i>&emsp;Tareas pendientes por socializar
+                <i class="fa fa-list"></i>&emsp;Tareas pendientes por socializar <b id="total_tareas_por_socializar"></b>
 
             </button>
 

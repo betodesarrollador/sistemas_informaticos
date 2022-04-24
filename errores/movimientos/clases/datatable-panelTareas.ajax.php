@@ -88,9 +88,23 @@ final class tablaPanelTareas extends Controler
 
             $url_sistema = $Data[$i]["url_sistema"]!='' ? "<a href='".$Data[$i]["url_sistema"]."' target='_blank'>Link sistema</a>" : "";
 
+            $fecha_actual = date('Y-m-d');
 
+            if($fecha_actual == $Data[$i]['fecha_final']){
+
+                $clase = "class='alert alert-warning'";
+                
+            }else if ($fecha_actual < $Data[$i]['fecha_final']){
+
+                $clase = "class='alert alert-danger'";
+            }else{
+
+                $clase = "class='alert alert-success'";
+            }
+
+            
             $datosJson .= '[
-                "' . $actividad_programada_id . '",
+                "<div '.$clase.'>' . $actividad_programada_id . '</div>",
                 "' . $button_observacion . '",
                 "' . $button_cierre . '",
                 "' . $Data[$i]['tipo_tarea'] . '",

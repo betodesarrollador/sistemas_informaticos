@@ -304,8 +304,6 @@ $(document).ready(function () {
 
     });
 
-
-
     //Table tareas finalizadas
 
     table_finalizadas = $('#tareas_finalizadas').DataTable({
@@ -373,7 +371,6 @@ $(document).ready(function () {
         }
 
     });
-
 
 
     //Table tareas pendientes por socializar
@@ -804,36 +801,25 @@ $(document).ready(function () {
 
     });
 
-
-
     setInterval(function () {
 
-        /*   table.ajax.reload();
-
-          table_avances.ajax.reload();
-
-          table_vencidas.ajax.reload();
-
-          table_actuales.ajax.reload(); */
-
-
-
         table.ajax.url('datatable-panelTareas.ajax.php?detalles=true&tipo_tarea_id=' + tipo_tarea_id).load();
-
         table_avances.ajax.url('datatable-panelTareas.ajax.php?detalles_responsables=true&tipo_tarea_id=' + tipo_tarea_id).load();
-
         table_vencidas.ajax.url('datatable-panelTareas.ajax.php?tareas_vencidas=true&tipo_tarea_id=' + tipo_tarea_id).load();
-
         table_finalizadas.ajax.url('datatable-panelTareas.ajax.php?tareas_finalizadas=true&tipo_tarea_id=' + tipo_tarea_id).load();
-
         table_pendientes_socializar.ajax.url('datatable-panelTareas.ajax.php?tareas_pendiente_socializar=true&tipo_tarea_id=' + tipo_tarea_id).load();
-
         table_actuales.ajax.url('datatable-panelTareas.ajax.php?tareas_actuales=true&tipo_tarea_id=' + tipo_tarea_id).load(); 
-
-
 
     }, 90000);
 
+    setInterval(function () { 
+
+        $("#total_tareas_actuales").html("["+table_actuales.rows().count()+"]");
+        $("#total_tareas_retraso").html("["+table_vencidas.rows().count()+"]");
+        $("#total_tareas_finalizadas").html("["+table_finalizadas.rows().count()+"]");
+        $("#total_tareas_por_socializar").html("["+table_pendientes_socializar.rows().count()+"]");
+
+    }, 2000);
 
 
 });
