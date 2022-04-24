@@ -62,7 +62,7 @@
 
 
 
-    <div class="pos-f-t">
+  {*   <div class="pos-f-t">
 
         <nav class="alert alert-success" style="margin-top: 15px; padding: 0;">
 
@@ -102,7 +102,7 @@
 
         </div>
 
-    </div>
+    </div> *}
 
 
 
