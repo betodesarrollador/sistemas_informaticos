@@ -94,7 +94,7 @@ final class tablaPanelTareas extends Controler
 
                 $clase = "class='alert alert-warning'";
                 
-            }else if ($fecha_actual < $Data[$i]['fecha_final']){
+            }else if ($fecha_actual > $Data[$i]['fecha_final']){
 
                 $clase = "class='alert alert-danger'";
             }else{
