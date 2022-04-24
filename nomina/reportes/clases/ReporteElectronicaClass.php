@@ -376,7 +376,7 @@ final class ReporteElectronica extends Controler{
 			//echo "empleado_is: ".$empleado_id;
 
 			$data = $Model -> getReporteEnviar($desde,$hasta,$empresa_id,$empleado_id,$this -> getConex());
-//exit($this -> jsonSeparator(array("cantidad","fechaInicio","fechaFin","pago","tipo"),array($data[0][dias_incapacidadGen],$data[0][fecha_inicio_IncapacidadGen],$data[0][fecha_final_incapacidadGen],$data[0][valor_incapacidadGen],$data[0][tipo_incapacidadGen])));
+			//exit($this -> jsonSeparator(array("cantidad","fechaInicio","fechaFin","pago","tipo"),array($data[0][dias_incapacidadGen],$data[0][fecha_inicio_IncapacidadGen],$data[0][fecha_final_incapacidadGen],$data[0][valor_incapacidadGen],$data[0][tipo_incapacidadGen])));
 
 			$request = '{
 				"tokenEnterprise":"'.$tokenEnterprise.'",
@@ -676,9 +676,9 @@ final class ReporteElectronica extends Controler{
 			$curl = curl_init();
 
 			//echo "url: ".$url."\n";
-			exit($data[0][liquidacion_novedad_id]);
-			exit($request);
-
+			//exit($data[0][liquidacion_novedad_id]);
+			//exit($request);
+			//echo("--------------------------------------------------------------------------");
 			
 			
 			curl_setopt_array($curl, array(
@@ -702,11 +702,11 @@ final class ReporteElectronica extends Controler{
 
 				$respuesta = json_decode($response);
 
-				$mensaje = $Model -> actualizaDatosReporte($respuesta,$data[0][fechaEmision],$desde,$hasta,$data[0][contrato_id],$data[0][num_rango],$data[0][liquidacion_novedad_id],$this -> getConex());
+				$mensaje .= $Model -> actualizaDatosReporte($respuesta,$data[0][fechaEmision],$desde,$hasta,$data[0][contrato_id],$data[0][num_rango],$data[0][liquidacion_novedad_id],$this -> getConex());
 
-				//exit("prueba: ".$response);
+				//echo "prueba: ".$response;
 
-//---------------------------------------------------------------------------------------------------
+			//---------------------------------------------------------------------------------------------------
 
 			$curl = curl_init();
 
@@ -754,13 +754,10 @@ final class ReporteElectronica extends Controler{
 				$documentoBinaria = base64_decode($docBase64);
 				$bytes = file_put_contents($rutaDocumentoSalida, $documentoBinaria);
 			}
-
-				
-				echo $mensaje;
-				
+	
 		}
 
-		
+		echo $mensaje;
 
   	}
 

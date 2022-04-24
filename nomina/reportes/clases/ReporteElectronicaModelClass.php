@@ -85,8 +85,12 @@ final class ReporteElectronicaModel extends Db {
 			SUM(IF(dl.concepto='SUELDO PAGAR',dl.credito,0)) AS total_comprobante,	
 			SUM(IF(dl.sueldo_pagar != 1,dl.credito,0)) AS total_deduccion,	
 
-			IFNULL((SELECT SUM(lq.valor_pagos) FROM liquidacion_vacaciones lq WHERE lq.inicial = 0 AND lq.contrato_id = c.contrato_id AND lq.fecha_liquidacion>='$desde' AND lq.fecha_liquidacion<='$hasta'),0)+IFNULL((SELECT SUM(lq.valor) FROM liquidacion_vacaciones lq WHERE lq.inicial = 0 AND lq.contrato_id = c.contrato_id AND lq.fecha_liquidacion>='$desde' AND lq.fecha_liquidacion<='$hasta'),0)+IFNULL((SELECT SUM(valor_liquidacion) FROM liquidacion_cesantias WHERE estado = 'C' AND inicial = 0 AND contrato_id = c.contrato_id AND fecha_liquidacion BETWEEN '$desde' AND '$hasta'),0)+IFNULL((SELECT SUM(total) valor_prima FROM liquidacion_prima 
-			WHERE contrato_id = c.contrato_id AND fecha_liquidacion >='$desde' AND fecha_liquidacion <= '$hasta' AND estado = 'C'),0)+(SELECT IFNULL((SELECT SUM(valor_liquidacion) FROM liquidacion_int_cesantias WHERE contrato_id = c.contrato_id AND inicial = 0 AND fecha_liquidacion BETWEEN '$desde' AND '$hasta'),0)) + SUM(IF(dl.sueldo_pagar != 1,dl.debito,0)) AS total_devengado,
+			IFNULL((SELECT SUM(lq.valor_pagos) FROM liquidacion_vacaciones lq WHERE lq.inicial = 0 AND lq.estado = 'C' AND lq.contrato_id = c.contrato_id AND lq.fecha_liquidacion>='$desde' AND lq.fecha_liquidacion<='$hasta'),0)+
+			IFNULL((SELECT SUM(lq.valor) FROM liquidacion_vacaciones lq WHERE lq.inicial = 0 AND lq.estado = 'C' AND lq.contrato_id = c.contrato_id AND lq.fecha_liquidacion>='$desde' AND lq.fecha_liquidacion<='$hasta'),0)+
+			IFNULL((SELECT SUM(valor_liquidacion) FROM liquidacion_cesantias WHERE estado = 'C' AND inicial = 0 AND estado = 'C' AND contrato_id = c.contrato_id AND fecha_liquidacion BETWEEN '$desde' AND '$hasta'),0)+
+			IFNULL((SELECT SUM(total) valor_prima FROM liquidacion_prima WHERE inicial = 0 AND estado = 'C' AND contrato_id = c.contrato_id AND fecha_liquidacion >='$desde' AND fecha_liquidacion <= '$hasta'),0)+
+			(SELECT IFNULL((SELECT SUM(valor_liquidacion) FROM liquidacion_int_cesantias WHERE contrato_id = c.contrato_id AND inicial = 0 AND estado = 'C' AND fecha_liquidacion BETWEEN '$desde' AND '$hasta'),0)) + 
+			SUM(IF(dl.sueldo_pagar != 1,dl.debito,0)) AS total_devengado,
 
 			'102' AS tipo_documento, '0' AS  novedad, '' AS novedad_cune, '' AS tipo_nota, '' AS fecha_gen_pred, 
             '' AS cune_pred, '' AS numero_pred,
@@ -829,8 +833,12 @@ final class ReporteElectronicaModel extends Db {
 			SUM(IF(dl.concepto='SUELDO PAGAR',dl.credito,0)) AS total_comprobante,	
 			SUM(IF(dl.sueldo_pagar != 1,dl.credito,0)) AS total_deduccion,	
 
-			IFNULL((SELECT SUM(lq.valor_pagos) FROM liquidacion_vacaciones lq WHERE lq.inicial = 0 AND lq.contrato_id = c.contrato_id AND lq.fecha_liquidacion>='$desde' AND lq.fecha_liquidacion<='$hasta'),0)+IFNULL((SELECT SUM(lq.valor) FROM liquidacion_vacaciones lq WHERE lq.inicial = 0 AND lq.contrato_id = c.contrato_id AND lq.fecha_liquidacion>='$desde' AND lq.fecha_liquidacion<='$hasta'),0)+IFNULL((SELECT SUM(valor_liquidacion) FROM liquidacion_cesantias WHERE estado = 'C' AND inicial = 0 AND contrato_id = c.contrato_id AND fecha_liquidacion BETWEEN '$desde' AND '$hasta'),0)+IFNULL((SELECT SUM(total) valor_prima FROM liquidacion_prima 
-			WHERE contrato_id = c.contrato_id AND fecha_liquidacion >='$desde' AND fecha_liquidacion <= '$hasta' AND estado = 'C'),0)+(SELECT IFNULL((SELECT SUM(valor_liquidacion) FROM liquidacion_int_cesantias WHERE contrato_id = c.contrato_id AND inicial = 0 AND fecha_liquidacion BETWEEN '$desde' AND '$hasta'),0)) + SUM(IF(dl.sueldo_pagar != 1,dl.debito,0)) AS total_devengado,
+			IFNULL((SELECT SUM(lq.valor_pagos) FROM liquidacion_vacaciones lq WHERE lq.inicial = 0 AND lq.estado = 'C' AND lq.contrato_id = c.contrato_id AND lq.fecha_liquidacion>='$desde' AND lq.fecha_liquidacion<='$hasta'),0)+
+			IFNULL((SELECT SUM(lq.valor) FROM liquidacion_vacaciones lq WHERE lq.inicial = 0 AND lq.estado = 'C' AND lq.contrato_id = c.contrato_id AND lq.fecha_liquidacion>='$desde' AND lq.fecha_liquidacion<='$hasta'),0)+
+			IFNULL((SELECT SUM(valor_liquidacion) FROM liquidacion_cesantias WHERE estado = 'C' AND inicial = 0 AND estado = 'C' AND contrato_id = c.contrato_id AND fecha_liquidacion BETWEEN '$desde' AND '$hasta'),0)+
+			IFNULL((SELECT SUM(total) valor_prima FROM liquidacion_prima WHERE inicial = 0 AND estado = 'C' AND contrato_id = c.contrato_id AND fecha_liquidacion >='$desde' AND fecha_liquidacion <= '$hasta'),0)+
+			(SELECT IFNULL((SELECT SUM(valor_liquidacion) FROM liquidacion_int_cesantias WHERE contrato_id = c.contrato_id AND inicial = 0 AND estado = 'C' AND fecha_liquidacion BETWEEN '$desde' AND '$hasta'),0)) + 
+			SUM(IF(dl.sueldo_pagar != 1,dl.debito,0)) AS total_devengado,
 
 			'102' AS tipo_documento, '0' AS  novedad, '' AS novedad_cune, '' AS tipo_nota, 'null' AS fecha_gen_pred, 
             '' AS cune_pred, '' AS numero_pred,
@@ -849,19 +857,19 @@ final class ReporteElectronicaModel extends Db {
 
 			SUM(IF(dl.concepto IN('SALUD'),dl.credito,0)) AS deduccion_salud,
 			
-			(SELECT dp.desc_emple_salud FROM datos_periodo dp
+			(SELECT CONCAT(dp.desc_emple_salud,'.00') AS desc_emple_salud FROM datos_periodo dp
 				INNER JOIN periodo_contable pc ON dp.periodo_contable_id = pc.periodo_contable_id
 				WHERE anio = SUBSTRING('$desde', 1, 4)) porcentaje_salud,
 
 			SUM(IF(dl.concepto IN('PENSION'),dl.credito,0)) AS deduccion_pension,
 			
-			(SELECT dp.desc_emple_pension FROM datos_periodo dp
+			(SELECT CONCAT(dp.desc_emple_pension,'.00') AS desc_emple_pension FROM datos_periodo dp
 				INNER JOIN periodo_contable pc ON dp.periodo_contable_id = pc.periodo_contable_id
 				WHERE anio = SUBSTRING('$desde', 1, 4)) porcentaje_pension,
 
 			SUM(IF(dl.concepto IN('FONDO PENSIONAL'),dl.credito,0)) deduccion_solidaridad_pensional,
 			
-			(SELECT desc_emple_fonpension FROM datos_periodo dp
+			(SELECT CONCAT(desc_emple_fonpension,'.00') AS desc_emple_fonpension FROM datos_periodo dp
 				INNER JOIN periodo_contable pc ON dp.periodo_contable_id = pc.periodo_contable_id
 				WHERE anio = SUBSTRING('$desde', 1, 4)) porcentaje_solidaridad_pensional,	
 
@@ -878,7 +886,7 @@ final class ReporteElectronicaModel extends Db {
 
 			IFNULL((SELECT valor_liquidacion FROM liquidacion_int_cesantias WHERE estado = 'C' AND inicial = 0 AND contrato_id = c.contrato_id AND fecha_liquidacion BETWEEN '$desde' AND '$hasta'),'0') valor_intereses_cesantias,
 
-			IF((SELECT valor_liquidacion FROM liquidacion_int_cesantias WHERE estado = 'C' AND inicial = 0 AND contrato_id = c.contrato_id AND fecha_liquidacion BETWEEN '$desde' AND '$hasta') > 1,(SELECT dp.desc_empre_int_cesantias FROM datos_periodo dp
+			IF((SELECT valor_liquidacion FROM liquidacion_int_cesantias WHERE estado = 'C' AND inicial = 0 AND contrato_id = c.contrato_id AND fecha_liquidacion BETWEEN '$desde' AND '$hasta') > 1,(SELECT CONCAT(dp.desc_empre_int_cesantias,'.00') AS desc_empre_int_cesantias FROM datos_periodo dp
 			INNER JOIN periodo_contable pc ON dp.periodo_contable_id = pc.periodo_contable_id
 			WHERE anio = SUBSTRING('$desde', 1, 4)),'') porcentaje_intereses_cesantias, 
 				
@@ -895,7 +903,7 @@ final class ReporteElectronicaModel extends Db {
 
             SUM(IF(dl.concepto = 'HORAS EXTRAS DIURNAS',dl.debito,0)) valor_horasE_diurnas,
 
-			(SELECT dp.val_hr_ext_diurna-100 FROM datos_periodo dp
+			(SELECT CONCAT(dp.val_hr_ext_diurna-100,'.00') AS val_hr_ext_diurna FROM datos_periodo dp
 				INNER JOIN periodo_contable pc ON dp.periodo_contable_id = pc.periodo_contable_id
 				WHERE anio = SUBSTRING('$desde', 1, 4)) porcentaje_extra_diurno,
 
@@ -905,7 +913,7 @@ final class ReporteElectronicaModel extends Db {
 
             SUM(IF(dl.concepto = 'HORAS EXTRAS NOCTURNAS',dl.debito,0)) valor_horasE_nocturno,
             
-			(SELECT dp.val_hr_ext_nocturna-100 FROM datos_periodo dp
+			(SELECT CONCAT(dp.val_hr_ext_nocturna-100,'.00') AS val_hr_ext_nocturna FROM datos_periodo dp
 				INNER JOIN periodo_contable pc ON dp.periodo_contable_id = pc.periodo_contable_id
 				WHERE anio = SUBSTRING('$desde', 1, 4)) porcentaje_extra_nocturno,
             
@@ -915,7 +923,7 @@ final class ReporteElectronicaModel extends Db {
 
             SUM(IF(dl.concepto = 'RECARGO NOCTURNO',dl.debito,0)) valor_horasR_nocturno,
 					
-			(SELECT dp.val_recargo_nocturna-100 FROM datos_periodo dp
+			(SELECT CONCAT(dp.val_recargo_nocturna-100,'.00') AS val_recargo_nocturna FROM datos_periodo dp
 				INNER JOIN periodo_contable pc ON dp.periodo_contable_id = pc.periodo_contable_id
 				WHERE anio = SUBSTRING('$desde', 1, 4)) porcentaje_recargo_nocturno,
             
@@ -925,7 +933,7 @@ final class ReporteElectronicaModel extends Db {
 
 			SUM(IF(dl.concepto = 'HORAS EXTRAS FEST DIURNAS',dl.debito,0)) valor_horasE_diurnofes,
 
-			(SELECT dp.val_hr_ext_festiva_diurna-100 FROM datos_periodo dp
+			(SELECT CONCAT(dp.val_hr_ext_festiva_diurna-100,'.00') AS val_hr_ext_festiva_diurna FROM datos_periodo dp
 				INNER JOIN periodo_contable pc ON dp.periodo_contable_id = pc.periodo_contable_id
 				WHERE anio = SUBSTRING('$desde', 1, 4)) porcentaje_extra_diurnofes,
 
@@ -935,7 +943,7 @@ final class ReporteElectronicaModel extends Db {
 
 			SUM(IF(dl.concepto = 'DOMINICALES FESTIVO',dl.debito,0)) valor_horasR_diurnofes,
 
-			(SELECT dp.val_recargo_dominical-100 FROM datos_periodo dp
+			(SELECT CONCAT(dp.val_recargo_dominical-100,'.00') AS val_recargo_dominical FROM datos_periodo dp
 				INNER JOIN periodo_contable pc ON dp.periodo_contable_id = pc.periodo_contable_id
 				WHERE anio = SUBSTRING('$desde', 1, 4)) porcentaje_recargo_diurnofes,
 
@@ -945,7 +953,7 @@ final class ReporteElectronicaModel extends Db {
 
 			SUM(IF(dl.concepto = 'HORAS EXTRAS FEST NOCTURNAS',dl.debito,0)) valor_horasE_nocturnofes,
 					
-			(SELECT dp.val_hr_ext_festiva_nocturna-100 FROM datos_periodo dp
+			(SELECT CONCAT(dp.val_hr_ext_festiva_nocturna-100,'.00') AS val_hr_ext_festiva_nocturna FROM datos_periodo dp
 				INNER JOIN periodo_contable pc ON dp.periodo_contable_id = pc.periodo_contable_id
 				WHERE anio = SUBSTRING('$desde', 1, 4)) porcentaje_extra_nocturnofes,
 
