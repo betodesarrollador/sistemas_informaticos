@@ -99,7 +99,7 @@ final class tablaPanelTareas extends Controler
                 $clase = "class='alert alert-danger'";
             }else{
 
-                $clase = "class='alert alert-success'";
+                $clase = "class='alert alert-primary'";
             }
 
             
