@@ -377,7 +377,7 @@ final class ReporteElectronica extends Controler{
 
 			$data = $Model -> getReporteEnviar($desde,$hasta,$empresa_id,$empleado_id,$this -> getConex());
 			//exit($this -> jsonSeparator(array("cantidad","fechaInicio","fechaFin","pago","tipo"),array($data[0][dias_incapacidadGen],$data[0][fecha_inicio_IncapacidadGen],$data[0][fecha_final_incapacidadGen],$data[0][valor_incapacidadGen],$data[0][tipo_incapacidadGen])));
-
+			
 			$request = '{
 				"tokenEnterprise":"'.$tokenEnterprise.'",
 				"tokenPassword":"'.$tokenPassword.'",
@@ -677,7 +677,7 @@ final class ReporteElectronica extends Controler{
 
 			//echo "url: ".$url."\n";
 			//exit($data[0][liquidacion_novedad_id]);
-			//exit($request);
+			//echo $request;
 			//echo("--------------------------------------------------------------------------");
 			
 			
@@ -700,61 +700,67 @@ final class ReporteElectronica extends Controler{
 				
 				curl_close($curl);
 
+				//exit("prueba: ".$response);
+
 				$respuesta = json_decode($response);
 
 				$mensaje .= $Model -> actualizaDatosReporte($respuesta,$data[0][fechaEmision],$desde,$hasta,$data[0][contrato_id],$data[0][num_rango],$data[0][liquidacion_novedad_id],$this -> getConex());
 
-				//echo "prueba: ".$response;
+				
 
 			//---------------------------------------------------------------------------------------------------
 
-			$curl = curl_init();
+			if ($respuesta -> codigo == "200") {
+				
+				$curl = curl_init();
 
-			curl_setopt_array($curl, array(
+				curl_setopt_array($curl, array(
 
-				CURLOPT_URL => 'http://demonominaelectronica.thefactoryhka.com.co/DescargarPDF',
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_ENCODING => '',
-				CURLOPT_MAXREDIRS => 10,
-				CURLOPT_TIMEOUT => 0,
-				CURLOPT_FOLLOWLOCATION => true,
-				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-				CURLOPT_CUSTOMREQUEST => 'POST',
-				CURLOPT_POSTFIELDS =>'{
-				"tokenEnterprise": "'.$tokenEnterprise.'",
-				"tokenPassword": "'.$tokenPassword.'",
-				"consecutivoDocumentoNom": "'.$data[0][prefijo_rango].$data[0][num_rango].'"
-				}',
-				CURLOPT_HTTPHEADER => array(
-					'Content-Type: application/json'
-				),
+					CURLOPT_URL => 'http://demonominaelectronica.thefactoryhka.com.co/DescargarPDF',
+					CURLOPT_RETURNTRANSFER => true,
+					CURLOPT_ENCODING => '',
+					CURLOPT_MAXREDIRS => 10,
+					CURLOPT_TIMEOUT => 0,
+					CURLOPT_FOLLOWLOCATION => true,
+					CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+					CURLOPT_CUSTOMREQUEST => 'POST',
+					CURLOPT_POSTFIELDS =>'{
+					"tokenEnterprise": "'.$tokenEnterprise.'",
+					"tokenPassword": "'.$tokenPassword.'",
+					"consecutivoDocumentoNom": "'.$data[0][prefijo_rango].$data[0][num_rango].'"
+					}',
+					CURLOPT_HTTPHEADER => array(
+						'Content-Type: application/json'
+					),
 
-			));
+				));
 
-			$response = curl_exec($curl);
+				$response = curl_exec($curl);
 
-			$respuesta = json_decode($response);
+				$respuesta = json_decode($response);
 
-			curl_close($curl);
+				curl_close($curl);
 
 
-			if ($respuesta -> codigo == 200) {
+				if ($respuesta -> codigo == 200) {
 
-				$docBase64 = $respuesta -> documento;
-				$nombreArchivo = $respuesta -> nombre;
+					$docBase64 = $respuesta -> documento;
+					$nombreArchivo = $respuesta -> nombre;
 
-				$carpeta = '../../../archivos/nomina/nominaE';
+					$carpeta = '../../../archivos/nomina/nominaE';
 
-				if (!file_exists($carpeta)) {
-					mkdir($carpeta, 0777, true);
+					if (!file_exists($carpeta)) {
+						mkdir($carpeta, 0777, true);
+					}
+
+					$rutaDocumentoSalida = "../../.."."/archivos/nomina/nominaE/".$nombreArchivo;
+
+					$documentoBinaria = base64_decode($docBase64);
+					$bytes = file_put_contents($rutaDocumentoSalida, $documentoBinaria);
 				}
 
-				$rutaDocumentoSalida = "../../.."."/archivos/nomina/nominaE/".$nombreArchivo;
+			} 
 
-				$documentoBinaria = base64_decode($docBase64);
-				$bytes = file_put_contents($rutaDocumentoSalida, $documentoBinaria);
-			}
-	
 		}
 
 		echo $mensaje;

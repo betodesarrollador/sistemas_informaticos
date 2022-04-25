@@ -72,7 +72,7 @@ final class ReporteElectronicaModel extends Db {
 				FROM  abono_nomina an, relacion_abono_nomina ra, cuenta_tipo_pago ct, forma_pago fp, liquidacion_novedad ln2 
             WHERE ra.liquidacion_novedad_id = ln2.liquidacion_novedad_id AND an.abono_nomina_id=ra.abono_nomina_id AND ln2.contrato_id = ln.contrato_id AND ln2.estado = 'C' AND an.estado_abono_nomina='C' AND ct.cuenta_tipo_pago_id=an.cuenta_tipo_pago_id AND fp.forma_pago_id=ct.forma_pago_id AND ln2.fecha_inicial BETWEEN '$desde' AND '$hasta' AND ln2.fecha_final BETWEEN '$desde' AND '$hasta'),1) AS metododePago,
             '1' AS medioPago,
-            (SELECT b.nombre_banco FROM banco b WHERE b.banco_id=c.banco_id) AS nombreBanco,
+            (SELECT TRIM(b.nombre_banco) AS nombre_banco FROM banco b WHERE b.banco_id=c.banco_id) AS nombreBanco,
             (SELECT tc.nombre_tipo_cuenta FROM  tipo_cuenta tc WHERE tc.tipo_cta_id=c.tipo_cta_id) AS tipoCuenta,
             c.numcuenta_proveedor AS numeroCuenta,
             
@@ -820,7 +820,7 @@ final class ReporteElectronicaModel extends Db {
 				FROM  abono_nomina an, relacion_abono_nomina ra, cuenta_tipo_pago ct, forma_pago fp, liquidacion_novedad ln2 
             WHERE ra.liquidacion_novedad_id = ln2.liquidacion_novedad_id AND an.abono_nomina_id=ra.abono_nomina_id AND ln2.contrato_id = ln.contrato_id AND ln2.estado = 'C' AND an.estado_abono_nomina='C' AND ct.cuenta_tipo_pago_id=an.cuenta_tipo_pago_id AND fp.forma_pago_id=ct.forma_pago_id AND ln2.fecha_inicial BETWEEN '$desde' AND '$hasta' AND ln2.fecha_final BETWEEN '$desde' AND '$hasta'),1) AS metododePago,
             '1' AS medioPago,
-            (SELECT b.nombre_banco FROM banco b WHERE b.banco_id=c.banco_id) AS nombreBanco,
+            (SELECT TRIM(b.nombre_banco) AS nombre_banco FROM banco b WHERE b.banco_id=c.banco_id) AS nombreBanco,
             (SELECT tc.nombre_tipo_cuenta FROM  tipo_cuenta tc WHERE tc.tipo_cta_id=c.tipo_cta_id) AS tipoCuenta,
             c.numcuenta_proveedor AS numeroCuenta,
             
