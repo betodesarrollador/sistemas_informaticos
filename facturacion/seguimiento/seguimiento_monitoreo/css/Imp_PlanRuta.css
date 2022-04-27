@@ -1,0 +1,48 @@
+/* CSS Document */
+
+.table_condi{
+	border:#000 2px solid;
+	font-size:9px;
+	width:600px;
+	font-family:Arial, Helvetica, sans-serif;
+}
+.table_condi td{
+	padding:2px 1px 2px 1px;
+		
+}
+.bottom_condi{
+	border-bottom:#000 2px solid;
+}
+.celda_bordes{
+	border:#000 1px solid;
+}
+.table_detalles{
+	border:#000 2px solid;
+	font-size:12px;
+	width:600px;
+	font-family:Arial, Helvetica, sans-serif;
+}
+.celda_nombre{
+	height:30px;
+	width:270px;
+	text-align:center;
+}
+
+.celda_control{
+	height:80px;
+	width:290px;
+}
+.celda_firmas{
+	height:70px;
+	width:170px;
+}
+
+
+
+#contenedor{
+	width:1200px;
+	height:572px;
+	/*background:#000000;*/
+}
+
+

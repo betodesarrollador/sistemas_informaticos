@@ -1,0 +1,628 @@
+<<<<<<< HEAD
+<?php /* Smarty version 2.6.26, created on 2013-10-16 11:00:55
+         compiled from RemesasMasivo.tpl */ ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+  <head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <?php print $this->_tpl_vars['JAVASCRIPT']; ?>
+
+  <?php print $this->_tpl_vars['TABLEGRIDJS']; ?>
+
+  <?php print $this->_tpl_vars['CSSSYSTEM']; ?>
+ 
+  <?php print $this->_tpl_vars['TABLEGRIDCSS']; ?>
+  
+  <?php print $this->_tpl_vars['TITLETAB']; ?>
+    
+  </head>
+
+  <body>
+
+    <fieldset>
+    <legend><?php print $this->_tpl_vars['TITLEFORM']; ?>
+</legend>
+	
+    <div id="divSolicitudRemesa">
+		<iframe id="iframeSolicitudRemesa"></iframe>
+    </div>
+	
+    <div id="divOrdenCargueRemesa">
+		<iframe id="iframeOrdenCargueRemesa"></iframe>
+    </div>	
+	
+	<div id="table_find">
+        <table align="center" width="100%">
+         <tr>
+           <td><label>Busqueda :</label></td><td><?php print $this->_tpl_vars['BUSQUEDA']; ?>
+</td><td align="right"><?php print $this->_tpl_vars['IMPORTARORDENCARGUE']; ?>
+&nbsp;<?php print $this->_tpl_vars['IMPORTARSOLICITUD']; ?>
+&nbsp;&nbsp;&nbsp;</td>
+         </tr>
+        </table>
+    </div>
+
+        <?php print $this->_tpl_vars['OFICINAIDSTATIC']; ?>
+ <?php print $this->_tpl_vars['FECHA']; ?>
+<?php print $this->_tpl_vars['ASEGURADORAIDSTATIC']; ?>
+<?php print $this->_tpl_vars['NUMEROPOLIZASTATIC']; ?>
+<?php print $this->_tpl_vars['FECHAVENCEPOLIZASTATIC']; ?>
+<?php print $this->_tpl_vars['FORM1']; ?>
+<?php print $this->_tpl_vars['DETALLESSID']; ?>
+
+		
+	<fieldset class="section">
+        <legend>Informacion general</legend>
+        <table align="center" width="85%">
+          <tr>
+            <td><label>Tipo Remesa :</label></td>
+            <td><?php print $this->_tpl_vars['TIPOREMESA']; ?>
+<?php print $this->_tpl_vars['REMESAID']; ?>
+<?php print $this->_tpl_vars['DETALLESSID']; ?>
+<?php print $this->_tpl_vars['OFICINAID']; ?>
+</td>
+            <td><label>Fecha Remesa :</label></td><td><?php print $this->_tpl_vars['FECHAREMESA']; ?>
+</td>
+          </tr>
+          <tr >
+            <td><label>Fecha Recogida :</label></td>
+            <td><?php print $this->_tpl_vars['FECHARECOGIDA']; ?>
+</td>
+            <td><label>Hora Recogida :</label></td>
+            <td><?php print $this->_tpl_vars['HORARECOGIDA']; ?>
+</td>
+          </tr>		  
+          <tr>
+            <td><label>Remesa No. :</label></td>
+            <td><?php print $this->_tpl_vars['NUMEROREMESA']; ?>
+<?php print $this->_tpl_vars['DETALLEREMESAID']; ?>
+</td>
+            <td><label>Solicitud Servicio :</label></td>
+            <td><?php print $this->_tpl_vars['SOLICITUDID']; ?>
+</td>
+          </tr>
+          <tr>
+            <td><label>Cliente :</label></td><td><?php print $this->_tpl_vars['CLIENTE']; ?>
+<?php print $this->_tpl_vars['CLIENTEID']; ?>
+</td>
+            <td><label>Contacto :</label></td>
+            <td><?php print $this->_tpl_vars['CONTACTOS']; ?>
+</td>
+          </tr>	  
+          <tr>
+            <td><label>Propietario Mercancia :</label></td>
+            <td>
+              <?php print $this->_tpl_vars['PROPIETARIO']; ?>
+<?php print $this->_tpl_vars['PROPIETARIOTXT']; ?>
+<?php print $this->_tpl_vars['PROPIETARIOID']; ?>
+<?php print $this->_tpl_vars['TIPOIDENTIFICACIONPROPIETARIO']; ?>
+<?php print $this->_tpl_vars['NUMEROIDENTIFICACIONPROPIETARIO']; ?>
+            </td>
+            <td><label>Clase Remesa  :</label></td>
+            <td><?php print $this->_tpl_vars['CLASEREMESA']; ?>
+</td>			
+          </tr>         
+          <tr>
+            <td><label>N. Remesa Padre :</label></td>
+            <td><?php print $this->_tpl_vars['NUMEROREMESAPADRE']; ?>
+</td>
+            <td><label>Nacional :</label></td>
+            <td><?php print $this->_tpl_vars['NACIONAL']; ?>
+</td>
+          </tr>
+          <tr>
+            <td><label>Estado :</label></td>
+            <td><?php print $this->_tpl_vars['ESTADO']; ?>
+</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          </tr>			   
+		</table>
+    </fieldset>
+		<fieldset class="section">
+		<legend>Seguro de La Mercancia</legend>
+		<table width="100%">
+          <tr>
+            <td><label>Amparada Por :</label></td>
+            <td><?php print $this->_tpl_vars['AMPARADAPOR']; ?>
+</td>
+            <td><label>Aseguradora :</label></td>
+            <td><?php print $this->_tpl_vars['ASEGURADORAS']; ?>
+</td>
+          </tr>
+          <tr>
+            <td><label>N° Poliza :</label></td>
+            <td><?php print $this->_tpl_vars['NUMEROPOLIZA']; ?>
+</td>
+            <td><label>Fecha Vencimiento :</label></td>
+            <td><?php print $this->_tpl_vars['FECHAVENCEPOLIZA']; ?>
+</td>
+          </tr>		
+		</table>
+		</fieldset>		
+		<fieldset class="section">
+		<legend>Datos Remesa</legend>
+		<table align="center" width="85%">
+		  <tr>
+		    <td>
+				<table align="center" width="100%">
+				  <tr>
+					<td><label>Remitente :</label></td>
+					<td><?php print $this->_tpl_vars['REMITENTE']; ?>
+<?php print $this->_tpl_vars['REMITENTEID']; ?>
+<?php print $this->_tpl_vars['TIPOIDENTIFICACIONREMITENTEID']; ?>
+</td>
+				  </tr>
+				  <tr>
+					<td><label>Origen :</label></td><td><?php print $this->_tpl_vars['ORIGEN']; ?>
+<?php print $this->_tpl_vars['ORIGENID']; ?>
+</td>
+				  </tr>				  
+				  <tr>
+					<td><label>Documento :</label></td><td><?php print $this->_tpl_vars['DOCUMENTOREMITENTE']; ?>
+</td>
+				  </tr>
+				  <tr>
+					<td><label>Direccion :</label></td><td><?php print $this->_tpl_vars['DIRECCIONORIGEN']; ?>
+</td>
+				  </tr>
+				  <tr>
+					<td><label>Telefono :</label></td><td><?php print $this->_tpl_vars['TELEFONOORIGEN']; ?>
+</td>
+				  </tr>
+				  <tr>
+				    <td><label>Dcto. Cliente  :</label></td>
+				    <td><?php print $this->_tpl_vars['ORDENDESPACHO']; ?>
+</td>
+			      </tr>
+				</table>
+			</td>
+			<td>
+				<table align="center" width="100%">
+				  <tr>
+					<td><label>Destinatario :</label></td><td><?php print $this->_tpl_vars['DESTINATARIO']; ?>
+<?php print $this->_tpl_vars['DESTINATARIOID']; ?>
+<?php print $this->_tpl_vars['TIPOIDENTIFICACIONDESTINATARIOID']; ?>
+
+				    </td>
+				  </tr>
+				  <tr>
+					<td><label>Destino :</label></td><td><?php print $this->_tpl_vars['DESTINO']; ?>
+<?php print $this->_tpl_vars['DESTINOID']; ?>
+</td>
+				  </tr>				  
+				  <tr>
+					<td><label>Documento :</label></td><td><?php print $this->_tpl_vars['DOCUMENTODESTINATARIO']; ?>
+</td>
+				  </tr>
+				  <tr>
+					<td><label>Direccion :</label></td><td><?php print $this->_tpl_vars['DIRECCIONDESTINO']; ?>
+</td>
+				  </tr>
+				  <tr>
+					<td><label>Telefono :</label></td><td><?php print $this->_tpl_vars['TELEFONODESTINO']; ?>
+</td>
+				  </tr>
+				</table>
+			</td>
+		  </tr>	
+		  </tr>
+		</table>
+		</fieldset>			
+
+		<fieldset class="section">
+		 <legend>Datos Producto</legend>
+		 <table width="85%" align="center" >
+           <tr>
+             <td width="18%"><label>Codigo Producto  :</label></td>
+             <td><?php print $this->_tpl_vars['PRODUCTOID']; ?>
+<?php print $this->_tpl_vars['PRODUCTO']; ?>
+
+             <label></label></td>
+             <td><label>Producto : </label></td>
+             <td><?php print $this->_tpl_vars['DESCRIPCIONPRODUCTO']; ?>
+</td>
+           </tr>
+           <tr>
+             <td><label>Naturaleza :</label></td>
+             <td width="32%"><?php print $this->_tpl_vars['NATURALEZA']; ?>
+</td>
+             <td width="21%"><label>Unidad Empaque :</label></td>
+             <td><?php print $this->_tpl_vars['UNIDADEMPAQUE']; ?>
+</td>
+           </tr>
+           <tr>
+             <td><label>Unidad Medida :</label></td>
+             <td><?php print $this->_tpl_vars['UNIDADMEDIDA']; ?>
+</td>
+             <td><label>Cantidad :</label></td>
+             <td width="29%"><?php print $this->_tpl_vars['CANTIDAD']; ?>
+</td>
+           </tr>
+           <tr>
+             <td><label>Peso Neto :</label></td>
+             <td><?php print $this->_tpl_vars['PESONETO']; ?>
+</td>
+             <td><label>Valor Declarado :</label></td>
+             <td><?php print $this->_tpl_vars['VALORDECLARADO']; ?>
+</td>
+           </tr>
+           <tr>
+             <td valign="top"><label>Peso Volumen :</label></td>
+             <td valign="top"><?php print $this->_tpl_vars['PESOVOLUMEN']; ?>
+</td>
+             <td valign="top"><label>Observaciones :</label></td>
+             <td valign="top"><?php print $this->_tpl_vars['OBSERVACIONES']; ?>
+</td>
+           </tr>           
+         </table>
+		</fieldset>				
+		
+				
+		<table align="center">
+	      <tr>
+	        <td align="center"><?php print $this->_tpl_vars['GUARDAR']; ?>
+&nbsp;<?php print $this->_tpl_vars['ACTUALIZAR']; ?>
+&nbsp;<?php print $this->_tpl_vars['LIMPIAR']; ?>
+&nbsp;<?php print $this->_tpl_vars['ANULAR']; ?>
+&nbsp;<?php print $this->_tpl_vars['IMPRIMIR']; ?>
+</td>
+          </tr>
+      </table>
+      <?php print $this->_tpl_vars['FORM1END']; ?>
+
+    </fieldset>
+	
+	<div id="rangoImp">
+      <div align="center">
+	    <p align="center">
+		  <b>Desde :&nbsp;</b><?php print $this->_tpl_vars['RANGODESDE']; ?>
+ <b>&nbsp;&nbsp;&nbsp;Hasta :&nbsp;</b><?php print $this->_tpl_vars['RANGOHASTA']; ?>
+&nbsp;&nbsp;&nbsp;<b>Formato :</b><?php print $this->_tpl_vars['FORMATO']; ?>
+
+		</p>
+		<p align="center"><?php print $this->_tpl_vars['PRINTCANCEL']; ?>
+<?php print $this->_tpl_vars['PRINTOUT']; ?>
+</p>
+	  </div>
+	</div>		
+    
+    <fieldset><?php print $this->_tpl_vars['GRIDREMESAS']; ?>
+</fieldset>
+	
+<div id="divAnulacion">
+  <form onSubmit="return false">
+	<table>              
+	  <tr>
+		<td><label>Causal :</label></td>
+		<td><?php print $this->_tpl_vars['CAUSALANULACIONID']; ?>
+</td>
+	  </tr>
+	  <tr>
+		<td><label>Descripcion :</label></td>
+		<td><?php print $this->_tpl_vars['OBSERVANULACION']; ?>
+</td>
+	  </tr> 
+	  <tr>
+		<td colspan="2" align="center"><?php print $this->_tpl_vars['ANULAR']; ?>
+</td>
+	  </tr>                    
+	</table>
+  </form>
+</div>	
+	    
+  </body>
+=======
+<?php /* Smarty version 2.6.26, created on 2013-10-16 11:00:55
+         compiled from RemesasMasivo.tpl */ ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+  <head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <?php print $this->_tpl_vars['JAVASCRIPT']; ?>
+
+  <?php print $this->_tpl_vars['TABLEGRIDJS']; ?>
+
+  <?php print $this->_tpl_vars['CSSSYSTEM']; ?>
+ 
+  <?php print $this->_tpl_vars['TABLEGRIDCSS']; ?>
+  
+  <?php print $this->_tpl_vars['TITLETAB']; ?>
+    
+  </head>
+
+  <body>
+
+    <fieldset>
+    <legend><?php print $this->_tpl_vars['TITLEFORM']; ?>
+</legend>
+	
+    <div id="divSolicitudRemesa">
+		<iframe id="iframeSolicitudRemesa"></iframe>
+    </div>
+	
+    <div id="divOrdenCargueRemesa">
+		<iframe id="iframeOrdenCargueRemesa"></iframe>
+    </div>	
+	
+	<div id="table_find">
+        <table align="center" width="100%">
+         <tr>
+           <td><label>Busqueda :</label></td><td><?php print $this->_tpl_vars['BUSQUEDA']; ?>
+</td><td align="right"><?php print $this->_tpl_vars['IMPORTARORDENCARGUE']; ?>
+&nbsp;<?php print $this->_tpl_vars['IMPORTARSOLICITUD']; ?>
+&nbsp;&nbsp;&nbsp;</td>
+         </tr>
+        </table>
+    </div>
+
+        <?php print $this->_tpl_vars['OFICINAIDSTATIC']; ?>
+ <?php print $this->_tpl_vars['FECHA']; ?>
+<?php print $this->_tpl_vars['ASEGURADORAIDSTATIC']; ?>
+<?php print $this->_tpl_vars['NUMEROPOLIZASTATIC']; ?>
+<?php print $this->_tpl_vars['FECHAVENCEPOLIZASTATIC']; ?>
+<?php print $this->_tpl_vars['FORM1']; ?>
+<?php print $this->_tpl_vars['DETALLESSID']; ?>
+
+		
+	<fieldset class="section">
+        <legend>Informacion general</legend>
+        <table align="center" width="85%">
+          <tr>
+            <td><label>Tipo Remesa :</label></td>
+            <td><?php print $this->_tpl_vars['TIPOREMESA']; ?>
+<?php print $this->_tpl_vars['REMESAID']; ?>
+<?php print $this->_tpl_vars['DETALLESSID']; ?>
+<?php print $this->_tpl_vars['OFICINAID']; ?>
+</td>
+            <td><label>Fecha Remesa :</label></td><td><?php print $this->_tpl_vars['FECHAREMESA']; ?>
+</td>
+          </tr>
+          <tr >
+            <td><label>Fecha Recogida :</label></td>
+            <td><?php print $this->_tpl_vars['FECHARECOGIDA']; ?>
+</td>
+            <td><label>Hora Recogida :</label></td>
+            <td><?php print $this->_tpl_vars['HORARECOGIDA']; ?>
+</td>
+          </tr>		  
+          <tr>
+            <td><label>Remesa No. :</label></td>
+            <td><?php print $this->_tpl_vars['NUMEROREMESA']; ?>
+<?php print $this->_tpl_vars['DETALLEREMESAID']; ?>
+</td>
+            <td><label>Solicitud Servicio :</label></td>
+            <td><?php print $this->_tpl_vars['SOLICITUDID']; ?>
+</td>
+          </tr>
+          <tr>
+            <td><label>Cliente :</label></td><td><?php print $this->_tpl_vars['CLIENTE']; ?>
+<?php print $this->_tpl_vars['CLIENTEID']; ?>
+</td>
+            <td><label>Contacto :</label></td>
+            <td><?php print $this->_tpl_vars['CONTACTOS']; ?>
+</td>
+          </tr>	  
+          <tr>
+            <td><label>Propietario Mercancia :</label></td>
+            <td>
+              <?php print $this->_tpl_vars['PROPIETARIO']; ?>
+<?php print $this->_tpl_vars['PROPIETARIOTXT']; ?>
+<?php print $this->_tpl_vars['PROPIETARIOID']; ?>
+<?php print $this->_tpl_vars['TIPOIDENTIFICACIONPROPIETARIO']; ?>
+<?php print $this->_tpl_vars['NUMEROIDENTIFICACIONPROPIETARIO']; ?>
+            </td>
+            <td><label>Clase Remesa  :</label></td>
+            <td><?php print $this->_tpl_vars['CLASEREMESA']; ?>
+</td>			
+          </tr>         
+          <tr>
+            <td><label>N. Remesa Padre :</label></td>
+            <td><?php print $this->_tpl_vars['NUMEROREMESAPADRE']; ?>
+</td>
+            <td><label>Nacional :</label></td>
+            <td><?php print $this->_tpl_vars['NACIONAL']; ?>
+</td>
+          </tr>
+          <tr>
+            <td><label>Estado :</label></td>
+            <td><?php print $this->_tpl_vars['ESTADO']; ?>
+</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          </tr>			   
+		</table>
+    </fieldset>
+		<fieldset class="section">
+		<legend>Seguro de La Mercancia</legend>
+		<table width="100%">
+          <tr>
+            <td><label>Amparada Por :</label></td>
+            <td><?php print $this->_tpl_vars['AMPARADAPOR']; ?>
+</td>
+            <td><label>Aseguradora :</label></td>
+            <td><?php print $this->_tpl_vars['ASEGURADORAS']; ?>
+</td>
+          </tr>
+          <tr>
+            <td><label>N° Poliza :</label></td>
+            <td><?php print $this->_tpl_vars['NUMEROPOLIZA']; ?>
+</td>
+            <td><label>Fecha Vencimiento :</label></td>
+            <td><?php print $this->_tpl_vars['FECHAVENCEPOLIZA']; ?>
+</td>
+          </tr>		
+		</table>
+		</fieldset>		
+		<fieldset class="section">
+		<legend>Datos Remesa</legend>
+		<table align="center" width="85%">
+		  <tr>
+		    <td>
+				<table align="center" width="100%">
+				  <tr>
+					<td><label>Remitente :</label></td>
+					<td><?php print $this->_tpl_vars['REMITENTE']; ?>
+<?php print $this->_tpl_vars['REMITENTEID']; ?>
+<?php print $this->_tpl_vars['TIPOIDENTIFICACIONREMITENTEID']; ?>
+</td>
+				  </tr>
+				  <tr>
+					<td><label>Origen :</label></td><td><?php print $this->_tpl_vars['ORIGEN']; ?>
+<?php print $this->_tpl_vars['ORIGENID']; ?>
+</td>
+				  </tr>				  
+				  <tr>
+					<td><label>Documento :</label></td><td><?php print $this->_tpl_vars['DOCUMENTOREMITENTE']; ?>
+</td>
+				  </tr>
+				  <tr>
+					<td><label>Direccion :</label></td><td><?php print $this->_tpl_vars['DIRECCIONORIGEN']; ?>
+</td>
+				  </tr>
+				  <tr>
+					<td><label>Telefono :</label></td><td><?php print $this->_tpl_vars['TELEFONOORIGEN']; ?>
+</td>
+				  </tr>
+				  <tr>
+				    <td><label>Dcto. Cliente  :</label></td>
+				    <td><?php print $this->_tpl_vars['ORDENDESPACHO']; ?>
+</td>
+			      </tr>
+				</table>
+			</td>
+			<td>
+				<table align="center" width="100%">
+				  <tr>
+					<td><label>Destinatario :</label></td><td><?php print $this->_tpl_vars['DESTINATARIO']; ?>
+<?php print $this->_tpl_vars['DESTINATARIOID']; ?>
+<?php print $this->_tpl_vars['TIPOIDENTIFICACIONDESTINATARIOID']; ?>
+
+				    </td>
+				  </tr>
+				  <tr>
+					<td><label>Destino :</label></td><td><?php print $this->_tpl_vars['DESTINO']; ?>
+<?php print $this->_tpl_vars['DESTINOID']; ?>
+</td>
+				  </tr>				  
+				  <tr>
+					<td><label>Documento :</label></td><td><?php print $this->_tpl_vars['DOCUMENTODESTINATARIO']; ?>
+</td>
+				  </tr>
+				  <tr>
+					<td><label>Direccion :</label></td><td><?php print $this->_tpl_vars['DIRECCIONDESTINO']; ?>
+</td>
+				  </tr>
+				  <tr>
+					<td><label>Telefono :</label></td><td><?php print $this->_tpl_vars['TELEFONODESTINO']; ?>
+</td>
+				  </tr>
+				</table>
+			</td>
+		  </tr>	
+		  </tr>
+		</table>
+		</fieldset>			
+
+		<fieldset class="section">
+		 <legend>Datos Producto</legend>
+		 <table width="85%" align="center" >
+           <tr>
+             <td width="18%"><label>Codigo Producto  :</label></td>
+             <td><?php print $this->_tpl_vars['PRODUCTOID']; ?>
+<?php print $this->_tpl_vars['PRODUCTO']; ?>
+
+             <label></label></td>
+             <td><label>Producto : </label></td>
+             <td><?php print $this->_tpl_vars['DESCRIPCIONPRODUCTO']; ?>
+</td>
+           </tr>
+           <tr>
+             <td><label>Naturaleza :</label></td>
+             <td width="32%"><?php print $this->_tpl_vars['NATURALEZA']; ?>
+</td>
+             <td width="21%"><label>Unidad Empaque :</label></td>
+             <td><?php print $this->_tpl_vars['UNIDADEMPAQUE']; ?>
+</td>
+           </tr>
+           <tr>
+             <td><label>Unidad Medida :</label></td>
+             <td><?php print $this->_tpl_vars['UNIDADMEDIDA']; ?>
+</td>
+             <td><label>Cantidad :</label></td>
+             <td width="29%"><?php print $this->_tpl_vars['CANTIDAD']; ?>
+</td>
+           </tr>
+           <tr>
+             <td><label>Peso Neto :</label></td>
+             <td><?php print $this->_tpl_vars['PESONETO']; ?>
+</td>
+             <td><label>Valor Declarado :</label></td>
+             <td><?php print $this->_tpl_vars['VALORDECLARADO']; ?>
+</td>
+           </tr>
+           <tr>
+             <td valign="top"><label>Peso Volumen :</label></td>
+             <td valign="top"><?php print $this->_tpl_vars['PESOVOLUMEN']; ?>
+</td>
+             <td valign="top"><label>Observaciones :</label></td>
+             <td valign="top"><?php print $this->_tpl_vars['OBSERVACIONES']; ?>
+</td>
+           </tr>           
+         </table>
+		</fieldset>				
+		
+				
+		<table align="center">
+	      <tr>
+	        <td align="center"><?php print $this->_tpl_vars['GUARDAR']; ?>
+&nbsp;<?php print $this->_tpl_vars['ACTUALIZAR']; ?>
+&nbsp;<?php print $this->_tpl_vars['LIMPIAR']; ?>
+&nbsp;<?php print $this->_tpl_vars['ANULAR']; ?>
+&nbsp;<?php print $this->_tpl_vars['IMPRIMIR']; ?>
+</td>
+          </tr>
+      </table>
+      <?php print $this->_tpl_vars['FORM1END']; ?>
+
+    </fieldset>
+	
+	<div id="rangoImp">
+      <div align="center">
+	    <p align="center">
+		  <b>Desde :&nbsp;</b><?php print $this->_tpl_vars['RANGODESDE']; ?>
+ <b>&nbsp;&nbsp;&nbsp;Hasta :&nbsp;</b><?php print $this->_tpl_vars['RANGOHASTA']; ?>
+&nbsp;&nbsp;&nbsp;<b>Formato :</b><?php print $this->_tpl_vars['FORMATO']; ?>
+
+		</p>
+		<p align="center"><?php print $this->_tpl_vars['PRINTCANCEL']; ?>
+<?php print $this->_tpl_vars['PRINTOUT']; ?>
+</p>
+	  </div>
+	</div>		
+    
+    <fieldset><?php print $this->_tpl_vars['GRIDREMESAS']; ?>
+</fieldset>
+	
+<div id="divAnulacion">
+  <form onSubmit="return false">
+	<table>              
+	  <tr>
+		<td><label>Causal :</label></td>
+		<td><?php print $this->_tpl_vars['CAUSALANULACIONID']; ?>
+</td>
+	  </tr>
+	  <tr>
+		<td><label>Descripcion :</label></td>
+		<td><?php print $this->_tpl_vars['OBSERVANULACION']; ?>
+</td>
+	  </tr> 
+	  <tr>
+		<td colspan="2" align="center"><?php print $this->_tpl_vars['ANULAR']; ?>
+</td>
+	  </tr>                    
+	</table>
+  </form>
+</div>	
+	    
+  </body>
+>>>>>>> develop
+</html>

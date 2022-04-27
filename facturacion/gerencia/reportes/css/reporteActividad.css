@@ -1,0 +1,10 @@
+/* CSS Document */
+.tableFilter thead td{
+ font-weight:bold;
+ font-size:12px;
+}
+
+
+iframe{
+	height:450px;
+}

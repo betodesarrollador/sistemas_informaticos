@@ -1,0 +1,163 @@
+#tableEntrega{
+margin:5px 5px 5px 5px;
+}
+
+#tableEntrega thead th{
+border-bottom:1px solid;
+border-top:1px solid;
+border-left:1px solid;
+border-right:1px solid;
+border-color:#87B6D9;
+font-size: 10px;
+font-family: Arial, Helvetica, sans-serif;
+color: #1D74C1;
+background-color:#DAEAF6;
+padding:5px;
+}
+
+#tableEntrega tbody td{
+border-bottom:1px solid;
+border-top:1px solid;
+border-left:1px solid;
+border-right:1px solid;
+border-color:#87B6D9;
+font-size:11px;
+font-weight:bold;
+}
+
+#tableEntrega tbody tr{
+text-align:center;
+background-color:#FFFFFF;
+}
+
+#tableEntrega tbody td input[type=text]{
+border:none;
+}
+
+#tableEntrega tbody td img{
+vertical-align:middle;
+cursor: pointer;
+}
+
+#tableManifiesto{
+margin:5px 5px 5px 5px;
+}
+
+#tableManifiesto thead th{
+border-bottom:1px solid;
+border-top:1px solid;
+border-left:1px solid;
+border-right:1px solid;
+border-color:#87B6D9;
+font-size: 10px;
+font-family: Arial, Helvetica, sans-serif;
+color: #1D74C1;
+background-color:#DAEAF6;
+padding:5px;
+}
+
+#tableManifiesto tbody td{
+border-bottom:1px solid;
+border-top:1px solid;
+border-left:1px solid;
+border-right:1px solid;
+border-color:#87B6D9;
+font-size:11px;
+font-weight:bold;
+}
+
+#tableManifiesto tbody tr{
+text-align:center;
+background-color:#FFFFFF;
+}
+
+#tableManifiesto tbody td input[type=text]{
+border:none;
+}
+
+#tableManifiesto tbody td img{
+vertical-align:middle;
+cursor: pointer;
+}
+
+#tableManifiesto1{
+margin:5px 5px 5px 5px;
+}
+
+#tableManifiesto1 thead th{
+border-bottom:1px solid;
+border-top:1px solid;
+border-left:1px solid;
+border-right:1px solid;
+border-color:#87B6D9;
+font-size: 10px;
+font-family: Arial, Helvetica, sans-serif;
+color: #1D74C1;
+background-color:#DAEAF6;
+padding:5px;
+}
+
+#tableManifiesto1 tbody td{
+border-bottom:1px solid;
+border-top:1px solid;
+border-left:1px solid;
+border-right:1px solid;
+border-color:#87B6D9;
+font-size:11px;
+font-weight:bold;
+}
+
+#tableManifiesto1 tbody tr{
+text-align:center;
+background-color:#FFFFFF;
+}
+
+#tableManifiesto1 tbody td input[type=text]{
+border:none;
+}
+
+#tableManifiesto1 tbody td img{
+vertical-align:middle;
+cursor: pointer;
+}
+
+.focusSaveRow{
+background:#0033FF;
+}
+
+#clon{
+display:none;
+}
+
+#clon1{
+display:none;
+}
+
+#divProductos{
+  padding:5px;
+  overflow:auto;  
+  max-height:220px;
+  background-color:#FFFFFF;
+  border:1px solid;
+}
+
+#divProductos1{
+  padding:5px;
+  overflow:auto;  
+  max-height:220px;
+  background-color:#FFFFFF;
+  border:1px solid;
+}
+
+.focusGrid{
+  border:1px solid;
+  background-color:#0000FF;
+}
+
+div#texto {
+	position:relative;
+	margin-right: auto;
+	text-align: right;
+	border: 0px;
+
+}

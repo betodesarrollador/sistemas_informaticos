@@ -1,0 +1,62 @@
+/* CSS Document */
+
+   table tr td{
+    font-size:10px;
+   }
+   
+   .small{
+      font-size:xx-small;
+   }
+   
+   .title{
+     background-color:#999999;
+	 font-weight:bold;
+	 text-align:center;
+   }
+   
+   .fontBig{
+     font-size:12px;
+   }
+   
+   .infogeneral{
+     border:1px solid;
+   }
+   
+   .cellTitle{
+     background-color:#999999;
+	 font-weight:bold;
+	 text-align:center;
+	 border:1px solid;   
+   }
+   
+   .cellRight{
+     border-right:1px solid;
+	 border-bottom:1px solid;
+	 
+   }
+   
+   .cellLeft{
+     border-left:1px solid;
+     border-right:1px solid;
+	 border-bottom:1px solid;	 
+   }
+   
+   .cellTitleLeft{
+     border-left:1px solid;
+     border-right:1px solid;
+	 border-bottom:1px solid; 
+	 border-top:1px solid;
+     background-color:#999999;
+	 font-weight:bold;
+	 text-align:center;	   
+   }   
+   
+   .cellTitleRight{
+     border-right:1px solid;
+	 border-bottom:1px solid;   
+	 border-top:1px solid;	 
+     background-color:#999999;
+	 font-weight:bold;
+	 text-align:center;	 
+   }
+

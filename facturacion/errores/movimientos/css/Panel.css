@@ -1,0 +1,47 @@
+.panel {
+    background-color: rgb(255, 255, 255);
+    margin-top: 10px;
+    margin-bottom: 15px;
+    height: auto;
+    width: 100%;
+    border-radius: 5px;
+    box-shadow: 0px 0px 15px -4px;
+    padding-bottom: 5px;
+}
+
+.detalle_actividad {
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #dee2e6;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: none;
+}
+
+.cerrar {
+    text-align: right;
+}
+
+.campos {
+    text-align: center;
+    width: 350px;
+}
+
+.titulo {
+    width: 100%;
+    background: rgba(73, 155, 234, 0.78);
+    background: -moz-linear-gradient(top, rgba(73, 155, 234, 0.78) 0%, rgba(32, 124, 229, 1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(73, 155, 234, 0.78)), color-stop(100%, rgba(32, 124, 229, 1)));
+    background: -webkit-linear-gradient(top, rgba(73, 155, 234, 0.78) 0%, rgba(32, 124, 229, 1) 100%);
+    background: -o-linear-gradient(top, rgba(73, 155, 234, 0.78) 0%, rgba(32, 124, 229, 1) 100%);
+    background: -ms-linear-gradient(top, rgba(73, 155, 234, 0.78) 0%, rgba(32, 124, 229, 1) 100%);
+    background: linear-gradient(to bottom, rgba(73, 155, 234, 0.78) 0%, rgba(32, 124, 229, 1) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#499bea', endColorstr='#207ce5', GradientType=0);
+    height: 65px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color: #fff;
+    padding-top: 15px;
+}

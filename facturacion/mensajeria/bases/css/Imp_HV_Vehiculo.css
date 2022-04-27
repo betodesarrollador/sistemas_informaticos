@@ -1,0 +1,99 @@
+/* CSS Document */
+#contenedor{
+	width:572px;
+	height:752px;
+	/*background:#666666;*/
+}
+
+#cabecera{
+	width:572px;
+	height:69px;
+	/*background:#CCCCCC;*/
+}
+
+#contDatosVehi{
+	width:572px;
+	height:665px;
+	/*background:#99CC33;*/
+}
+
+#contDatosVehi table{
+	width:100%;
+}
+
+#contDatosVehi .Label_2{
+	text-align:right;
+}
+
+#contDatosVehi .Dato_2{
+	text-align:left;
+}
+
+#poli .Dato_2{
+	text-align:center;
+}
+
+#poli .Label_2{
+	text-align:center;
+}
+
+#tene .Dato_2{
+	text-align:center;
+}
+
+#tene .Label_2{
+	text-align:center;
+}
+
+
+
+.Tit_1{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:20px;
+	font-weight:bold;
+}
+
+.Tit_2{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:18px;
+	font-weight:bold;
+}
+
+.Tit_3{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:16px;
+	font-weight:bold;
+}
+
+.Label_1{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:14px;
+	font-weight:bold;
+}
+
+.Label_2{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	font-weight:bold;
+}
+
+.Label_3{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:10px;
+	font-weight:bold;
+}
+
+.Dato_1{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:14px;
+}
+
+.Dato_2{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+}
+
+.Dato_3{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:10px;
+}

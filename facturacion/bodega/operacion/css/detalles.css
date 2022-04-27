@@ -1,0 +1,35 @@
+.detallePrecios{
+	height : 276px;
+	margin-bottom: 20px;
+}
+
+.kardexrapido{
+	height: 310px;
+    padding-right: 10px;
+
+}
+
+.zoomIt{
+display:block!important;
+-webkit-transition:-webkit-transform 1s ease-out;
+-moz-transition:-moz-transform 1s ease-out;
+-o-transition:-o-transform 1s ease-out;
+-ms-transition:-ms-transform 1s ease-out;
+transition:transform 1s ease-out;
+}
+.zoomIt:hover{
+-moz-transform: scale(1.1);
+-webkit-transform: scale(1.1);
+-o-transform: scale(1.1);
+-ms-transform: scale(1.1);
+transform: scale(1.1)
+}
+
+.img{
+	width: 394px;
+height: 340px;
+background-color: #daddde;
+padding-left: 18px;
+padding-top: 10px;
+box-shadow: 0px 2px 16px -7px;
+}

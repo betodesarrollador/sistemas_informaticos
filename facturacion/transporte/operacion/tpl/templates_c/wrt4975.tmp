@@ -1,0 +1,54 @@
+<<<<<<< HEAD
+<?php /* Smarty version 2.6.26, created on 2013-06-14 17:37:41
+         compiled from OrdenCargueToRemesa.tpl */ ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+  <head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <?php print $this->_tpl_vars['JAVASCRIPT']; ?>
+
+  <?php print $this->_tpl_vars['CSSSYSTEM']; ?>
+
+  <?php print $this->_tpl_vars['TABLEGRIDJS']; ?>
+  
+  <?php print $this->_tpl_vars['TABLEGRIDCSS']; ?>
+  
+  <?php print $this->_tpl_vars['TITLETAB']; ?>
+ 
+  </head>
+
+  <body>
+   
+    <?php print $this->_tpl_vars['GRIDOrdenCargueToRemesa']; ?>
+
+	
+    <center><?php print $this->_tpl_vars['REMESAR']; ?>
+</center>
+  </body>
+=======
+<?php /* Smarty version 2.6.26, created on 2013-06-14 17:37:41
+         compiled from OrdenCargueToRemesa.tpl */ ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+  <head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <?php print $this->_tpl_vars['JAVASCRIPT']; ?>
+
+  <?php print $this->_tpl_vars['CSSSYSTEM']; ?>
+
+  <?php print $this->_tpl_vars['TABLEGRIDJS']; ?>
+  
+  <?php print $this->_tpl_vars['TABLEGRIDCSS']; ?>
+  
+  <?php print $this->_tpl_vars['TITLETAB']; ?>
+ 
+  </head>
+
+  <body>
+   
+    <?php print $this->_tpl_vars['GRIDOrdenCargueToRemesa']; ?>
+
+	
+    <center><?php print $this->_tpl_vars['REMESAR']; ?>
+</center>
+  </body>
+>>>>>>> develop
+</html>

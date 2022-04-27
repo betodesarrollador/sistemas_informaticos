@@ -1,0 +1,554 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+  <head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  {$JAVASCRIPT}
+  {$CSSSYSTEM}
+  </head>
+
+  <body> 
+  <input type="hidden" id="tipo" value="{$tipo}" />
+  
+  <table width="90%" align="center" id="encabezado" border="0">
+  	<tr><td width="30%">&nbsp;</td><td align="center" class="titulo" width="40%">{if $tipo eq 'FP'}Facturas Pendientes{elseif  $tipo eq 'RE'}Reporte Recaudos{elseif  $tipo eq 'EC'}Estado Cartera{elseif  $tipo eq 'RF'}Relaci&oacute;n de Facturas{elseif  $tipo eq 'PE'}Cartera por Edades{/if}</td><td width="30%" align="right">&nbsp;</td></tr>	
+  	<tr><td colspan="3">&nbsp;</td></tr>
+  	<tr><td align="center" colspan="3">Rango Inicial : {$desde}&nbsp;&nbsp;&nbsp;&nbsp;Rango Final: {$hasta}</td></tr>	 	   
+  </table>	
+
+  <table align="center" id="encabezado"  width="90%">
+      {if $tipo eq 'FP'}
+          {assign var="clien" value=""}
+          {assign var="acumula_total" value="0"}
+          {assign var="acumula_saldos" value="0"}
+
+          {assign var="acumula_totales" value="0"}
+          {assign var="acumula_saldos_total" value="0"}
+          
+          {foreach name=detalles from=$DETALLES item=i}
+      
+		  {if $clien eq '' or $clien neq $i.cliente_nombre}
+              
+              {if $clien neq '' and $clien neq $i.cliente_nombre}
+              
+                  <tr class="subtitulo">
+                   <td class="borderLeft borderTop borderRight borderBottom" colspan="5" align="right">TOTAL</td>
+                   <td class="borderTop borderRight borderBottom" align="right">{$acumula_total|number_format:2:',':'.'}</td>
+                   <td class="borderTop borderRight borderBottom" align="right">{$acumula_saldos|number_format:2:',':'.'}</td>
+                   <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>								
+                  </tr>  
+                  {assign var="acumula_total" value="0"}
+                  {assign var="acumula_saldos" value="0"}
+                  <tr>
+                    <th colspan="8" align="left">&nbsp;</th>
+                  </tr>	
+                  <tr>
+                    <th colspan="8" align="left">&nbsp;</th>
+                  </tr>	
+                  
+                  
+			  {/if}	
+              {assign var="clien" value=$i.cliente_nombre}
+
+          <tr>
+          	<th colspan="8" align="left">{$i.cliente_nombre}<br /></th>
+          
+          </tr>	
+          <tr>
+          	<th colspan="8" align="left">&nbsp;</th>
+          </tr>	
+
+          <tr>
+            <th class="borderLeft borderTop borderRight">No FACT</th>
+            <th class="borderTop borderRight">OFICINA</th>
+            <th class="borderTop borderRight">FECHA FACT</th>
+            <th class="borderTop borderRight">VENCE</th>
+            <th class="borderTop borderRight">DIAS</th>		
+            <th class="borderTop borderRight">VALOR</th>
+            <th class="borderTop borderRight">SALDO</th>
+            <th class="borderTop borderRight">COMERCIAL</th>
+          </tr>
+          {/if}
+          <tr bgcolor="{cycle values="#eeeeee,#d0d0d0"}">
+            <td class="borderLeft borderTop borderRight">{$i.consecutivo_factura} </td> 
+            <td class="borderTop borderRight">{$i.oficina}</td>  
+            <td class="borderTop borderRight">{$i.fecha}</td>  
+            <td class="borderTop borderRight">{$i.vencimiento}</td>  
+            <td class="borderTop borderRight">{$i.dias}</td>  
+            <td class="borderTop borderRight" align="right">{$i.valor_neto|number_format:2:',':'.'}</td>  
+            <td class="borderTop borderRight" align="right">{$i.saldo|number_format:2:',':'.'}</td>  
+            <td class="borderTop borderRight" align="center">{$i.comercial}</td>  
+          </tr> 
+          {math assign="acumula_total" equation="x + y" x=$acumula_total y=$i.valor_neto}
+          {math assign="acumula_saldos" equation="x + y" x=$acumula_saldos y=$i.saldo}
+
+          {math assign="acumula_totales" equation="x + y" x=$acumula_totales y=$i.valor_neto}
+          {math assign="acumula_saldos_total" equation="x + y" x=$acumula_saldos_total y=$i.saldo}
+          
+		  {/foreach}	
+
+          <tr class="subtitulo">
+           <td class="borderLeft borderTop borderRight borderBottom" colspan="5" align="right">TOTAL</td>
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_total|number_format:2:',':'.'}</td>
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_saldos|number_format:2:',':'.'}</td>
+           <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>																
+          </tr>  
+
+          <tr >
+           <td  colspan="8" align="right">&nbsp;</td>
+          </tr>  
+          <tr class="subtitulo">
+           <td class="borderLeft borderTop borderRight borderBottom" colspan="5" align="right">TOTAL TODOS LOS TERCEROS</td>
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_totales|number_format:2:',':'.'}</td>
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_saldos_total|number_format:2:',':'.'}</td>
+           <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>																
+          </tr>  
+
+      {elseif $tipo eq 'RF'}
+          {assign var="clien" value=""}
+          {assign var="acumula_total" value="0"}
+          {assign var="acumula_saldos" value="0"}
+          
+          {assign var="acumula_totales" value="0"}
+          {assign var="acumula_saldos_total" value="0"}
+          
+          {foreach name=detalles from=$DETALLES item=i}
+      
+		  {if $clien eq '' or $clien neq $i.cliente_nombre}
+              
+              {if $clien neq '' and $clien neq $i.cliente_nombre}
+              
+                  <tr class="subtitulo">
+                   <td class="borderLeft borderTop borderRight borderBottom" colspan="7" align="right">TOTAL</td>
+                   <td class="borderTop borderRight borderBottom" align="right">{$acumula_total|number_format:2:',':'.'}</td>
+                   <td class="borderTop borderRight borderBottom" align="right">{$acumula_saldos|number_format:2:',':'.'}</td>								
+                  </tr>  
+                  {assign var="acumula_total" value="0"}
+                  {assign var="acumula_saldos" value="0"}
+                  <tr>
+                    <th colspan="7" align="left">&nbsp;</th>
+                  </tr>	
+                  <tr>
+                    <th colspan="7" align="left">&nbsp;</th>
+                  </tr>	
+                  
+                  
+			  {/if}	
+              {assign var="clien" value=$i.cliente_nombre}
+
+          <tr>
+          	<th colspan="7" align="left">{$i.cliente_nombre}<br /></th>
+          
+          </tr>	
+          <tr>
+          	<th colspan="7" align="left">&nbsp;</th>
+          </tr>	
+
+          <tr>
+            <th class="borderLeft borderTop borderRight">No FACT</th>
+            <th class="borderTop borderRight">ESTADO</th>
+             <th class="borderTop borderRight">CENTRO</th>		
+            <th class="borderTop borderRight">OFICINA</th>
+            <th class="borderTop borderRight">FECHA FACT</th>
+            <th class="borderTop borderRight">VENCE</th>
+            <th class="borderTop borderRight">RELACION PAGOS</th>
+            <th class="borderTop borderRight">VALOR</th>
+            <th class="borderTop borderRight">SALDO</th>
+          </tr>
+          {/if}
+          <tr bgcolor="{cycle values="#eeeeee,#d0d0d0"}">
+            <td class="borderLeft borderTop borderRight">{$i.consecutivo_factura} </td> 
+            <td class="borderTop borderRight">{$i.estado}</td> 
+            <td class="borderTop borderRight">{$i.centro}</td>  
+            <td class="borderTop borderRight">{$i.oficina}</td>  
+            <td class="borderTop borderRight">{$i.fecha}</td>  
+            <td class="borderTop borderRight">{$i.vencimiento}</td>
+            <td class="borderTop borderRight">{$i.relacion_pago}</td>  
+            <td class="borderTop borderRight" align="right">{if $i.estado eq 'ANULADA'}0{else}{$i.valor_neto|number_format:2:',':'.'}{/if}</td>  
+            <td class="borderTop borderRight" align="right">{if $i.estado eq 'ANULADA'}0{else}{$i.saldo|number_format:2:',':'.'}{/if}</td>  
+          </tr> 
+          {if $i.estado neq 'ANULADA'}
+          {math assign="acumula_total" equation="x + y" x=$acumula_total y=$i.valor_neto}
+          {math assign="acumula_saldos" equation="x + y" x=$acumula_saldos y=$i.saldo}
+              {math assign="acumula_totales" equation="x + y" x=$acumula_totales y=$i.valor_neto}
+              {math assign="acumula_saldos_total" equation="x + y" x=$acumula_saldos_total y=$i.saldo}
+		  {/if}
+          
+		  {/foreach}	
+
+          <tr class="subtitulo">
+           <td class="borderLeft borderTop borderRight borderBottom" colspan="7" align="right">TOTAL</td>
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_total|number_format:2:',':'.'}</td>
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_saldos|number_format:2:',':'.'}</td>								
+          </tr>  
+          <tr >
+           <td  colspan="9" align="right">&nbsp;</td>
+          </tr>  
+          <tr class="subtitulo">
+           <td class="borderLeft borderTop borderRight borderBottom" colspan="7" align="right">TOTAL TODOS LOS TERCEROS</td>
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_totales|number_format:2:',':'.'}</td>
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_saldos_total|number_format:2:',':'.'}</td>								
+          </tr>  
+             <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+  {elseif $tipo eq 'RE'}
+    {assign var="clien" value=""}
+    {assign var="acumula_total" value="0"}
+    {assign var="acumula_saldos" value="0"}
+    
+     {assign var="acumula_pagos" value="0"}
+
+    {assign var="acumula_totales" value="0"}
+    {assign var="acumula_saldos_total" value="0"}
+    {assign var="acumula_pagos_total" value="0"}
+
+    {foreach name=detalles from=$DETALLES item=i}
+      {if $clien eq '' or $clien neq $i.cliente_nombre}
+        {if $clien neq '' and $clien neq $i.cliente_nombre}
+          <tr class="subtitulo">
+            <td class="borderLeft borderTop borderRight borderBottom" colspan="3" align="center">TOTAL</td>
+            <td class="borderTop borderRight borderBottom" align="right">{$acumula_total|number_format:2:',':'.'}</td>
+            <td class="borderTop borderRight borderBottom" colspan="2" align="center">TOTAL PAGOS</td>
+            {math assign="acumula_pagos" equation="x - y" x=$acumula_total y=$acumula_saldos}
+             <td class="borderTop borderRight borderBottom" align="right">{$acumula_pagos|number_format:2:',':'.'}</td>
+            <td class="borderTop borderRight borderBottom" align="right">{$acumula_saldos|number_format:2:',':'.'}</td>
+            <td class="borderTop borderRight borderBottom" align="right"></td>
+            <td class="borderTop borderRight borderBottom" align="right"></td>
+            <td class="borderTop borderRight borderBottom" align="right"></td>
+          </tr>
+          {assign var="acumula_total" value="0"}
+          {assign var="acumula_saldos" value="0"}
+          {assign var="acumula_pagos" value="0"}
+          <tr>
+            <th colspan="5" align="left">&nbsp;</th>
+          </tr>
+          <tr>
+            <th colspan="5" align="left">&nbsp;</th>
+          </tr>
+        {/if}
+        {assign var="clien" value=$i.cliente_nombre}
+        <tr>
+          <th colspan="5" align="left">{$i.cliente_nombre}<br /></th>
+        </tr>
+        <tr>
+          <th colspan="5" align="left">&nbsp;</th>
+        </tr>
+        <tr>
+          <th class="borderLeft borderTop borderRight">Nº FACT</th>
+          <th class="borderTop borderRight">OFICINA</th>
+          <th class="borderTop borderRight">FECHA FACT</th>
+          <th class="borderTop borderRight">VALOR</th>
+          <th class="borderTop borderRight">RELACION PAGOS</th>
+          <th class="borderTop borderRight">FECHA RELACION PAGOS</th>
+          <th class="borderTop borderRight">VALOR PAGO</th>
+          <th class="borderTop borderRight">SALDO</th>
+          <th class="borderTop borderRight">DIAS DIFERENCIA DE PAGO</th>
+          <th class="borderTop borderRight">COMERCIAL</th>
+          <th class="borderTop borderRight">USUARIO</th>
+        </tr>
+      {/if}
+    <tr bgcolor="{cycle values="#eeeeee,#d0d0d0"}">
+      <td class="borderLeft borderTop borderRight">{$i.consecutivo_factura} </td>
+      <td class="borderTop borderRight">{$i.oficina}</td>
+      <td class="borderTop borderRight">{$i.fecha}</td>
+      <td class="borderTop borderRight" align="right">{if $i.estado eq 'ANULADA'}0{else}{$i.valor_neto|number_format:2:',':'.'}{/if}</td>
+      <td class="borderTop borderRight" align="center">{$i.relacion_pago}</td>
+      <td class="borderTop borderRight">{$i.fecha_relacion_pago}</td>
+      <td class="borderTop borderRight">{$i.valor_relacion_pago|number_format:2:',':'.'}</td>
+      <td class="borderTop borderRight" align="right">{if $i.estado eq 'ANULADA'}0{else}{$i.saldo|number_format:2:',':'.'}{/if}</td>
+      <td class="borderTop borderRight" align="center">{if $i.diferencia_dias eq ''}PAGO AUN NO REGISTRADO{else}{$i.diferencia_dias}{/if}</td>
+      <td class="borderTop borderRight">{$i.comercial}</td>
+      <td class="borderTop borderRight">{$i.usuario}</td>
+    </tr>
+    {math assign="acumula_total" equation="x + y" x=$acumula_total y=$i.valor_neto}
+    {math assign="acumula_saldos" equation="x + y" x=$acumula_saldos y=$i.saldo}
+    
+    {if $i.estado neq 'ANULADA'}
+      {math assign="acumula_totales" equation="x + y" x=$acumula_totales y=$i.valor_neto}
+      {math assign="acumula_saldos_total" equation="x + y" x=$acumula_saldos_total y=$i.saldo}
+      
+    {/if}
+  {/foreach}
+  <tr class="subtitulo">
+    <td class="borderLeft borderTop borderRight borderBottom" colspan="3" align="center">TOTAL</td>
+    <td class="borderTop borderRight borderBottom"  align="right">{$acumula_total|number_format:2:',':'.'}</td>
+    <td class="borderTop borderRight borderBottom" colspan="2" align="center">TOTAL PAGOS</td>
+    {math assign="acumula_pagos" equation="x - y" x=$acumula_total y=$acumula_saldos}
+    
+     <td class="borderTop borderRight borderBottom" align="right">{$acumula_pagos|number_format:2:',':'.'}</td>
+    <td class="borderTop borderRight borderBottom" align="right">{$acumula_saldos|number_format:2:',':'.'}</td>
+    <td class="borderTop borderRight borderBottom" align="right"></td>
+    <td class="borderTop borderRight borderBottom" align="right"></td>
+            <td class="borderTop borderRight borderBottom" align="right"></td>
+            
+  </tr>
+  <tr >
+    <td  colspan="7" align="right">&nbsp;</td>
+  </tr>
+  <tr class="subtitulo">
+    <td class="borderLeft borderTop borderRight borderBottom" colspan="3" align="center">TOTAL TODOS LOS TERCEROS</td>
+    <td class="borderTop borderRight borderBottom" align="right">{$acumula_totales|number_format:2:',':'.'}</td>
+   <td class="borderTop borderRight borderBottom" colspan="2" align="center">TOTAL PAGOS</td>
+   {math assign="acumula_pagos_total" equation="x - y" x=$acumula_totales y=$acumula_saldos_total}
+            
+             <td class="borderTop borderRight borderBottom" align="right">{$acumula_pagos_total|number_format:2:',':'.'}</td>
+            
+    <td class="borderTop borderRight borderBottom" align="right">{$acumula_saldos_total|number_format:2:',':'.'}</td>
+    <td class="borderTop borderRight borderBottom" align="right"></td>
+    <td class="borderTop borderRight borderBottom" align="right"></td>
+            <td class="borderTop borderRight borderBottom" align="right"></td>
+            
+  </tr>
+
+          <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+       
+      
+      {elseif  $tipo eq 'EC'}
+
+          {assign var="clien" value=""}
+          {assign var="acumula_total" value="0"}
+          {assign var="acumula_saldos" value="0"}
+          {foreach name=detalles from=$DETALLES item=i}
+      
+		  {if $clien eq '' or $clien neq $i.cliente_nombre}
+              
+              {if $clien neq '' and $clien neq $i.cliente_nombre}
+              
+                  <tr class="subtitulo">
+                   <td class="borderLeft borderTop borderRight borderBottom" colspan="5" align="right">TOTAL</td>
+                   <td class="borderTop borderRight borderBottom" align="right">{$acumula_total|number_format:2:',':'.'}</td>
+                   <td class="borderTop borderRight borderBottom" align="right">{$acumula_saldos|number_format:2:',':'.'}</td>								
+                  </tr>  
+                  {assign var="acumula_total" value="0"}
+                  {assign var="acumula_saldos" value="0"}
+                  <tr>
+                    <th colspan="7" align="left">&nbsp;</th>
+                  </tr>	
+                  <tr>
+                    <th colspan="7" align="left">&nbsp;</th>
+                  </tr>	
+                  
+                  
+			  {/if}	
+              {assign var="clien" value=$i.cliente_nombre}
+
+          <tr>
+          	<th colspan="7" align="left">{$i.cliente_nombre}<br /></th>
+          
+          </tr>	
+          <tr>
+          	<th colspan="7" align="left">&nbsp;</th>
+          </tr>	
+
+          <tr>
+            
+            <th class="borderLeft borderTop borderRight">No FACT</th>
+            <th class="borderTop borderRight">OFICINA</th>
+            <th class="borderTop borderRight">FECHA FACT</th>
+            <th class="borderTop borderRight">FECHA VENCIMIENTO</th>
+            <th class="borderTop borderRight">DIAS</th>		
+            <th class="borderTop borderRight">VALOR</th>
+            <th class="borderTop borderRight">SALDO</th>
+          </tr>
+          {/if}
+          <tr bgcolor="{cycle values="#eeeeee,#d0d0d0"}">
+            <td class="borderLeft borderTop borderRight">{$i.consecutivo_factura} </td> 
+            <td class="borderTop borderRight">{$i.oficina}</td>  
+            <td class="borderTop borderRight">{$i.fecha}</td>  
+            <td class="borderTop borderRight">{$i.vencimiento}</td>  
+            <td class="borderTop borderRight">{$i.dias}</td>  
+            <td class="borderTop borderRight" align="right">{$i.valor_neto|number_format:2:',':'.'}</td>  
+            <td class="borderTop borderRight" align="right">{$i.saldo|number_format:2:',':'.'}</td>  
+          </tr> 
+          {math assign="acumula_total" equation="x + y" x=$acumula_total y=$i.valor_neto}
+          {math assign="acumula_saldos" equation="x + y" x=$acumula_saldos y=$i.saldo}
+		  {/foreach}	
+
+          <tr class="subtitulo">
+           <td class="borderLeft borderTop borderRight borderBottom" colspan="5" align="right">TOTAL</td>
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_total|number_format:2:',':'.'}</td>
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_saldos|number_format:2:',':'.'}</td>								
+          </tr>  
+      
+      {elseif  $tipo eq 'PE'}
+
+          {assign var="clien" value=""}
+          {assign var="acumula_total" value="0"}
+
+          {assign var="acumula_0" value="0"}
+          {assign var="acumula_30" value="0"}
+          {assign var="acumula_60" value="0"}
+          {assign var="acumula_90" value="0"}
+          {assign var="acumula_180" value="0"}
+          {assign var="acumula_360" value="0"}
+          {assign var="acumula_360mas" value="0"}
+          
+          {foreach name=detalles from=$DETALLES item=i}
+      
+		  {if $clien eq '' or $clien neq $i.cliente_nombre}
+              
+              {if $clien neq '' and $clien neq $i.cliente_nombre}
+              
+                  <tr class="subtitulo">
+                   <td class="borderLeft borderTop borderRight borderBottom" colspan="4" align="right">TOTAL</td>
+                   <td class="borderTop borderRight borderBottom" align="right">{$acumula_0|number_format:2:',':'.'}</td>
+                   <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>								
+                   
+                   <td class="borderTop borderRight borderBottom" align="right">{$acumula_30|number_format:2:',':'.'}</td>
+                   <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>								
+                   <td class="borderTop borderRight borderBottom" align="right">{$acumula_60|number_format:2:',':'.'}</td>
+                   <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>								
+                   <td class="borderTop borderRight borderBottom" align="right">{$acumula_90|number_format:2:',':'.'}</td>
+                   <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>								
+                   <td class="borderTop borderRight borderBottom" align="right">{$acumula_180|number_format:2:',':'.'}</td>
+                   <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>								
+                   <td class="borderTop borderRight borderBottom" align="right">{$acumula_360|number_format:2:',':'.'}</td>
+                   <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>								
+                   <td class="borderTop borderRight borderBottom" align="right">{$acumula_360mas|number_format:2:',':'.'}</td>
+                   <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>								
+                  </tr>  
+                  {assign var="acumula_0" value="0"}
+                  {assign var="acumula_30" value="0"}
+                  {assign var="acumula_60" value="0"}
+                  {assign var="acumula_90" value="0"}
+                  {assign var="acumula_180" value="0"}
+                  {assign var="acumula_360" value="0"}
+                  {assign var="acumula_360mas" value="0"}
+                  <tr>
+                    <th colspan="11" align="left">&nbsp;</th>
+                  </tr>	
+                  <tr>
+                    <th colspan="11" align="left">&nbsp;</th>
+                  </tr>	
+                  
+                  
+			  {/if}	
+              {assign var="clien" value=$i.cliente_nombre}
+
+          <tr>
+          	<th colspan="11" align="left">{$i.cliente_nombre}<br /></th>
+          
+          </tr>	
+          <tr>
+          	<th colspan="11" align="left">&nbsp;</th>
+          </tr>	
+
+          <tr>
+            <th class="borderLeft borderTop borderRight" rowspan="2">No FACT</th>
+            <th class="borderTop borderRight" rowspan="2">OFICINA</th>
+             <th class="borderTop borderRight" rowspan="2">FECHA FACT</th>
+            <th class="borderTop borderRight" rowspan="2">VENCE</th>
+            <th class=" borderLeft borderTop borderRight" colspan="2">MENOR A 1</th>            
+            <th class="borderTop borderRight" colspan="2">1-30</th>		
+            <th class="borderTop borderRight" colspan="2">31-60</th>
+            <th class="borderTop borderRight" colspan="2">61-90</th>
+            <th class="borderTop borderRight" colspan="2">91-180</th>
+            <th class="borderTop borderRight" colspan="2">181-360</th>
+            <th class="borderTop borderRight" colspan="2">MAYOR A 360</th>
+          </tr>
+          <tr>
+            <th class="borderLeft borderTop borderRight">VALOR</th>
+            <th class="borderTop borderRight">DIAS</th>
+            <th class="borderTop borderRight">VALOR</th>
+            <th class="borderTop borderRight">DIAS</th>
+            <th class="borderTop borderRight">VALOR</th>
+            <th class="borderTop borderRight">DIAS</th>
+            <th class="borderTop borderRight">VALOR</th>
+            <th class="borderTop borderRight">DIAS</th>
+            <th class="borderTop borderRight">VALOR</th>
+            <th class="borderTop borderRight">DIAS</th>
+            <th class="borderTop borderRight">VALOR</th>
+            <th class="borderTop borderRight">DIAS</th>
+            <th class="borderTop borderRight">VALOR</th>
+            <th class="borderTop borderRight">DIAS</th>
+            
+          </tr>
+          {/if}
+          <tr bgcolor="{cycle values="#eeeeee,#d0d0d0"}">
+            <td class="borderLeft borderTop borderRight">{$i.consecutivo_factura}</td> 
+            <td class="borderTop borderRight">{$i.oficina}</td>  
+            <td class="borderTop borderRight">{$i.fecha}</td>  
+            <td class="borderTop borderRight">{$i.vencimiento}</td>  
+
+            <td class="borderTop borderRight" align="right">{if $i.dias lt 0 or  $i.dias eq 0}{$i.saldo|number_format:2:',':'.'}{/if}</td>  
+            <td class="borderTop borderRight">{if $i.dias lt 0 or  $i.dias eq 0}{$i.dias}{/if}</td>  
+            
+            <td class="borderTop borderRight" align="right">{if $i.dias gt 0 and $i.dias lt 31 }{$i.saldo|number_format:2:',':'.'}{/if}</td>  
+            <td class="borderTop borderRight">{if $i.dias gt 0 and $i.dias lt 31 }{$i.dias}{/if}</td>  
+
+            <td class="borderTop borderRight" align="right">{if $i.dias gt 30 and $i.dias lt 61 }{$i.saldo|number_format:2:',':'.'}{/if}</td>  
+            <td class="borderTop borderRight">{if $i.dias gt 30 and $i.dias lt 61 }{$i.dias}{/if}</td>  
+
+            <td class="borderTop borderRight" align="right">{if $i.dias gt 60 and $i.dias lt 91 }{$i.saldo|number_format:2:',':'.'}{/if}</td>  
+            <td class="borderTop borderRight">{if $i.dias gt 60 and $i.dias lt 91 }{$i.dias}{/if}</td>  
+
+            <td class="borderTop borderRight" align="right">{if $i.dias gt 90 and $i.dias lt 181 }{$i.saldo|number_format:2:',':'.'}{/if}</td>  
+            <td class="borderTop borderRight">{if $i.dias gt 60 and $i.dias lt 91 }{$i.dias}{/if}</td>  
+            
+            <td class="borderTop borderRight" align="right">{if $i.dias gt 180 and $i.dias lt 361 }{$i.saldo|number_format:2:',':'.'}{/if}</td>  
+            <td class="borderTop borderRight">{if $i.dias gt 60 and $i.dias lt 91 }{$i.dias}{/if}</td>  
+
+            <td class="borderTop borderRight" align="right">{if $i.dias gt 360}{$i.saldo|number_format:2:',':'.'}{/if}</td>  
+            <td class="borderTop borderRight">{if $i.dias gt 360}{$i.dias}{/if}</td>  
+
+          </tr> 
+          {if  $i.dias lt 0 or  $i.dias eq 0 }
+	          {math assign="acumula_0" equation="x + y" x=$acumula_0 y=$i.valor_neto}
+          {/if}
+          
+          {if $i.dias gt 0 and $i.dias lt 31 }
+	          {math assign="acumula_30" equation="x + y" x=$acumula_30 y=$i.valor_neto}
+          {/if}
+          {if $i.dias gt 30 and $i.dias lt 61 }   
+          	{math assign="acumula_60" equation="x + y" x=$acumula_60 y=$i.saldo}
+          {/if}  
+          {if $i.dias gt 60 and $i.dias lt 91 }
+	          {math assign="acumula_90" equation="x + y" x=$acumula_90 y=$i.saldo}          
+          {/if}
+          {if $i.dias gt 90 and $i.dias lt 181 }
+	          {math assign="acumula_180" equation="x + y" x=$acumula_180 y=$i.saldo}          
+          {/if}
+          {if $i.dias gt 180 and $i.dias lt 361 }
+	          {math assign="acumula_360" equation="x + y" x=$acumula_360 y=$i.saldo}          
+          {/if}
+          
+          {if $i.dias gt 360}    
+	          {math assign="acumula_360mas" equation="x + y" x=$acumula_360mas y=$i.saldo}          
+          {/if}    
+          {math assign="acumula_total" equation="x + y" x=$acumula_total y=$i.saldo}
+
+          
+		  {/foreach}	
+
+          <tr class="subtitulo">
+           <td class="borderLeft borderTop borderRight borderBottom" colspan="4" align="right">TOTAL</td>
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_0|number_format:2:',':'.'}</td>
+           <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>								
+           
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_30|number_format:2:',':'.'}</td>
+           <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>								
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_60|number_format:2:',':'.'}</td>
+           <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>								
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_90|number_format:2:',':'.'}</td>
+           <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>								
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_180|number_format:2:',':'.'}</td>
+           <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>								
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_360|number_format:2:',':'.'}</td>
+           <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>								
+           <td class="borderTop borderRight borderBottom" align="right">{$acumula_360mas|number_format:2:',':'.'}</td>
+           <td class="borderTop borderRight borderBottom" align="right">&nbsp;</td>								
+          </tr>  
+          <tr >
+           <td  colspan="13" align="right">&nbsp;</td>
+          </tr>  
+
+          <tr class="subtitulo">
+           <td class="borderLeft borderTop borderRight borderBottom" colspan="4" align="right">TOTAL PENDIENTE</td>
+           <td class="borderTop borderRight borderBottom" align="right" colspan="10">{$acumula_total|number_format:2:',':'.'}</td>
+          </tr>  
+
+      
+      {/if}   
+       
+  </table>
+  </body>
+</html>
