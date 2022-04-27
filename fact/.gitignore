@@ -1,8 +1,0 @@
-*.xls
-*.xlsx
-*.pdf
-*.gif
-*.tif
-*.sql
-error_log
-!.gitignore

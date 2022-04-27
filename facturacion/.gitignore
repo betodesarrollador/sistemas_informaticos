@@ -1,11 +1,8 @@
-
-/framework/clases/ConexionClass.php
-/archivos
-*.sql
-*.xlsx
 *.xls
-*.gif
+*.xlsx
 *.pdf
+*.gif
+*.tif
+*.sql
 error_log
-
-frameworkAntiguo/
+!.gitignore
