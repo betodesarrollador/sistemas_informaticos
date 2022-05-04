@@ -620,9 +620,9 @@ final class ReporteElectronica extends Controler{
 							   ],
 							   "metodoDePago":"1",
 							   "medioPago":"'.$data[0][metododePago].'",
-							   "nombreBanco":"'.$data[0][nombreBanco].'",
-							   "tipoCuenta":"'.$data[0][tipoCuenta].'",
-							   "numeroCuenta":"'.$data[0][numeroCuenta].'"
+							   "nombreBanco":"'.$this -> RemoveSpecialChar($data[0][nombreBanco]).'",
+							   "tipoCuenta":"'.$this -> RemoveSpecialChar($data[0][tipoCuenta]).'",
+							   "numeroCuenta":"'.$this -> RemoveSpecialChar($data[0][numeroCuenta]).'"
 							}
 						 ],
 						 "periodoNomina": "5",
@@ -648,16 +648,16 @@ final class ReporteElectronica extends Controler{
 						 "trabajador":{
 							"altoRiesgoPension":"'.$data[0][altoRiesgopension].'",
 							"codigoTrabajador":"'.$data[0][codtrabajador].'",
-							"email":"'.$data[0][email_trabajador].'",
+							"email":"'.$this -> RemoveSpecialChar($data[0][email_trabajador]).'",
 							"extrasNom":null,
 							"lugarTrabajoDepartamentoEstado":"'.$data[0][departamento].'",
-							"lugarTrabajoDireccion":"'.$data[0][lugar_trabajo].'",
+							"lugarTrabajoDireccion":"'.trim($data[0][lugar_trabajo]).'",
 							"lugarTrabajoMunicipioCiudad":"'.$data[0][municipio].'",
 							"lugarTrabajoPais":"CO",
 							"numeroDocumento":"'.$data[0][identificacion].'",
-							"otrosNombres":"'.$data[0][otros_nombres].'",
-							"primerApellido":"'.$data[0][primer_apellido].'",
-							"primerNombre":"'.$data[0][primer_nombre].'",
+							"otrosNombres":"'.trim($data[0][otros_nombres]).'",
+							"primerApellido":"'.trim($data[0][primer_apellido]).'",
+							"primerNombre":"'.trim($data[0][primer_nombre]).'",
 							"salarioIntegral":"'.$data[0][salariointegral].'",
 							"segundoApellido":"'.$data[0][segundo_apellido].'",
 							"subTipoTrabajador":"'.$data[0][subtipoTrabajador].'",
@@ -766,6 +766,13 @@ final class ReporteElectronica extends Controler{
 		echo $mensaje;
 
   	}
+
+	protected function RemoveSpecialChar($str){
+		$result = preg_replace('/[0-9\@\.\;\""]+/', '', $str);
+		$result = trim($result);
+
+		return $result;
+	}
 
 	  protected function showGrid(){
 	  
