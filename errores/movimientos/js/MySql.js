@@ -3,7 +3,7 @@
 $(document).ready(function () {
 
   $('#detalles').DataTable({
-    "lengthMenu": [[-1, 25, 50], ["Todos", 10, 25, 50]],
+    "lengthMenu": [[-1, 10, 25], ["Todos", 10, 25]],
     "language": {
 
       "sProcessing": "Procesando...",
@@ -97,9 +97,6 @@ function check_all(obj) {
 }
 
 
-
-
-
 function limpiar() {
 
   $("#query").val('');
@@ -107,9 +104,59 @@ function limpiar() {
 }
 
 
+function setCamposCrearLinea(){
 
+  var marca        = $.trim($("#form_crear_linea").find("#marca").val());
+  var linea        = $.trim($("#form_crear_linea").find("#linea").val());
+  var codigo_linea = $.trim($("#form_crear_linea").find("#codigo_linea").val());
+  
+  var query = "INSERT INTO linea(marca_id, linea, codigo_marca, codigo_linea) VALUES ((SELECT marca_id FROM marca WHERE marca LIKE '"+marca+"'),'"+linea+"',(SELECT codigo FROM marca WHERE marca LIKE '"+marca+"'),'"+codigo_linea+"');";
 
+  $("#query").val(query).focus();
 
+  $("#form_crear_linea").find("#linea").val('');
+  $("#form_crear_linea").find("#codigo_marca").val('');
+  $("#form_crear_linea").find("#codigo_linea").val('');
+
+}
+
+function setCamposEliminarNc(){
+
+  var consecutivo = $("#form_eliminar_nc").find("#consecutivo").val();
+
+  var encabezado_registro_id = "(SELECT encabezado_registro_id FROM encabezado_de_registro WHERE consecutivo = "+consecutivo+" AND tipo_documento_id = 18)";
+  
+  var query = "DELETE FROM item_abono WHERE abono_factura_id = (SELECT abono_factura_id FROM abono_factura WHERE encabezado_registro_id = "+encabezado_registro_id+"); \n DELETE FROM relacion_abono WHERE abono_factura_id = (SELECT abono_factura_id FROM abono_factura WHERE encabezado_registro_id = "+encabezado_registro_id+");\nDELETE FROM abono_factura WHERE encabezado_registro_id = "+encabezado_registro_id+";\nDELETE FROM imputacion_contable WHERE encabezado_registro_id = "+encabezado_registro_id+";\nDELETE FROM encabezado_de_registro WHERE  consecutivo = 23 AND tipo_documento_id = 18;";
+
+  $("#query").val(query).focus();
+
+  $("#form_eliminar_nc").find("#consecutivo").val('');
+
+}
+
+function setCamposDeleteTrafico(){
+
+  var trafico_id = $("#form_borrar_trafico").find("#trafico_id").val();
+  
+  var query = "DELETE FROM detalle_seguimiento WHERE trafico_id IN ("+trafico_id+");\nDELETE FROM trafico WHERE trafico_id IN ("+trafico_id+");";
+
+  $("#query").val(query).focus();
+
+  $("#form_borrar_trafico").find("#trafico_id").val('');
+
+}
+
+function setCamposDeleteFactura(){
+
+  var factura_id = $("#form_delete_factura").find("#factura_id").val();
+  
+  var query = "UPDATE factura SET encabezado_registro_id = NULL WHERE factura_id = "+factura_id+";\nDELETE FROM imputacion_contable WHERE encabezado_registro_id = (SELECT encabezado_registro_id FROM factura WHERE factura_id = "+factura_id+" );\nDELETE FROM encabezado_de_registro WHERE encabezado_registro_id = (SELECT encabezado_registro_id FROM factura WHERE factura_id = "+factura_id+" );\nUPDATE remesa SET estado = 'LQ' WHERE remesa_id IN (SELECT remesa_id FROM detalle_factura WHERE factura_id = "+factura_id+" );\nDELETE FROM detalle_remesa_puc WHERE remesa_id IN (SELECT remesa_id FROM detalle_factura WHERE factura_id = "+factura_id+" );\nDELETE FROM detalle_factura_puc WHERE factura_id = "+factura_id+";\nDELETE FROM detalle_factura WHERE factura_id = "+factura_id+";\nDELETE FROM factura WHERE factura_id = "+factura_id+";";
+
+  $("#query").val(query).focus();
+
+  $("#form_delete_factura").find("#factura_id").val('');
+
+}
 
 
 function ejecutarQuery() {

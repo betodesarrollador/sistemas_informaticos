@@ -62,11 +62,14 @@ final class MySqlModel extends Db
 
             if (mysqli_multi_query($Conexion, $query)) {
                 $success .= "<br><br> Ejecutado con exito para base de datos '$bd'";
+            
             } else {
                 $errores .= "<br><br> Error al ejecutar en base de datos '$bd' - " . mysqli_error($Conexion);
 
                 $resultado .= '"' . mysqli_error($Conexion) . '"';
+            
             }
+
 
             mysqli_close($Conexion);
         }
