@@ -61,14 +61,14 @@ final class dataBaseModel extends Db
     {
         $this->DbInsertTable("clientes_db", $Campos, $Conex, true);
 
-        if (!$this->GetNumError() > 0) {
+        /* if (!$this->GetNumError() > 0) {
             $this->actualizarLogo($Conex);
-        }
+        } */
     }
 
     public function Update($Campos, $Conex)
     {
-        $this->actualizarLogo($Conex);
+        //$this->actualizarLogo($Conex);
 
         $this->DbUpdateTable("clientes_db", $Campos, $Conex, true);
     }
