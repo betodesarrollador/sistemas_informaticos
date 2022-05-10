@@ -1,0 +1,68 @@
+<?php
+
+require_once("../../../framework/clases/ViewClass.php"); 
+
+final class ReportePresupuestoLayout extends View{
+	
+	public function SetImprimir($Permiso){
+  	 $this -> Imprimir = $Permiso;
+   }   
+      
+   public function setCampos($campos){
+
+     require_once("../../../framework/clases/FormClass.php");
+	 
+     $Form1 = new Form("ReportePresupuestoClass.php","ReportePresupuestoForm","ReportePresupuestoForm");
+	 
+     $this -> fields = $campos; 
+	 
+     $this -> TplInclude -> IncludeCss("../../../framework/css/ajax-dynamic-list.css");
+     $this -> TplInclude -> IncludeCss("../../../framework/css/reset.css");
+     $this -> TplInclude -> IncludeCss("../../../framework/css/general.css");
+     $this -> TplInclude -> IncludeCss("../../../transporte/operacion/css/solicitud_servicios.css");	 
+     $this -> TplInclude -> IncludeCss("../../../framework/css/jquery.alerts.css");	
+ 
+     $this -> TplInclude -> IncludeJs("../../../framework/js/jquery.js");
+     $this -> TplInclude -> IncludeJs("../../../framework/js/jquery.filestyle.js");
+     $this -> TplInclude -> IncludeJs("../../../framework/js/jqcalendar/jquery.ui.datepicker.js");
+     $this -> TplInclude -> IncludeJs("../../../framework/js/jqcalendar/jquery.ui.datepicker-es.js");
+     $this -> TplInclude -> IncludeJs("../../../framework/js/jqueryform.js");
+     $this -> TplInclude -> IncludeJs("../../../framework/js/funciones.js");
+     $this -> TplInclude -> IncludeJs("../../../framework/js/ajax-list.js");
+     $this -> TplInclude -> IncludeJs("../../../framework/js/ajax-dynamic-list.js");
+     $this -> TplInclude -> IncludeJs("../../../framework/js/jquery-uploader/swfobject.js");
+     $this -> TplInclude -> IncludeJs("../../../framework/js/jquery-uploader/jquery.uploadify.v2.1.0.min.js");
+     $this -> TplInclude -> IncludeJs("../js/ReportePresupuesto.js");
+     $this -> TplInclude -> IncludeJs("../../../framework/js/jquery.alerts.js");
+	 
+     $this -> assign("CSSSYSTEM",	$this -> TplInclude -> GetCssInclude());
+     $this -> assign("JAVASCRIPT",	$this -> TplInclude -> GetJsInclude());
+     $this -> assign("FORM1",		$Form1 -> FormBegin());
+     $this -> assign("FORM1END",	$Form1 -> FormEnd());
+	  $this -> assign("DESCARGAR",    $this -> objectsHtml -> GetobjectHtml($this -> fields[descargar]));
+	 
+	 if($this -> Imprimir)
+	   $this -> assign("IMPRIMIR",	$this -> objectsHtml -> GetobjectHtml($this -> fields[imprimir]));	 
+
+   }
+
+//LISTA MENU
+
+ 
+   public function setReportePresupuestos($presupuestos){
+	 $this -> fields['presupuesto_id']['options'] = $presupuestos;
+     $this -> assign("PRESUPUESTOID",$this -> objectsHtml -> GetobjectHtml($this -> fields['presupuesto_id']));      
+   }   
+
+
+   public function RenderMain(){
+   
+        $this -> RenderLayout('ReportePresupuesto.tpl');
+	 
+   }
+
+
+}
+
+
+?>

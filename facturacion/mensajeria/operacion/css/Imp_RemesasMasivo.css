@@ -1,0 +1,84 @@
+/* CSS Document */
+
+*{
+  font-family:Arial, Helvetica, sans-serif;
+  font-size:11px;
+  text-align:left;  
+}
+
+.title{
+  font-size:14px;
+  font-weight:bold;
+  text-align:center;
+}
+
+.general{
+  text-align:center;
+}
+
+.resolucion{
+ text-align:right;
+}
+
+label{
+font-weight:bold;
+text-align:left;
+float:left;
+}
+
+.producto{
+  margin-top:15px;
+}
+
+.producto thead th{
+ font-size:12px;
+ font-weight:bold;
+ text-align:center;
+}
+
+.producto tbody td{
+ font-size:12px;
+ text-align:center;
+}
+
+.productocelllefttop{
+  border:1px solid;
+}
+
+.productocellleftbottom{
+  border-right: 1px solid;
+  border-left:1px solid;
+  border-bottom:1px solid;
+}
+
+.productocellrighttop{
+  border-top:1px solid;
+  border-right:1px solid;
+}
+
+.productocellrightbottom{
+  border-top:1px solid;
+  border-bottom:1px solid;
+  border-right:1px solid;
+}
+
+.firmas{
+ font-size:12px;
+ font-weight:bold;
+ text-align:center;
+}
+
+
+.saltopagina {
+  page-break-after: always;
+}
+
+.numRemesa{
+ font-size:16px;
+ color:#FF0000;
+ font-weight:bold;
+}
+
+.divisionHoja{
+ height:15px;
+}

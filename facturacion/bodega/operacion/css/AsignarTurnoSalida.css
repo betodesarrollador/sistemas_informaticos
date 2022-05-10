@@ -1,0 +1,31 @@
+.alistamiento{
+   background: #3ADF00;
+    font-weight: bold;
+    height: 15px;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.despachado{
+   background: rgb(255, 227, 65);
+    font-weight: bold;
+    height: 15px;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.anulado{
+   background: rgb(255, 44, 44);
+    font-weight: bold;
+    height: 15px;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.enturnado{
+   background: rgb(0, 217, 255);
+    font-weight: bold;
+    height: 15px;
+    padding: 2px;
+    cursor: pointer;
+}

@@ -1,0 +1,191 @@
+/* CSS Document */
+
+   .tipoDocumento{
+    font-family:Arial, Helvetica, sans-serif;
+	font-size:10px;
+	font-weight:bold;
+	text-align:center
+   }
+   
+   .numeroDocumento{
+     font-family:Arial, Helvetica, sans-serif;
+	 font-size:18px;
+	 font-weight:bold;
+	 text-align:center;
+   }
+   
+   .subtitulos{
+     font-family:Arial, Helvetica, sans-serif;
+	 font-size:12px;
+	 font-weight:bold;
+   }
+   
+   .contenido{
+     font-family:Arial, Helvetica, sans-serif;
+	 font-size:12px;
+   }
+
+   .borderTop{
+     border-top:1px solid;
+   }
+
+   table tr td{
+      font-size:12px;
+   }
+     
+   .title{
+     background-color:#EAEAEA;
+	 font-weight:bold;
+	 text-align:center;
+   }
+   
+   .fontBig{
+     font-size:10px;
+   }
+   
+   .infoGeneral{
+	 border-left:1px solid;   
+	 border-right:1px solid;   	 
+	 border-bottom:1px solid;   	 	 
+	 text-align:center;
+   }
+   
+   .cellTitle{
+     background-color:#E6E6E6;
+	 font-weight:bold;
+	 border-left:1px solid;   
+	 border-right:1px solid;   	 
+	 border-bottom:1px solid;   	 	 
+   }
+
+   .cellTitles{
+     background-color:#E6E6E6;
+   font-weight:bold;
+   border-left:1px solid;   
+   border-right:1px solid;     
+   border-bottom:1px solid; 
+   border-top:1px solid;        
+   }
+   
+   .cellRight{
+     border-right:1px solid;
+	 border-bottom:1px solid;
+ 	 padding: 3px;
+	 
+   }
+   .cellRightRed{
+   	 border-left:1px solid;
+     border-right:1px solid;
+	 border-bottom:1px solid;	
+ 	 padding: 3px;
+	 color:#F00;
+	 
+   }
+   
+   .cellLeft{
+     border-left:1px solid;
+     border-right:1px solid;
+	 border-bottom:1px solid;
+	 padding: 3px;
+   }
+
+   .cellCenter{
+     border-left:1px solid;
+     border-right:1px solid;
+	 border-bottom:1px solid;
+   }
+
+   .cellTitleLeft{
+     border-left:1px solid;
+     border-right:1px solid;
+	 border-bottom:1px solid; 
+	 border-top:1px solid;
+     background-color:#E6E6E6;
+	 font-weight:bold;
+   }   
+   
+   .cellTitleRight{
+     border-right:1px solid;
+	 border-bottom:1px solid;   
+	 border-top:1px solid;	 
+     background-color:#E6E6E6;
+	 font-weight:bold;
+   }
+   
+   body{
+    padding:0px;
+   }
+   
+   .content{
+    font-weight:bold;
+	font-size:12px;
+	text-transform:uppercase;
+   }
+
+   .table_firmas{
+    font-weight:bold;
+	font-size:14px;
+	margin-top:1px;
+   }
+
+   .anulado{
+	   width:500px;
+	   margin-top:180px;
+	   margin-left:230px;
+	   position:absolute;
+	   font-weight:bold;
+	   color:#FBCDBF;
+	   font-size:60px;
+	   opacity:0.1;
+	   filter:alpha(opacity=40);
+   }
+
+   .anulado1{
+	   width:500px;
+	   margin-top:400px;
+	   margin-left:230px;
+	   position:absolute;
+	   font-weight:bold;
+	   color:#FBCDBF;
+	   font-size:60px;
+	   opacity:0.1;
+	   filter:alpha(opacity=40);
+   }
+   .realizado{
+	   width:500px;
+	   margin-top:180px;
+	   margin-left:230px;
+	   position:absolute;
+	   font-weight:bold;
+	   color:#A0F5AB;
+	   font-size:60px;
+	   opacity:0.1;
+	   filter:alpha(opacity=40);
+   }
+
+   .realizado1{
+	   width:500px;
+	   margin-top:400px;
+	   margin-left:230px;
+	   position:absolute;
+	   font-weight:bold;
+	   color:#A0F5AB;
+	   font-size:60px;
+	   opacity:0.1;
+	   filter:alpha(opacity=40);
+   }
+   .normal{
+	   height:30px;
+   }
+
+   .turno_si{
+      color: #fff;
+      font-weight: bold;
+      background-color: #007BFF;
+   }
+
+   .turno_no{
+      color: #fff;
+      font-weight: bold;
+      background-color: rgb(201, 39, 39);
+   }

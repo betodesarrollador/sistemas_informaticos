@@ -1,0 +1,21 @@
+/* CSS Document */
+#divSolicitudRemesa,#divOrdenCargueRemesa{
+	display:none;
+	font-size:9px;
+}
+
+#importSolcitud{
+padding:2px;
+cursor: pointer;
+}
+
+#iframeSolicitudRemesa,#iframeOrdenCargueRemesa{
+	width:100%;
+	height:98%;
+	border:0px;
+}
+
+#rangoImp{
+ display:none;
+ font-size:12px;
+}

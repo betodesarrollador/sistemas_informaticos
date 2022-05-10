@@ -23,13 +23,33 @@ final class PagoModel extends Db
     public function selectDatosPagoId($abono_nomina_id, $Conex)
     {
         $select = "SELECT a.*,
-	 					(SELECT consecutivo FROM encabezado_de_registro WHERE encabezado_registro_id=a.encabezado_registro_id) AS numero_soporte
+	 					(SELECT consecutivo FROM encabezado_de_registro WHERE encabezado_registro_id=a.encabezado_registro_id) AS numero_soporte,
+                        (SELECT t.email FROM  empleado e, tercero t WHERE e.empleado_id=a.empleado_id AND  t.tercero_id=e.tercero_id ) AS empleado_email
 					FROM abono_nomina  a
 	                WHERE a.abono_nomina_id = $abono_nomina_id";
         $result = $this->DbFetchAll($select, $Conex, true);
         return $result;
 
     }
+
+    public function getPagosFec($fecha_pago_ini,$fecha_pago_fin,$Conex) {
+        $select = "SELECT * FROM `abono_nomina` WHERE estado_abono_nomina = 'C' AND fecha BETWEEN '$fecha_pago_ini' AND '$fecha_pago_fin'";	  
+        $result = $this -> DbFetchAll($select,$Conex,true); 
+        return $result;	 
+    }
+
+    public function selectDatosAbonos($abono_nomina_id,$Conex){
+        $select = "SELECT an.*, (SELECT er.consecutivo FROM encabezado_de_registro er WHERE er.encabezado_registro_id = an.encabezado_registro_id) AS consecutivo, (SELECT td.nombre FROM tipo_de_documento td WHERE td.tipo_documento_id = an.tipo_documento_id) AS tipo_doc, ln.fecha_inicial, ln.fecha_final, ln.fecha_registro FROM `abono_nomina` an, `relacion_abono_nomina` ran, `liquidacion_novedad` ln WHERE an.abono_nomina_id = $abono_nomina_id AND an.abono_nomina_id = ran.abono_nomina_id AND ln.liquidacion_novedad_id = ran.liquidacion_novedad_id";	  
+        $result = $this -> DbFetchAll($select,$Conex,true); 
+        return $result;	 
+    }
+
+    public function selectItemsAbono($abono_nomina_id,$Conex){
+        $select = "SELECT * FROM `item_abono_nomina` WHERE abono_nomina_id = $abono_nomina_id";	  
+        $result = $this -> DbFetchAll($select,$Conex,true); 
+        
+        return $result;	 
+    }    
 
     public function GetTipoPago($Conex)
     {

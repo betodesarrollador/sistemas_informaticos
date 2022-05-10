@@ -1,0 +1,269 @@
+            /* CSS Document */
+            
+            table tr td {
+                font-size: 12px;
+            }
+            
+            .title {
+                background-color: #999999;
+                font-weight: bold;
+                text-align: center;
+            }
+            
+            .fontBig {
+                font-size: 10px;
+            }
+            
+            .infoGeneral {
+                border-left: 1px solid;
+                border-right: 1px solid;
+                border-bottom: 1px solid;
+                text-align: center;
+            }
+            
+            .cellTitle {
+                background-color: #999999;
+                font-weight: bold;
+                text-align: center;
+                border-left: 1px solid;
+                border-right: 1px solid;
+                border-bottom: 1px solid;
+            }
+            
+            .cellRight {
+                border-left: 1px solid;
+                border-right: 1px solid;
+                border-bottom: 1px solid;
+                text-align: left;
+                padding: 3px;
+            }
+            
+            .cellTotal {
+                border-left: 1px solid;
+                border-right: 1px solid;
+                border-bottom: 1px solid;
+                border-top: 1px solid;
+                padding: 3px;
+            }
+            
+            .cellRightRed {
+                border-left: 1px solid;
+                border-right: 1px solid;
+                border-bottom: 1px solid;
+                text-align: left;
+                padding: 3px;
+                color: #F00;
+            }
+            
+            .cellLeft {
+                border-left: 1px solid;
+                border-right: 1px solid;
+                border-bottom: 1px solid;
+                text-align: left;
+                padding: 3px;
+            }
+            
+            .cellCenter {
+                border-left: 1px solid;
+                border-right: 1px solid;
+                border-bottom: 1px solid;
+                text-align: center;
+            }
+            
+            .cellTitleLeft {
+                border-left: 1px solid;
+                border-right: 1px solid;
+                border-bottom: 1px solid;
+                border-top: 1px solid;
+                background-color: #999999;
+                font-weight: bold;
+                text-align: center;
+            }
+            
+            .cellTitleRight {
+                border-right: 1px solid;
+                border-bottom: 1px solid;
+                border-top: 1px solid;
+                background-color: #999999;
+                font-weight: bold;
+                text-align: center;
+            }
+            
+            body {
+                padding: 0px;
+            }
+            
+            .cabeceras {
+                width: auto;
+                background: #000153 !important;
+                color: #fff;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            
+            .cabeceras1 {
+                width: auto;
+                background-color: #e6e6e6;
+                color: #000153;
+                font-weight: bold;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            
+            .cabeceras2 {
+                width: auto;
+                background-color: #fff;
+                color: #000000;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            
+            .auto {
+                width: auto;
+            }
+            
+            .content {
+                font-weight: bold;
+                font-size: 13px;
+                text-align: center;
+                text-transform: uppercase;
+            }
+            
+            .table_firmas {
+                font-weight: bold;
+                font-size: 14px;
+                margin-top: 120px;
+            }
+            
+            .anulado {
+                width: 500px;
+                margin-top: 180px;
+                margin-left: 230px;
+                position: absolute;
+                font-weight: bold;
+                color: #FBCDBF;
+                font-size: 60px;
+                opacity: 0.2;
+                filter: alpha(opacity=40);
+            }
+            
+            .anulado1 {
+                width: 500px;
+                margin-top: 400px;
+                margin-left: 230px;
+                position: absolute;
+                font-weight: bold;
+                color: #FBCDBF;
+                font-size: 60px;
+                opacity: 0.2;
+                filter: alpha(opacity=40);
+            }
+            
+            .realizado {
+                width: 500px;
+                margin-top: 180px;
+                margin-left: 230px;
+                position: absolute;
+                font-weight: bold;
+                color: #A0F5AB;
+                font-size: 60px;
+                opacity: 0.2;
+                filter: alpha(opacity=40);
+            }
+            
+            .realizado1 {
+                width: 500px;
+                margin-top: 400px;
+                margin-left: 230px;
+                position: absolute;
+                font-weight: bold;
+                color: #A0F5AB;
+                font-size: 60px;
+                opacity: 0.2;
+                filter: alpha(opacity=40);
+            }
+            
+            .dian {
+                width: 90px;
+                margin-top: 140px;
+                margin-left: 2px;
+                position: absolute;
+                font-weight: bold;
+                color: #19A62B;
+                font-size: 20px;
+                opacity: 0.2;
+                filter: alpha(opacity=40);
+            }
+            
+            .table thead th {
+                vertical-align: bottom;
+                border-bottom: 2px solid #003264 !important;
+            }
+            
+            .fontsmall {
+                font-size: 10px;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            
+            .fontsmall_detalle {
+                font-size: 9px;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            
+            .fontgrande {
+                font-size: 18px;
+                font-weight: bold
+            }
+            
+            .margenes {
+                margin-left: 5px;
+                margin-top: 8px;
+            }
+            
+            @media print {
+                table tr td.cabeceras {
+                    width: auto;
+                    background-color: #000153 !important;
+                    color: #fff;
+                }
+            }
+            
+            @media print {
+                table tr td.cabeceras1 {
+                    width: auto;
+                    background-color: #e6e6e6 !important;
+                    color: #000153;
+                }
+            }
+            
+            @media print {
+                .table-bordered td,
+                .table-bordered th {
+                    border: 2px solid #b5b5b5 !important;
+                }
+            }
+            
+            @media print {
+                table tr td {
+                    font-size: 13px !important;
+                }
+            }
+            
+            @media print {
+                .fontsmall {
+                    font-size: 15px;
+                }
+            }
+            
+            @media print {
+                .table td,
+                .table th {
+                    padding: 0.1rem !important;
+                    vertical-align: top;
+                    border-top: 1px solid #dee2e6;
+                }
+            }
+            
+            @media print {
+                .margenes {
+                    margin-left: 0px;
+                    margin-top: 10px;
+                }
+            }

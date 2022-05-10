@@ -1,0 +1,236 @@
+// JavaScript Document
+$(document).ready(function(){
+	checkedAll();
+	checkRow();
+	autocompleteUbicacion();
+	autocompleteRemesa();
+	linkDetalles();
+});
+
+
+function checkedAll(){
+	$("#checkedAll").click(function(){
+		if($(this).is(":checked")){
+			$("input[name=procesar]").attr("checked","true");
+		}else{
+			$("input[name=procesar]").attr("checked","");
+		}
+	});
+}
+
+
+/***************************************************************
+	lista inteligente para la ubicacion con jquery
+**************************************************************/
+function autocompleteUbicacion(){
+	
+	$("input[name=origen],input[name=destino]").autocomplete("../../../framework/clases/ListaInteligente.php?consulta=ubicacion", {
+		width: 260,
+		selectFirst: false
+	});
+	
+	$("input[name=origen],input[name=destino]").result(function(event, data, formatted) {
+		if (data) $(this).next().val(data[1]);
+	});	
+}
+
+
+/***************************************************************
+	lista inteligente para la remesa con jquery
+**************************************************************/
+function autocompleteRemesa(){
+	
+	$("input[name=remesa]").autocomplete("../../../framework/clases/ListaInteligente.php?consulta=remesa", {
+		width: 260,
+		selectFirst: false
+	});
+	
+	$("input[name=remesa]").result(function(event, data, formatted) {
+		if (data) $(this).next().val(data[1]);
+	});	
+}
+
+
+/***************************************************************
+	Funciones para el objeto de guardado en los edtalles de ruta
+***************************************************************/
+function linkDetalles(){
+
+	$("a[name=saveDetalle]").attr("href","javascript:void(0)");
+	
+	$("a[name=saveDetalle]").focus(function(){
+		var celda = this.parentNode;
+		$(celda).addClass("focusSaveRow");
+	});
+	
+	$("a[name=saveDetalle]").blur(function(){
+		var celda = this.parentNode;
+		$(celda).removeClass("focusSaveRow");
+	});
+	
+	$("a[name=saveDetalle]").click(function(){
+		saveDetalle(this);
+	});
+}
+
+
+function saveDetalle(obj){
+	
+	var row = obj.parentNode.parentNode;
+	
+	if(validaRequeridosDetalle(obj,row)){
+	
+		var Celda         = obj.parentNode;
+		var Fila          = obj.parentNode.parentNode;
+		var checkProcesar = $(Fila).find("input[name=procesar]");
+		
+		var QueryString   = {
+								'ACTIONCONTROLER'        : '',
+								'ordencompra_id'         : $("#ordencompra_id").val(),
+								'detalle_ordenconexo_id' : $(Fila).find("input[name=detalle_ordenconexo_id]").val(),
+								'remesa_id'              : $(Fila).find("input[name=remesa_id]").val(),
+								'origen_id'              : ($(Fila).find("input[name=origen_id]").val().length>0?$(Fila).find("input[name=origen_id]").val():'NULL'),
+								'destino_id'             : ($(Fila).find("input[name=destino_id]").val().length>0?$(Fila).find("input[name=destino_id]").val():'NULL'),
+								'observaciones'          : $(Fila).find("textarea[name=observaciones]").val(),
+								'costo_ordenconexo'      : $(Fila).find("input[name=costo_ordenconexo]").val()
+							};
+	
+		if(!QueryString.detalle_ordenconexo_id.length > 0){
+			
+			if( $('#guardar',parent.document).length > 0 ){/*se valida el permiso de guardar*/
+			
+				QueryString.ACTIONCONTROLER        = 'onclickSave';
+				QueryString.detalle_ordenconexo_id = 'NULL';
+				
+				$.ajax({
+					
+					url        : "DetalleOrdenCompraClass.php",
+					data       : QueryString,
+					beforeSend : function(){},
+					success    : function(response){
+					
+						if(!isNaN(response)){
+							
+							$(Fila).find("input[name=detalle_ordenconexo_id]").val(response);
+							
+							var Table   = document.getElementById('tableDetalle');
+							var numRows = (Table.rows.length);
+							var newRow  = Table.insertRow(numRows);
+							
+							$(newRow).html($("#clon").html());
+							//$(newRow).find("input[name=orden_det_ruta]").focus();
+							
+							autocompleteUbicacion();
+							autocompleteRemesa();
+							linkDetalles();
+							checkRow();
+							updateGrid();
+							
+							checkProcesar.attr("checked","");
+							$(Celda).removeClass("focusSaveRow");
+							
+						}else{
+							alertJquery(response);
+						}
+					}/*fin del success*/
+				});
+			}
+		}else{
+			
+			if( $('#actualizar',parent.document).length > 0 ){/*se valida el persmiso de actualizar*/
+			
+				QueryString.ACTIONCONTROLER = 'onclickUpdate';
+				
+				$.ajax({
+					
+					url        : "DetalleOrdenCompraClass.php",
+					data       : QueryString,
+					beforeSend : function(){},
+					success    : function(response){
+						
+						if( $.trim(response) == 'true'){
+							
+							checkProcesar.attr("checked","");
+							$(Fila).find("a[name=saveDetalle").parent().addClass("focusSaveRow");
+							updateGrid();
+							
+						}else{
+							alertJquery(response);
+						}
+					}/*fin del success*/
+				});
+			}
+		}
+	}
+}
+
+
+function deleteDetalle(obj){
+
+	var Celda           = obj.parentNode;
+	var Fila            = obj.parentNode.parentNode;
+	var QueryString     = {
+							'ACTIONCONTROLER'        : 'onclickDelete',
+							'detalle_ordenconexo_id' : $(Fila).find("input[name=detalle_ordenconexo_id]").val()
+							};
+	
+	if(QueryString.detalle_ordenconexo_id.length > 0){
+		
+		if( $('#borrar',parent.document).length > 0 ){/*se valida el permiso de borrar*/
+		
+			$.ajax({
+				url        : "DetalleOrdenCompraClass.php",
+				data       : QueryString,
+				beforeSend : function(){},
+				success    : function(response){
+					
+					if( $.trim(response) == 'true' ){
+						
+						var numRow = (Fila.rowIndex - 1);
+						Fila.parentNode.deleteRow(numRow);
+			   			
+						updateGrid();
+						
+					}else{
+						alertJquery(response);
+					}
+				}/*fin del success*/
+			});
+		}
+	}else{
+		
+		alertJquery('No puede eliminar elementos que no han sido guardados');
+		$(Fila).find("input[name=procesar]").attr("checked","");
+		
+	}
+}
+
+
+function saveDetalles(){
+	$("input[name=procesar]:checked").each(function(){
+		saveDetalle(this);
+	});
+}
+
+
+function deleteDetalles(){
+	$("input[name=procesar]:checked").each(function(){
+		deleteDetalle(this);
+	});
+}
+
+
+function updateGrid(){
+	parent.updateGrid();
+}
+
+
+function checkRow(){
+	$("input[type=text]").keyup(function(event){
+		
+		var Tecla = event.keyCode;
+		var Fila  = this.parentNode.parentNode;
+		
+		$(Fila).find("input[name=procesar]").attr("checked","true");
+	});
+}

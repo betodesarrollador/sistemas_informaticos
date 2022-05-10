@@ -1,0 +1,47 @@
+/* CSS Document */
+
+
+.pendiente{
+	background:#FF0000; color:#FFF; font-weight:bold;
+	height:15px;
+	padding:2px;
+	cursor:pointer;
+	
+}
+.conruta{
+	background:#3CF; color:#FFF; font-weight:bold;
+	height:15px;
+	padding:2px;
+	cursor:pointer;
+}
+.transito{
+	background:#0C3; font-weight:bold;
+	height:15px;
+	padding:2px;
+	cursor:pointer;	
+}
+.amarillosem{
+	background:#FF6;
+	
+}
+.ProgressBar{ 
+	 width: 12em; 
+	 border: 1px solid black; 
+	 background: #eef; 
+	 height: 1.25em; 
+	 display: block;
+ }
+.ProgressBarText { 
+	position: absolute; 
+	font-size: 1em; 
+	width: 12em; 
+	text-align: center; 
+	font-weight: normal; 
+}
+.ProgressBarFill { 
+	height: 100%; 
+	background: #47B4D3; 
+	display: block; 
+	overflow: visible; 
+	z-index:+5;
+}

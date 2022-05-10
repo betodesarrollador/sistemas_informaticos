@@ -264,12 +264,13 @@ final class Pago extends Controler{
 		$fecha_pago_fin = $_REQUEST['fecha_pago_fin'];
 		$datagen = $Model -> getPagosFec($fecha_pago_ini,$fecha_pago_fin,$this -> getConex());
 		$mensajefin='';
+
 		for($p=0;$p<count($datagen);$p++){
 			$abono_nomina_id=$datagen[$p]['abono_nomina_id'];
 			$data = $Model -> selectDatosPagoId($abono_nomina_id,$this -> getConex());
 			$data1 = $Model -> selectDatosAbonos($abono_nomina_id,$this -> getConex());		
 			$correo = $data[0]['empleado_email'];
-			$correo ='fabianmendez.90@gmail.com';
+			// $correo ='alexander_tafur1999@hotmail.com';
 			$valor_tot_pago = $data[0]['valor_abono_nomina'];
 			$concepto_abono_nomina = $data[0]['concepto_abono_nomina'];
 			$nombre_empresa = $this -> getEmpresaNombre();

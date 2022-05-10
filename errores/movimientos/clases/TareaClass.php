@@ -596,9 +596,9 @@ final class Tarea extends Controler
 
     {
 
+ $codigo
 
-
-        $codigo = $_REQUEST['actividad_programada_id'];
+        = $_REQUEST['actividad_programada_id'];
 
         $descripcion = $_REQUEST['descripcion'];
 

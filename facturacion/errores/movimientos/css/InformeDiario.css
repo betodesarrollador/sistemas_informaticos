@@ -1,0 +1,29 @@
+.PanelTareas {
+    background-color: rgb(255, 255, 255);
+    margin-top: 10px;
+    margin-bottom: 15px;
+    height: auto;
+    width: 100%;
+    border-radius: 5px;
+    box-shadow: 0px 0px 15px -4px;
+    padding-bottom: 5px;
+}
+
+.detalle_actividad {
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #dee2e6;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.cerrar {
+    text-align: right;
+}
+
+.campos {
+    text-align: center;
+    width: 350px;
+}

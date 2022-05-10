@@ -376,8 +376,8 @@ final class ReporteElectronica extends Controler{
 			//echo "empleado_is: ".$empleado_id;
 
 			$data = $Model -> getReporteEnviar($desde,$hasta,$empresa_id,$empleado_id,$this -> getConex());
-//exit($this -> jsonSeparator(array("cantidad","fechaInicio","fechaFin","pago","tipo"),array($data[0][dias_incapacidadGen],$data[0][fecha_inicio_IncapacidadGen],$data[0][fecha_final_incapacidadGen],$data[0][valor_incapacidadGen],$data[0][tipo_incapacidadGen])));
-
+			//exit($this -> jsonSeparator(array("cantidad","fechaInicio","fechaFin","pago","tipo"),array($data[0][dias_incapacidadGen],$data[0][fecha_inicio_IncapacidadGen],$data[0][fecha_final_incapacidadGen],$data[0][valor_incapacidadGen],$data[0][tipo_incapacidadGen])));
+			
 			$request = '{
 				"tokenEnterprise":"'.$tokenEnterprise.'",
 				"tokenPassword":"'.$tokenPassword.'",
@@ -620,9 +620,9 @@ final class ReporteElectronica extends Controler{
 							   ],
 							   "metodoDePago":"1",
 							   "medioPago":"'.$data[0][metododePago].'",
-							   "nombreBanco":"'.$data[0][nombreBanco].'",
-							   "tipoCuenta":"'.$data[0][tipoCuenta].'",
-							   "numeroCuenta":"'.$data[0][numeroCuenta].'"
+							   "nombreBanco":"'.$this -> RemoveSpecialChar($data[0][nombreBanco]).'",
+							   "tipoCuenta":"'.$this -> RemoveSpecialChar($data[0][tipoCuenta]).'",
+							   "numeroCuenta":"'.$this -> RemoveSpecialChar($data[0][numeroCuenta]).'"
 							}
 						 ],
 						 "periodoNomina": "5",
@@ -648,16 +648,16 @@ final class ReporteElectronica extends Controler{
 						 "trabajador":{
 							"altoRiesgoPension":"'.$data[0][altoRiesgopension].'",
 							"codigoTrabajador":"'.$data[0][codtrabajador].'",
-							"email":"'.$data[0][email_trabajador].'",
+							"email":"'.$this -> RemoveSpecialChar($data[0][email_trabajador]).'",
 							"extrasNom":null,
 							"lugarTrabajoDepartamentoEstado":"'.$data[0][departamento].'",
-							"lugarTrabajoDireccion":"'.$data[0][lugar_trabajo].'",
+							"lugarTrabajoDireccion":"'.trim($data[0][lugar_trabajo]).'",
 							"lugarTrabajoMunicipioCiudad":"'.$data[0][municipio].'",
 							"lugarTrabajoPais":"CO",
 							"numeroDocumento":"'.$data[0][identificacion].'",
-							"otrosNombres":"'.$data[0][otros_nombres].'",
-							"primerApellido":"'.$data[0][primer_apellido].'",
-							"primerNombre":"'.$data[0][primer_nombre].'",
+							"otrosNombres":"'.trim($data[0][otros_nombres]).'",
+							"primerApellido":"'.trim($data[0][primer_apellido]).'",
+							"primerNombre":"'.trim($data[0][primer_nombre]).'",
 							"salarioIntegral":"'.$data[0][salariointegral].'",
 							"segundoApellido":"'.$data[0][segundo_apellido].'",
 							"subTipoTrabajador":"'.$data[0][subtipoTrabajador].'",
@@ -676,9 +676,9 @@ final class ReporteElectronica extends Controler{
 			$curl = curl_init();
 
 			//echo "url: ".$url."\n";
-			exit($data[0][liquidacion_novedad_id]);
-			exit($request);
-
+			//exit($data[0][liquidacion_novedad_id]);
+			//echo $request;
+			//echo("--------------------------------------------------------------------------");
 			
 			
 			curl_setopt_array($curl, array(
@@ -700,69 +700,79 @@ final class ReporteElectronica extends Controler{
 				
 				curl_close($curl);
 
-				$respuesta = json_decode($response);
-
-				$mensaje = $Model -> actualizaDatosReporte($respuesta,$data[0][fechaEmision],$desde,$hasta,$data[0][contrato_id],$data[0][num_rango],$data[0][liquidacion_novedad_id],$this -> getConex());
-
 				//exit("prueba: ".$response);
 
-//---------------------------------------------------------------------------------------------------
+				$respuesta = json_decode($response);
 
-			$curl = curl_init();
+				$mensaje .= $Model -> actualizaDatosReporte($respuesta,$data[0][fechaEmision],$desde,$hasta,$data[0][contrato_id],$data[0][num_rango],$data[0][liquidacion_novedad_id],$this -> getConex());
 
-			curl_setopt_array($curl, array(
+				
 
-				CURLOPT_URL => 'http://demonominaelectronica.thefactoryhka.com.co/DescargarPDF',
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_ENCODING => '',
-				CURLOPT_MAXREDIRS => 10,
-				CURLOPT_TIMEOUT => 0,
-				CURLOPT_FOLLOWLOCATION => true,
-				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-				CURLOPT_CUSTOMREQUEST => 'POST',
-				CURLOPT_POSTFIELDS =>'{
-				"tokenEnterprise": "'.$tokenEnterprise.'",
-				"tokenPassword": "'.$tokenPassword.'",
-				"consecutivoDocumentoNom": "'.$data[0][prefijo_rango].$data[0][num_rango].'"
-				}',
-				CURLOPT_HTTPHEADER => array(
-					'Content-Type: application/json'
-				),
+			//---------------------------------------------------------------------------------------------------
 
-			));
+			if ($respuesta -> codigo == "200") {
+				
+				$curl = curl_init();
 
-			$response = curl_exec($curl);
+				curl_setopt_array($curl, array(
 
-			$respuesta = json_decode($response);
+					CURLOPT_URL => 'http://demonominaelectronica.thefactoryhka.com.co/DescargarPDF',
+					CURLOPT_RETURNTRANSFER => true,
+					CURLOPT_ENCODING => '',
+					CURLOPT_MAXREDIRS => 10,
+					CURLOPT_TIMEOUT => 0,
+					CURLOPT_FOLLOWLOCATION => true,
+					CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+					CURLOPT_CUSTOMREQUEST => 'POST',
+					CURLOPT_POSTFIELDS =>'{
+					"tokenEnterprise": "'.$tokenEnterprise.'",
+					"tokenPassword": "'.$tokenPassword.'",
+					"consecutivoDocumentoNom": "'.$data[0][prefijo_rango].$data[0][num_rango].'"
+					}',
+					CURLOPT_HTTPHEADER => array(
+						'Content-Type: application/json'
+					),
 
-			curl_close($curl);
+				));
+
+				$response = curl_exec($curl);
+
+				$respuesta = json_decode($response);
+
+				curl_close($curl);
 
 
-			if ($respuesta -> codigo == 200) {
+				if ($respuesta -> codigo == 200) {
 
-				$docBase64 = $respuesta -> documento;
-				$nombreArchivo = $respuesta -> nombre;
+					$docBase64 = $respuesta -> documento;
+					$nombreArchivo = $respuesta -> nombre;
 
-				$carpeta = '../../../archivos/nomina/nominaE';
+					$carpeta = '../../../archivos/nomina/nominaE';
 
-				if (!file_exists($carpeta)) {
-					mkdir($carpeta, 0777, true);
+					if (!file_exists($carpeta)) {
+						mkdir($carpeta, 0777, true);
+					}
+
+					$rutaDocumentoSalida = "../../.."."/archivos/nomina/nominaE/".$nombreArchivo;
+
+					$documentoBinaria = base64_decode($docBase64);
+					$bytes = file_put_contents($rutaDocumentoSalida, $documentoBinaria);
 				}
 
-				$rutaDocumentoSalida = "../../.."."/archivos/nomina/nominaE/".$nombreArchivo;
+			} 
 
-				$documentoBinaria = base64_decode($docBase64);
-				$bytes = file_put_contents($rutaDocumentoSalida, $documentoBinaria);
-			}
-
-				
-				echo $mensaje;
-				
 		}
 
-		
+		echo $mensaje;
 
   	}
+
+	protected function RemoveSpecialChar($str){
+		$result = preg_replace('/[0-9\@\.\;\""]+/', '', $str);
+		$result = trim($result);
+
+		return $result;
+	}
 
 	  protected function showGrid(){
 	  
