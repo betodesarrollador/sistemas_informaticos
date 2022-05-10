@@ -52,10 +52,33 @@ final class MySqlModel extends Db
 
             $bd = $result[0]["db"];
 
-            $Conexion = mysqli_connect("localhost", "$usuario", "$contrasena", $bd);
+            
+            switch ($bd) {
+
+                case 'siandsi5_talpa':
+                    $Conexion = mysqli_connect("162.214.79.143", "$usuario", "", $bd);
+                    break;
+
+                case 'siandsi3_vercourrier':
+                    $Conexion = mysqli_connect("162.214.78.255", "$usuario", "", $bd);
+                    break;
+
+                case 'siandsi3_roa':
+                    $Conexion = mysqli_connect("162.214.78.255", "$usuario", "$contrasena", $bd);
+                    break;
+
+                case 'wwsyst_transNorteN':
+                    $Conexion = mysqli_connect("162.214.164.7", "$usuario", "$contrasena", $bd);
+                    break;
+                
+                default:
+                    $Conexion = mysqli_connect("localhost", "$usuario", "$contrasena", $bd);
+                    break;
+            }
+            
 
             if (!$Conexion) {
-                $errores .= "<br><br> Error de conexion. Base de datos : $bd  -  Usuario : $usuario -  Contrasena : $contrasena - " . mysqli_error($Conexion);
+                $errores .= "<br><br> Error de conexion. Base de datos : $bd  -  Usuario : $usuario -  Contrasena : $contrasena  " . mysqli_error($Conexion);
 
                 $resultado .= '"' . mysqli_error($Conexion) . '"';
             }

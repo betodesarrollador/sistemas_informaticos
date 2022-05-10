@@ -71,6 +71,21 @@
             </div>
         </div>
 
+        {* ==================================== RECLASIFICAR CUENTAS ========================================== *}
+
+        <div class="pos-f-t">
+            <nav class="alert alert-primary" style="margin-top: 15px; padding: 0;">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar5" aria-controls="navbar5" aria-label="Toggle navigation">
+                    <i class="fa fa-list"></i>&emsp;Reclasificar cuentas contables
+                </button>
+            </nav>
+
+            <div class="collapse detalle_actividad" id="navbar5">
+                <br />
+                {include file="soportes/reclasificar_cuentas.tpl"}
+            </div>
+        </div>
+
     </fieldset>
 
     <fieldset>
