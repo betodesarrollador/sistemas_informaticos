@@ -142,36 +142,92 @@ final class ProvisionesModel extends Db{
 
 		//revisar dias incapacidad
 		$select_inca = "SELECT (DATEDIFF(IF(l.fecha_final>'$fecha_final','$fecha_final',l.fecha_final),IF(l.fecha_inicial>'$fecha_inicial',l.fecha_inicial,'$fecha_inicial'))+1) AS dias_inca, ti.dia, ti.porcentaje,ti.descuento  
-					FROM licencia l, tipo_incapacidad ti WHERE  l.contrato_id=$contrato_id AND ti.tipo_incapacidad_id=l.tipo_incapacidad_id AND ti.tipo='I'  AND ('$fecha_inicial' BETWEEN  l.fecha_inicial AND l.fecha_final OR '$fecha_final'  BETWEEN  l.fecha_inicial AND l.fecha_final OR l.fecha_inicial BETWEEN '$fecha_inicial' AND '$fecha_final') ";
+					FROM licencia l, tipo_incapacidad ti WHERE  l.contrato_id=$contrato_id AND ti.tipo_incapacidad_id=l.tipo_incapacidad_id AND ti.tipo='I'  AND base_salarial = 'S' AND ('$fecha_inicial' BETWEEN  l.fecha_inicial AND l.fecha_final OR '$fecha_final'  BETWEEN  l.fecha_inicial AND l.fecha_final OR l.fecha_inicial BETWEEN '$fecha_inicial' AND '$fecha_final') ";
+
+
+
 		$result_inca = $this -> DbFetchAll($select_inca,$Conex,true);
+		
+
 		$dias_inca=0;
 		$dia_difinc=0;
 		$sal_dia_cont=intval($sueldo_base/30);
 		$des_val_inc=0;
+
+		if(count($result_inca) == 0){
+			$dias_inca_sub = 0;
+
+		}
+
 		for($l=0;$l<count($result_inca);$l++){
+
 			if($result_inca[$l]['dias_inca']>=$result_inca[$l]['dia'] && $result_inca[$l]['descuento']=='S' ){
-				$dia_difinc = (($result_inca[$l]['dias_inca']-$result_inca[$l]['dia'])+1);
+				
+				/* $dia_difinc = (($result_inca[$l]['dias_inca']-$result_inca[$l]['dia'])+1);
 				$pago_desc=intval(($sal_dia_cont*$result_inca[$l]['porcentaje'])/100);
 				$por_desc=(100-$result_inca[$l]['porcentaje']);
-				if($pago_desc>$salrio_diario){
+	
+				if($pago_desc > $salrio_diario){
 					
 					$des_val_inc = ($des_val_inc + intval((($sal_dia_cont*$dia_difinc)*$por_desc)/100));
 					
 				}else{
 					
 					$des_val_inc = ($des_val_inc + intval(($sal_dia_cont-$salrio_diario)*$dia_difinc));
-				} 
+				}  */
+
+				$dias_total = $result_inca[$l]['dias_inca'];
+				$dias_eps = ($result_inca[$l]['dias_inca']-$result_inca[$l]['dia']);
+				$dias_empresa = $result_inca[$l]['dia'];
+				$porcentaje_param = $result_inca[$l]['porcentaje'];
+	
+				if($pago_desc > $salrio_diario){
+					
+					$des_val_inc = ($des_val_inc + intval(($sal_dia_cont * $dias_total)*($porcentaje_param/100)));
+					
+				}else{
+					
+					$des_val_inc = ($des_val_inc + intval(($salrio_diario * $dias_total)));
+				}
+
+
 			}
+			
 			$dias_inca_sub=$dias_inca_sub+$result_inca[$l]['dias_inca'];			
 		}
+
+
+		//LICENCIAS
+
+		$dias_licencia_r = 0;
+
+		$select_licencia = "SELECT * FROM licencia l 
+							INNER JOIN tipo_incapacidad ti ON ti.tipo_incapacidad_id = l.tipo_incapacidad_id
+							WHERE contrato_id = $contrato_id AND tipo = 'L' AND ti.base_salarial = 'S' AND l.remunerado = 1 AND ('$fecha_inicial' BETWEEN  l.fecha_inicial AND l.fecha_final OR '$fecha_final'  BETWEEN  l.fecha_inicial AND l.fecha_final OR l.fecha_inicial BETWEEN '$fecha_inicial' AND '$fecha_final')";
 		
+		$result_lic = $this -> DbFetchAll($select_licencia, $Conex, true);
+
+		for ($cont_licencia=0; $cont_licencia < count($result_lic); $cont_licencia++) { 
+			
+			$fecha_ini_licencia = $result_lic[$cont_licencia][fecha_inicial];
+			$fecha_fin_licencia = $result_lic[$cont_licencia][fecha_final];
+	
+			$dias_licencia_r 	+= 	$this -> restaFechasCont($fecha_ini_licencia,$fecha_fin_licencia);
+			$dias_inca_sub	=	$dias_licencia_r ;
+		}
+
 		
+	
 		//sumatoria devengados
+
 		$selectdeve = "SELECT  SUM(n.valor_cuota) AS valor_deven
 				FROM novedad_fija n, concepto_area c
-				WHERE n.contrato_id=$contrato_id AND n.tipo_novedad='V'  AND n.estado='A' AND '$fecha_final' BETWEEN  n.fecha_inicial AND n.fecha_final AND c.concepto_area_id=n.concepto_area_id AND c.base_salarial='SI'";
+				WHERE n.contrato_id=$contrato_id AND n.tipo_novedad='V'  AND n.estado='P' AND '$fecha_final' BETWEEN  n.fecha_inicial AND n.fecha_final AND c.concepto_area_id=n.concepto_area_id AND c.base_salarial='SI'";
+		
 		$resultdeve = $this -> DbFetchAll($selectdeve,$Conex,true);
+
 		$valor_deven = $resultdeve[0]['valor_deven']>0 ? $resultdeve[0]['valor_deven'] : 0;
+
 		//sumatoria  extras
 		/*$selectext = "SELECT  
 				((((($sueldo_base/$horas_dia)*$val_hr_ext_diurna)/100)*SUM(horas_diurnas))) AS valor_diurnas,
@@ -203,14 +259,21 @@ final class ProvisionesModel extends Db{
 		$valor_recargo_noc = $resultext[0]['valor_recargo_noc']>0 ? $resultext[0]['valor_recargo_noc'] : 0;		
 		$valor_recargo_doc = $resultext[0]['valor_recargo_doc']>0 ? $resultext[0]['valor_recargo_doc'] : 0;		
 
-		$subsidio_base = ($subsidio_transporte/30)*($dias-$dias_inca_sub);
+		$subsidio_base = ($subsidio_transporte/30)*($dias-$dias_inca_sub+ $dias_licencia_r);
 		
-		$total_base=($subsidio_base+$valor_deven+$valor_diurnas+$valor_nocturnas+$valor_diurnas_fes+$valor_nocturnas_fes+$valor_recargo_noc+$valor_recargo_doc)-$des_val_inc;
+		$total_base=($subsidio_base+$valor_deven+$valor_diurnas+$valor_nocturnas+$valor_diurnas_fes+$valor_nocturnas_fes+$valor_recargo_noc+$valor_recargo_doc)+$des_val_inc;
+
+
+		$sueldo_diario 	=	$sueldo_base / 30;
+		$dias_total 	= 	$dias - $dias_inca_sub + $dias_licencia_r;
+		$base_salarial 	= 	($sueldo_diario * $dias_total) + $total_base;
+		$por_cesan 		=	$result_per[0]['desc_empre_cesantias'];
 
 		//cesantias
-		$por_cesan = $result_per[0]['desc_empre_cesantias'];
-		$valor_cesan=intval(intval(((($sueldo_base)/30)*$dias)+$total_base)*($por_cesan/100));
 		
+
+		$valor_cesan= intval($base_salarial * ($por_cesan/100));
+
 		
 		
 		$debito=$valor_cesan;
@@ -231,11 +294,14 @@ final class ProvisionesModel extends Db{
 
 
 		//interes cesantias
+
 		$por_intcesan = $result_per[0]['desc_empre_int_cesantias'];
 		///$valor_intcesan=intval($valor_cesan*($por_intcesan/100));
-		$valor_intcesan=intval((($sueldo_base/30)*$dias)+$total_base)*($por_intcesan/100);
+		$valor_intcesan=intval($base_salarial*($por_intcesan/100));
 		$debito=$valor_intcesan;
 		$credito=0;
+
+
 
 		$detalle_liquidacion_provision_id = $this -> DbgetMaxConsecutive("detalle_liquidacion_provision","detalle_liquidacion_provision_id",$Conex,false,1);
 		$insert = "INSERT INTO 	detalle_liquidacion_provision (detalle_liquidacion_provision_id,puc_id,liquidacion_provision_id,liquidacion_novedad_id,debito,credito,fecha_inicial,fecha_final,dias,concepto,centro_de_costo_id,codigo_centro_costo) 
@@ -253,9 +319,11 @@ final class ProvisionesModel extends Db{
 
 		//prima servicios  
 		$por_prima = $result_per[0]['desc_empre_prima_serv'];
-		$valor_prima=intval(intval(((($sueldo_base)/30)*$dias)+$total_base)*($por_prima/100));
+		$valor_prima=intval($base_salarial*($por_prima/100));
 		$debito=$valor_prima;
 		$credito=0;
+
+
 
 		$detalle_liquidacion_provision_id = $this -> DbgetMaxConsecutive("detalle_liquidacion_provision","detalle_liquidacion_provision_id",$Conex,false,1);
 		$insert = "INSERT INTO 	detalle_liquidacion_provision (detalle_liquidacion_provision_id,puc_id,liquidacion_provision_id,liquidacion_novedad_id,debito,credito,fecha_inicial,fecha_final,dias,concepto,centro_de_costo_id,codigo_centro_costo) 
@@ -273,15 +341,21 @@ final class ProvisionesModel extends Db{
 
 		//vacaciones  
 		
-		$total_base_vac =($valor_deven+$valor_diurnas+$valor_nocturnas+$valor_diurnas_fes+$valor_nocturnas_fes+$valor_recargo_noc)-$des_val_inc;
+		//$total_base_vac =($valor_deven+$valor_diurnas+$valor_nocturnas+$valor_diurnas_fes+$valor_nocturnas_fes+$valor_recargo_noc)+$des_val_inc;
+
+		$total_base_vac = $valor_deven + $des_val_inc;
 
 
 		$por_vaca = $result_per[0]['desc_empre_vacaciones'];
-		$valor_vaca=intval(intval(((($sueldo_base)/30)*$dias)+($total_base_vac))*($por_vaca/100));
+
+
+		$valor_vaca=intval((($sueldo_diario * $dias_total) + $total_base_vac) * ($por_vaca / 100));
 
 		
 		$debito=$valor_vaca;
 		$credito=0;
+
+		
 
 		$detalle_liquidacion_provision_id = $this -> DbgetMaxConsecutive("detalle_liquidacion_provision","detalle_liquidacion_provision_id",$Conex,false,1);
 		$insert = "INSERT INTO 	detalle_liquidacion_provision (detalle_liquidacion_provision_id,puc_id,liquidacion_provision_id,liquidacion_novedad_id,debito,credito,fecha_inicial,fecha_final,dias,concepto,centro_de_costo_id,codigo_centro_costo) 

@@ -54,7 +54,7 @@ final class RegistrarModel extends Db{
 
 	         (SELECT CONCAT_WS(' ',t.primer_nombre,t.segundo_nombre,t.primer_apellido,t.segundo_apellido,t.razon_social) FROM tercero t,empleado e WHERE t.tercero_id=e.tercero_id AND e.empleado_id=c.empleado_id) AS empleado
 
-			 FROM contrato c WHERE c.estado = 'A' AND '$fecha_final' > c.fecha_terminacion $consulta";
+			 FROM contrato c WHERE c.estado = 'A' AND '$fecha_final' > c.fecha_terminacion AND c.fecha_terminacion IS NOT NULL $consulta ";
 
 			 
 
@@ -961,7 +961,9 @@ final class RegistrarModel extends Db{
 
 			//fondo pensional
 
-			$rango_salario=intval($sueldo_base/$salrio);
+			$base_salarial = $this -> getBaseSalarial($contrato_id, $fecha_inicial, $fecha_final, $diasNoRe, $diasRe, $Conex);
+
+			$rango_salario = intval(($base_salarial) / $salrio);
 
 			$selectfondo = "SELECT  f.porcentaje,f.rango_ini,f.rango_fin
 
@@ -1400,21 +1402,13 @@ final class RegistrarModel extends Db{
 	}
 
 	//fin detalles
-
 	
-
 	#Funcion para actualizar el estado a las novedades relacionadas con el contrato
-
 	
-
 	$this -> actualizarNovedad($Conex,$fecha_final,$contrato_id,'P');
 
-
-
 	if($previsual == 'true'){
-
 	
-
 	 # Muestro la ultima liquidacion creada	
 
 	 $selectLiquidacion      = "SELECT l.liquidacion_novedad_id, l.consecutivo, l.empleados, l.fecha_inicial, l.fecha_final, 		                              l.periodicidad, l.area_laboral, l.estado, l.contrato_id, l.encabezado_registro_id, l.usuario_id,                                  l.fecha_registro, l.con_usuario_id, l.con_fecha, 
@@ -1424,157 +1418,262 @@ final class RegistrarModel extends Db{
 	                            FROM liquidacion_novedad l
 
                                 ORDER BY l.liquidacion_novedad_id DESC LIMIT 1"; 
-
 	 
-
 	 $resultLiquidacion      = $this -> DbFetchAll($selectLiquidacion,$Conex,true);
-
-
 
 	 $liquidacion_novedad_id = $resultLiquidacion[0]['liquidacion_novedad_id'];
 
 
-
-
-
 	 $selectDetalle = " SELECT (p.nombre) AS nombre_puc, d.liquidacion_novedad_id, CONCAT_WS(' ',t.primer_nombre, t.segundo_nombre, t.primer_apellido, t.segundo_apellido) AS tercero, d.numero_identificacion, d.digito_verificacion, 
-
-
 
 					   (SELECT c.descripcion FROM concepto_area c WHERE c.concepto_area_id=d.concepto_area_id) AS descripcion_concepto, 
 
-
-
                        d.formula, d.base, d.porcentaje, d.debito, d.credito, d.fecha_inicial, d.fecha_final, d.dias, d.concepto, d.observacion, d.sueldo_pagar 
-
-
 
                        FROM detalle_liquidacion_novedad d, puc p, tercero t
 
-
-
 					   WHERE d.puc_id=p.puc_id AND d.tercero_id=t.tercero_id AND d.liquidacion_novedad_id = $liquidacion_novedad_id"; 
-
 					   
-
 	 
-
 	 $resultDetalle  = $this -> DbFetchAll($selectDetalle,$Conex,true);
 
 
-
-
-
 	 return  $resultDetalle;
-
 	 
-
 	 $this -> Rollback($Conex);
 
-
-
 	}else{
-
-
 
 	 $this -> Commit($Conex);
 
-
-
 	 return $liquidacion_novedad_id;
 
-
-
 	} 
-
   }
 
-  
+  function getBaseSalarial($contrato_id, $fecha_inicial, $fecha_final, $diasNoRemunerado, $diasRemunerado, $Conex){
 
+	$anio = substr($fecha_final,0,4);
+
+	$cant_dias_rango = $this -> restaFechasCont($fecha_inicial, $fecha_final);
+
+	$dias_laborados = 0;
+
+	$dias_descontar = 0;
+
+
+
+	//datos periodo
+
+	$select_periodo = "SELECT * FROM datos_periodo
+			WHERE periodo_contable_id = (SELECT periodo_contable_id FROM periodo_contable WHERE anio=$anio)";
+
+	$result_periodo = $this -> DbFetchAll($select_periodo, $Conex, true);
+
+	$salario_minimo = $result_periodo[0]['salrio'];
+
+	$salario_minimo_diario = $salario_minimo / 30;
+
+	
+
+	//datos contrato
+
+	$select_contrato = "SELECT c.*,
+						IF(c.fecha_inicio BETWEEN '$fecha_inicial'  AND '$fecha_final',DATEDIFF(CONCAT_WS(' ',c.fecha_inicio,'23:59:59'),'$fecha_inicial'),0) AS dias_descuento
+						FROM contrato c
+						INNER JOIN tipo_contrato tc ON c.tipo_contrato_id = tc.tipo_contrato_id
+						WHERE c.contrato_id = $contrato_id";
+
+	$result_contrato  = $this -> DbFetchAll($select_contrato, $Conex, true);
+
+	$sueldo_base	=	$result_contrato[0]['sueldo_base'];
+	$dias_descuento_contrato	=	$result_contrato[0]['dias_descuento'];
+	$salario_dia_contrato	=	$sueldo_base/30;
+	$subsidio_transporte	=	$result_contrato[0]['subsidio_transporte'];
+	
+	//datos vacaciones
+
+	$select_vacaciones = "SELECT  SUM(DATEDIFF(IF(fecha_reintegro>'$fecha_final','$fecha_final',fecha_reintegro),IF(fecha_dis_inicio>'$fecha_inicial',fecha_dis_inicio,'$fecha_inicial'))) AS diferencia
+						FROM 	liquidacion_vacaciones c 
+						WHERE c.estado = 'C' AND c.contrato_id=$contrato_id AND inicial=0 
+							AND (('$fecha_inicial' BETWEEN  fecha_dis_inicio AND fecha_reintegro OR '$fecha_final' BETWEEN  fecha_dis_inicio AND fecha_reintegro) 
+									OR ('$fecha_inicial' < fecha_dis_inicio AND fecha_reintegro < '$fecha_final'))";
+
+	$result_vacaciones  = $this -> DbFetchAll($select_vacaciones, $Conex, true);
+
+
+	$dias_vacaciones = $result_vacaciones[0]['diferencia'] > 0 ? ($result_vacaciones[0]['diferencia']) : 0;
+
+	$dias_vacaciones = ($dias_vacaciones==29) ? ($dias_vacaciones+1) : $dias_vacaciones;
+
+	if($cant_dias_rango <= $diasNoRemunerado){
+		
+		$dias_descontar	=	0;
+		
+	}elseif($cant_dias_rango <= $diasRemunerado){
+		
+		$dias_descontar = 0;
+		
+	}else{
+
+		$dias_descontar = $dias_vacaciones + $dias_descuento_contrato + $diasNoRemunerado + $diasRemunerado;
+		
+	}
+
+	
+
+	//datos incapacidad
+
+	$select_incapacidad = "SELECT 
+	(DATEDIFF(IF(l.fecha_final>'$fecha_final','$fecha_final',l.fecha_final),IF(l.fecha_inicial>'$fecha_inicial',l.fecha_inicial,'$fecha_inicial'))+1) AS dias_inca,ti.dia, ti.porcentaje,ti.descuento  
+							FROM licencia l 
+							INNER JOIN tipo_incapacidad ti ON ti.tipo_incapacidad_id=l.tipo_incapacidad_id
+							WHERE  l.contrato_id=$contrato_id AND l.estado!='I' AND ti.tipo='I'  
+							AND ('$fecha_inicial' BETWEEN  l.fecha_inicial AND l.fecha_final 
+								OR '$fecha_final'  BETWEEN  l.fecha_inicial AND l.fecha_final 
+								OR l.fecha_inicial BETWEEN '$fecha_inicial' AND '$fecha_final')";
+
+	$result_incapacidad  = $this -> DbFetchAll($select_incapacidad, $Conex, true);
+	
+	$des_val_inc = 0;
+
+	for($cont = 0; $cont < count($result_incapacidad); $cont++){
+
+		if($result_incapacidad[$cont]['dias_inca'] >= $result_incapacidad[$cont]['dia'] && $result_incapacidad[$cont]['descuento']=='S' ){
+
+			$dias_total = $result_incapacidad[$cont]['dias_inca'];
+			$dias_eps = ($result_incapacidad[$cont]['dias_inca'] - $result_incapacidad[$cont]['dia']);
+			$dias_empresa = $result_incapacidad[$cont]['dia'];
+			$porcentaje_param = $result_incapacidad[$cont]['porcentaje'];
+
+			if($pago_desc > $salario_minimo_diario){
+				
+				$des_val_inc = ($des_val_inc + intval(($salario_dia_contrato * $dias_total) * ($porcentaje_param/100)));
+				
+			}else{
+				
+				$des_val_inc = ($des_val_inc + intval(($salario_minimo_diario * $dias_total)));
+			}
+		}
+		
+		$dias_inca_sub = $dias_inca_sub + $result_incapacidad[$cont]['dias_inca'];			
+	}
+
+	$dias_descontar += $dias_inca_sub;
+
+	
+
+	//datos licencia
+
+	$select_licencia = "SELECT * FROM licencia l 
+						INNER JOIN tipo_incapacidad ti ON ti.tipo_incapacidad_id = l.tipo_incapacidad_id
+						WHERE contrato_id = $contrato_id AND tipo = 'L' AND ti.base_salarial = 'S' AND l.remunerado = 1 
+							AND ('$fecha_inicial' BETWEEN  l.fecha_inicial AND l.fecha_final 
+								OR '$fecha_final'  BETWEEN  l.fecha_inicial AND l.fecha_final 
+								OR l.fecha_inicial BETWEEN '$fecha_inicial' AND '$fecha_final')";
+
+	$result_licencia  = $this -> DbFetchAll($select_licencia, $Conex, true);
+
+	for ($cont_licencia=0; $cont_licencia < count($result_licencia); $cont_licencia++) { 
+			
+		$fecha_ini_licencia = $result_licencia[$cont_licencia][fecha_inicial];
+		$fecha_fin_licencia = $result_licencia[$cont_licencia][fecha_final];
+
+		$dias_licencia_r 	+= 	$this -> restaFechasCont($fecha_ini_licencia,$fecha_fin_licencia);
+		
+	}
+
+
+	//sumatoria devengados
+		
+	$selectdeve = "SELECT  SUM(n.valor_cuota) AS valor_deven
+					FROM novedad_fija n, concepto_area c
+					WHERE n.contrato_id=$contrato_id AND n.tipo_novedad='V'  AND n.estado='A' AND '$fecha_final' BETWEEN  n.fecha_inicial AND n.fecha_final AND c.concepto_area_id=n.concepto_area_id AND c.base_salarial='SI'";
+
+	$resultdeve = $this -> DbFetchAll($selectdeve,$Conex,true);
+
+	$valor_deven = $resultdeve[0]['valor_deven']>0 ? $resultdeve[0]['valor_deven'] : 0;
+
+
+	//sumatoria horas extra
+
+	$selectext = "SELECT  
+				SUM(h.vr_horas_diurnas) AS valor_diurnas,
+				SUM(h.vr_horas_nocturnas) AS valor_nocturnas,
+				SUM(h.vr_horas_diurnas_fes) AS valor_diurnas_fes,
+				SUM(h.vr_horas_nocturnas_fes) AS valor_nocturnas_fes,
+				SUM(h.vr_horas_recargo_noc) AS valor_recargo_noc,
+				SUM(h.vr_horas_recargo_doc) AS valor_recargo_doc
+				
+				FROM 	hora_extra h
+				WHERE h.contrato_id=$contrato_id AND h.estado='L' AND h.fecha_inicial>='$fecha_inicial' AND h.fecha_final<='$fecha_final' ";			
+				
+	$resultext = $this -> DbFetchAll($selectext,$Conex,true); 
+
+
+	$valor_diurnas = $resultext[0]['valor_diurnas']>0 ? $resultext[0]['valor_diurnas'] : 0;
+	$valor_nocturnas = $resultext[0]['valor_nocturnas']>0 ? $resultext[0]['valor_nocturnas'] : 0;			
+	$valor_diurnas_fes = $resultext[0]['valor_diurnas_fes']>0 ? $resultext[0]['valor_diurnas_fes'] : 0;
+	$valor_nocturnas_fes = $resultext[0]['valor_nocturnas_fes']>0 ? $resultext[0]['valor_nocturnas_fes'] : 0;			
+	$valor_recargo_noc = $resultext[0]['valor_recargo_noc']>0 ? $resultext[0]['valor_recargo_noc'] : 0;		
+	$valor_recargo_doc = $resultext[0]['valor_recargo_doc']>0 ? $resultext[0]['valor_recargo_doc'] : 0;
+
+	$valor_extras = $valor_diurnas + $valor_nocturnas + $valor_diurnas_fes + $valor_nocturnas_fes + $valor_recargo_noc + $valor_recargo_doc;
+
+
+	$dias_laborados = $cant_dias_rango - $dias_descontar + $dias_licencia_r;
+	$salario = $salario_dia_contrato * $dias_laborados;
+	$base_transporte = ($subsidio_transporte/30) * $dias_laborados;
+
+	$base_salarial = round($salario + $base_transporte + $valor_deven + $valor_extras + $des_val_inc);
+
+	//exit("<br> salario: ".$salario_dia_contrato."<br> dias_laborados: ".$dias_laborados."<br> transporte: ".$base_transporte."<br> valor: ".$base_salarial."<br> incapacidad: ".$des_val_inc."<br> novedad: ".$valor_deven."<br> extras: ".$valor_extras);
+	return $base_salarial;
+  }
+  
   
 
   public function actualizarNovedad($Conex,$fecha_final,$contrato_id,$estado){
-
 	  
-
 	$consul_estado = $estado == 'P' ? " n.estado='A'" : " n.estado='P'"; 
-
 	  
-
 	require_once("DetalleNovedadModelClass.php");	    
-
 	
-
 	$Model          = new DetalleNovedadModel();
-
 	
-
 	$select_novedad = "SELECT n.novedad_fija_id FROM novedad_fija n WHERE $consul_estado AND n.contrato_id=$contrato_id  AND '$fecha_final' BETWEEN  n.fecha_inicial AND n.fecha_final";
-
 					   
-
 	$result_novedad = $this -> DbFetchAll($select_novedad,$Conex,true);
-
 	
-
 	for($n=0; $n<count($result_novedad); $n++){
-
 		
-
 		$result          =  $Model -> getDetallesNovedad($Conex,$result_novedad[$n]['novedad_fija_id']);
-
 		
-
 		$fecha_fin_cuota = $result[count($result)-1]['fecha_cuota'];
-
 		
-
 		$update_novedad  = "UPDATE novedad_fija SET estado = '$estado' WHERE  '$fecha_fin_cuota' <= '$fecha_final' AND 
-
 		
-
 		novedad_fija_id  = ".$result_novedad[$n]['novedad_fija_id'];
-
 		
-
 		$this -> query($update_novedad,$Conex,true); 
-
 		
-
 	}
-
   }
-
   
-
-
 
   public function FechasLicenRe($fecha_inicial,$fecha_final,$Conex,$contrato_id=0){
 
-
-
 	if($contrato_id>0){
-
 		$consulta = "AND c.contrato_id = $contrato_id";
-
 	}else{
-
 		$consulta = "";
-
 	}
 
-
-
 	$select = "SELECT 
-
 		l.fecha_inicial,
-
 		l.fecha_final,
-
 		c.contrato_id
-
 		FROM 
-
 		licencia l, 
 
 		tipo_incapacidad ti,
@@ -1658,9 +1757,7 @@ final class RegistrarModel extends Db{
 
 
   public function SaveTodos($usuario_id,$Campos,$dias,$dias_real,$periodicidad,$area_laboral,$centro_de_costo_id,$previsual,$diasArrayNoRe,$diasArrayRe,$Conex){
-
 	
-
 	$this -> assignValRequest('usuario_id',$usuario_id);
 
 	$this -> assignValRequest('fecha_registro',date('Y-m-d H:i'));
@@ -1793,7 +1890,7 @@ final class RegistrarModel extends Db{
 
 			WHERE c.estado='A' AND t.tipo_contrato_id=c.tipo_contrato_id AND (t.prestaciones_sociales=1 OR (t.salud=1 AND t.prestaciones_sociales=0)OR (t.pension=1 AND t.prestaciones_sociales=0)) AND c.fecha_inicio <= '$fecha_final' $consulta_period $consulta_area $consulta_centro
 
-			AND c.contrato_id NOT IN (SELECT contrato_id FROM liquidacion_novedad WHERE fecha_inicial='$fecha_inicial' AND fecha_final='$fecha_final' AND estado!='A')"; 
+			AND c.contrato_id NOT IN (SELECT contrato_id FROM liquidacion_novedad WHERE fecha_inicial='$fecha_inicial' AND fecha_final='$fecha_final' AND estado!='A')";
 
 
 
@@ -2576,7 +2673,10 @@ final class RegistrarModel extends Db{
 
 			//fondo pensional
 
-			$rango_salario=intval($sueldo_base/$salrio);
+
+			$base_salarial = $this -> getBaseSalarial($contrato_id, $fecha_inicial, $fecha_final, $diasNoRe, $diasRe, $Conex);
+
+			$rango_salario = intval(($base_salarial) / $salrio);
 
 			$selectfondo = "SELECT  f.porcentaje,f.rango_ini,f.rango_fin
 
@@ -2594,8 +2694,8 @@ final class RegistrarModel extends Db{
 
 				$debito=0;
 
-				$credito=intval((intval((($sueldo_base/30)*$dias)+$total_base)*$porcen_fondo)/100);
-
+				//$credito=intval((intval((($sueldo_base/30)*$dias)+$total_base)*$porcen_fondo)/100);
+				$credito=intval(($base_salarial*$porcen_fondo)/100);
 				$deb_total=$deb_total+$debito;
 
 				$cre_total=$cre_total+$credito;
@@ -3485,7 +3585,6 @@ final class RegistrarModel extends Db{
 			
 
 		$update = "UPDATE encabezado_de_registro SET estado = 'A',anulado = 1 WHERE encabezado_registro_id = $encabezado_registro_id";	  
-
 		$this -> query($update,$Conex,true);	
 
 			  
@@ -3498,12 +3597,22 @@ final class RegistrarModel extends Db{
 
 	 }
 
+	 $select = "SELECT contrato_id FROM liquidacion_novedad WHERE fecha_inicial = '$fecha_inicial' AND fecha_final='$fecha_final' AND consecutivo=$consecutivo";
+	 
+	 $result = $this -> DbFetchAll($select,$Conex,true);		
+	 
+	 for ($contador=0; $contador < count($result); $contador++) { 
+
+		$contrato_id = $result[$contador]['contrato_id'];
+
+		$this -> actualizarNovedad($Conex,$fecha_final,$contrato_id,'A');
+
+	 }
+
 	 
 
      $this -> Commit($Conex);
-
   
-
   }    
 
 
