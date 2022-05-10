@@ -86,6 +86,21 @@
             </div>
         </div>
 
+        {* ==================================== ACTUALIZAR FECHA REMESA ========================================== *}
+
+        <div class="pos-f-t">
+            <nav class="alert alert-primary" style="margin-top: 15px; padding: 0;">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar6" aria-controls="navbar6" aria-label="Toggle navigation">
+                    <i class="fa fa-list"></i>&emsp;Actualizar fecha remesa
+                </button>
+            </nav>
+
+            <div class="collapse detalle_actividad" id="navbar6">
+                <br />
+                {include file="soportes/actualizar_remesa.tpl"}
+            </div>
+        </div>
+
     </fieldset>
 
     <fieldset>

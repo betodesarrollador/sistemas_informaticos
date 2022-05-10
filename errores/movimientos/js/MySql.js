@@ -173,6 +173,19 @@ function setCamposReclasificarCuentas(){
 
 }
 
+function setCamposFechaRemesa(){
+
+  var fecha_remesa  = $("#form_actualizar_fecha").find("#fecha_remesa").val();
+  var numero_remesa = $("#form_actualizar_fecha").find("#numero_remesa").val();
+  
+  var query = "UPDATE remesa SET fecha_remesa = '"+fecha_remesa+"' WHERE numero_remesa = "+numero_remesa+";";
+
+  clearInputsModal('form_actualizar_fecha',query);
+
+}
+
+
+
 
 function ejecutarQuery() {
 
