@@ -268,6 +268,25 @@ final class Incapacidad extends Controler{
 			type	=>array('column'))
 	);
 
+	$this -> Campos[base_salarial] = array(
+		name	=>'base_salarial',
+		id		=>'base_salarial',
+		type	=>'select',
+		Boostrap =>'si',
+		options	=> array(
+			array(value=>'S',text=>'SI',selected=>'N'),
+			array(value=>'N',text=>'NO',selected=>'N')
+		),
+		required=>'yes',
+		selected=>'N',
+	 	datatype=>array(
+			type	=>'text',
+			length	=>'1'),
+		transaction=>array(
+			table	=>array('tipo_incapacidad'),
+			type	=>array('column'))
+	);
+
 	$this -> Campos[dia] = array(
 		name	=>'dia',
 		id		=>'dia',

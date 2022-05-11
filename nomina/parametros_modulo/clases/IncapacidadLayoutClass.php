@@ -62,7 +62,8 @@ final class IncapacidadLayout extends View{
 
 	 $this -> assign("DESCUENTO",		$this -> objectsHtml -> GetobjectHtml($this -> fields[descuento]));	 
 	 $this -> assign("DIA",				$this -> objectsHtml -> GetobjectHtml($this -> fields[dia]));	 
-	 $this -> assign("PORCENTAJE",		$this -> objectsHtml -> GetobjectHtml($this -> fields[porcentaje]));	 
+	 $this -> assign("PORCENTAJE",		$this -> objectsHtml -> GetobjectHtml($this -> fields[porcentaje]));  
+   $this -> assign("BASESALARIAL",		$this -> objectsHtml -> GetobjectHtml($this -> fields[base_salarial]));
 
      $this -> assign("ESTADO",			$this -> objectsHtml -> GetobjectHtml($this -> fields[estado]));
 	

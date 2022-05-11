@@ -45,11 +45,15 @@
                 
             </tr> 
             <tr>
-                <td><label>Estado: </label></td>
-                <td>{$ESTADO}</td>
+                <td><label>Base Salarial: </label></td>
+                <td>{$BASESALARIAL}</td>
                 <td><label>Relacion nomina electronica: </label></td>
                 <td>{$TIPONOMINAELECTRONICA}</td>
             </tr>             
+            <tr>
+                <td><label>Estado: </label></td>
+                <td>{$ESTADO}</td>
+            </tr>
             <tr>
                 <td colspan="4" align="center">&nbsp;</td>
             </tr>
