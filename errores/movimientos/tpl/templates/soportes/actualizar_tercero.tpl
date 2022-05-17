@@ -24,27 +24,23 @@
 </head>
 
 <body>
-    <form id="form_reclasificar_cuentas">
+    <form id="form_actualizar_tercero">
         <div class="form-row">
 
             <div class="col">
-                <input type="text" class="form-control" placeholder="Nuevo codigo puc"   name="new_codigo_puc" id="new_codigo_puc" />
+                <input type="text" class="form-control" placeholder="Numero identificacion"   name="numero_identificacion" id="numero_identificacion" />
             </div>
 
             <div class="col">
-                <input type="text" class="form-control" placeholder="Antiguo codigo puc" name="old_codigo_puc" id="old_codigo_puc" />
+                 <input type="text" class="form-control" placeholder="Consecutivo encabezado"   name="consecutivo" id="consecutivo" />
             </div>
 
             <div class="col">
-                <input type="date" class="form-control" placeholder="Fecha desde" name="fecha_desde" id="fecha_desde" />
+                 <input type="text" class="form-control" placeholder="Nombre de tipo de documento"   name="nombre" id="nombre" />
             </div>
 
             <div class="col">
-                <input type="date" class="form-control" placeholder="Fecha hasta" name="fecha_hasta" id="fecha_hasta" />
-            </div>
-         
-            <div class="col">
-                 <button type="button" class="btn btn-primary" onclick="setCamposReclasificarCuentas()">Crear SQL</button>
+                 <button type="button" class="btn btn-primary" onclick="setCamposTerceroImputacion()">Crear SQL</button>
             </div>
         </div>
 

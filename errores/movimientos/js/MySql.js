@@ -173,6 +173,20 @@ function setCamposReclasificarCuentas(){
 
 }
 
+function setCamposTerceroImputacion(){
+
+  var numero_identificacion = $("#form_actualizar_tercero").find("#numero_identificacion").val();
+  var consecutivo           = $("#form_actualizar_tercero").find("#consecutivo").val();
+  var nombre                = $("#form_actualizar_tercero").find("#nombre").val();
+  var tercero_id            = "(SELECT t.tercero_id FROM tercero t WHERE t.numero_identificacion = '"+numero_identificacion+"')";
+  var tipo_documento_id     = "(SELECT tipo_documento_id  FROM tipo_de_documento WHERE nombre LIKE '"+nombre+"')";
+  
+  var query = "UPDATE imputacion_contable i, encabezado_de_registro e  SET i.tercero_id = "+tercero_id+",i.numero_identificacion = '"+numero_identificacion+"', e.tercero_id = "+tercero_id+" WHERE i.encabezado_registro_id = e.encabezado_registro_id AND e.consecutivo = "+consecutivo+" AND e.tipo_documento_id = "+tipo_documento_id+";";
+
+  clearInputsModal('form_actualizar_tercero',query);
+
+}
+
 function setCamposFechaRemesa(){
 
   var fecha_remesa  = $("#form_actualizar_fecha").find("#fecha_remesa").val();
@@ -181,6 +195,24 @@ function setCamposFechaRemesa(){
   var query = "UPDATE remesa SET fecha_remesa = '"+fecha_remesa+"' WHERE numero_remesa = "+numero_remesa+";";
 
   clearInputsModal('form_actualizar_fecha',query);
+
+}
+
+function setCamposDescuadre(){
+
+  var query = "";
+
+  var array = $("#form_descuadres").find("#encabezado_registro_id").val().split(',');
+
+  for (var i = 0; i < array.length; i++) {
+
+    var encabezado_registro_id = array[i];
+
+    query += "\n\nUPDATE imputacion_contable i, (SELECT ABS(SUM(credito)-SUM(debito)) AS diferencia_abs FROM imputacion_contable WHERE encabezado_registro_id = "+encabezado_registro_id+") AS d1,(SELECT SUM(credito)-SUM(debito) AS diferencia FROM imputacion_contable WHERE encabezado_registro_id = "+encabezado_registro_id+") AS d2,(SELECT imputacion_contable_id FROM imputacion_contable WHERE encabezado_registro_id = "+encabezado_registro_id+" LIMIT 1) AS l SET i.credito = IF((d2.diferencia > 0 AND d1.diferencia_abs = 1), i.credito -1 , i.credito),i.debito      = IF((d2.diferencia < 0 AND d1.diferencia_abs = 1), i.debito-1 , i.debito) WHERE i.encabezado_registro_id = "+encabezado_registro_id+" AND i.imputacion_contable_id = l.imputacion_contable_id;";
+
+  }
+
+  clearInputsModal('form_descuadres',query);
 
 }
 
@@ -283,4 +315,91 @@ function ejecutarQuery() {
   }
 
 
+}
+
+function manejoEmpresa(cliente_id,db,estado_empresa,btn) {
+  var QueryString         = "ACTIONCONTROLER=manejoEmpresa&cliente_id=" + cliente_id + "&estado_empresa=" + estado_empresa;
+  var mensajeConfirmacion = "";
+  var colorBtn            = "";
+
+  if(estado_empresa == "A") {
+    mensajeConfirmacion = `¿ Esta seguro que desea suspender la empresa <b>${db}</b> ?`;
+  } else {
+    mensajeConfirmacion = `¿ Esta seguro que desea habilitar la empresa <b>${db}</b> ?`;
+  }
+
+  Swal.fire({
+    html: mensajeConfirmacion,
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: 'Ejecutar',
+    denyButtonText: `Cancelar`,
+  }).then((result) => {
+    
+    if (result.value) {
+
+      $.ajax({
+
+        url: "MySqlClass.php?rand=" + Math.random(),
+
+        type: "POST",
+
+        data: QueryString,
+
+        beforeSend: function () {
+
+          Swal.fire({
+            title: "Cargando ..."
+          });
+
+          Swal.showLoading()
+        },
+
+        success: function (resp) {
+
+          console.log('resp : ', resp);
+
+          Swal.close();
+
+          try {
+
+            Swal.fire({
+              icon: 'success',
+              title: 'Respuesta',
+              html: resp
+            }).then(() => {
+              location.reload();
+            });
+
+
+
+            // if(estado_empresa == "A") {
+            //   $(`#${btn}`).removeClass("btn-danger");
+            //   $(`#${btn}`).addClass("btn-info");
+            //   $(`#${btn}`).html("Habilitar");
+            // } else {
+            //   $(`#${btn}`).removeClass("btn-info");
+            //   $(`#${btn}`).addClass("btn-danger");
+            //   $(`#${btn}`).html("Suspender");
+            // }
+
+
+            //alertJquery("<div style='overflow:auto; max-height:500px;'>" + resp + "</div>", "Respuesta");
+
+          } catch (e) {
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              html: e
+            })
+
+
+          }
+
+        }
+
+      });
+    } 
+  });
 }

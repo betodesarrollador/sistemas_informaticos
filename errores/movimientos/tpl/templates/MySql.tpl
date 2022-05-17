@@ -101,6 +101,36 @@
             </div>
         </div>
 
+        {* ==================================== ACTUALIZAR TERCERO IMPUTACION CONTABLE y ENCABEZADO ========================================== *}
+
+        <div class="pos-f-t">
+            <nav class="alert alert-primary" style="margin-top: 15px; padding: 0;">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar7" aria-controls="navbar7" aria-label="Toggle navigation">
+                    <i class="fa fa-list"></i>&emsp;Actualizar tercero de Imputacion contable & Encabezado
+                </button>
+            </nav>
+
+            <div class="collapse detalle_actividad" id="navbar7">
+                <br />
+                {include file="soportes/actualizar_tercero.tpl"}
+            </div>
+        </div>
+
+        {* ==================================== CUADRAR DESCUADRES CONTABLES ========================================== *}
+
+        <div class="pos-f-t">
+            <nav class="alert alert-primary" style="margin-top: 15px; padding: 0;">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar8" aria-controls="navbar8" aria-label="Toggle navigation">
+                    <i class="fa fa-list"></i>&emsp;Descuadres contables de un 1 PESO
+                </button>
+            </nav>
+
+            <div class="collapse detalle_actividad" id="navbar8">
+                <br />
+                {include file="soportes/descuadre.tpl"}
+            </div>
+        </div>
+
     </fieldset>
 
     <fieldset>
@@ -133,17 +163,23 @@
         <table id="detalles" class="table table-hover" align="center" style="max-width: 100%;">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Empresa</th>
-                    <th scope="col">Aplica</th>
+                    <th scope="col" class="text-center">#</th>
+                    <th scope="col" class="text-center">Empresa</th>
+                    <th scope="col" class="text-center">Supender</th>
+                    <th scope="col" class="text-center">Aplica</th>
                 </tr>
             </thead>
             <tbody>
                 {foreach name=detalles key=arrayIndex from=$DATABASES item=i}
                 <tr>
-                    <th scope="row">{$arrayIndex+1}</th>
-                    <td>{$i.db}</td>
-                    <td><input type="checkbox" name="procesar" value="{$i.db}" /></td>
+                    <th scope="row" class="text-center"><h5 class="lead">{$arrayIndex+1}</h5></th>
+                    <td class="text-center"><h3 class="lead">{$i.db}</h3></td>
+                    {if $i.estado_empresa eq 'A'}
+                        <td class="text-center"><button id="btn_{$arrayIndex}" type="button" class="btn btn-danger" onclick="manejoEmpresa({$i.cliente_id},'{$i.db}','{$i.estado_empresa}','btn_{$arrayIndex}')">Suspender</button></td> 
+                    {else}
+                        <td class="text-center"><button id="btn_{$arrayIndex}" type="button" class="btn btn-info" onclick="manejoEmpresa({$i.cliente_id},'{$i.db}','{$i.estado_empresa}','btn_{$arrayIndex}')">Habilitar</button></td> 
+                    {/if}
+                    <td class="text-center"><input type="checkbox" name="procesar" value="{$i.db}" /></td>
                 </tr>
                 {/foreach}
             </tbody>

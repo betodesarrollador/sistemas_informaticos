@@ -47,6 +47,21 @@ final class MySql extends Controler
         print $data;
     }
 
+    protected function manejoEmpresa() {
+        require_once "MySqlModelClass.php";
+
+        $Model = new MySqlModel();
+
+        $cliente_id         = $_REQUEST["cliente_id"];
+        $estado_empresa     = $_REQUEST["estado_empresa"];
+
+        $data = $Model->manejoEmpresa($this->getConex(), $cliente_id, $estado_empresa);
+
+        print $data;
+
+
+    }
+
     protected function setCampos()
     {
         //campos formulario
@@ -80,7 +95,7 @@ final class MySql extends Controler
         ];
 
         $this->SetVarsValidate($this->Campos);
-    }
+    }    
 }
 
 $tipo_campana = new MySql();

@@ -24,27 +24,15 @@
 </head>
 
 <body>
-    <form id="form_reclasificar_cuentas">
+    <form id="form_descuadres">
         <div class="form-row">
 
             <div class="col">
-                <input type="text" class="form-control" placeholder="Nuevo codigo puc"   name="new_codigo_puc" id="new_codigo_puc" />
+                <input type="text" class="form-control" placeholder="encabezado_registro_id Ejemplo : (154,5698,4587 ....)"   name="encabezado_registro_id" id="encabezado_registro_id" />
             </div>
 
             <div class="col">
-                <input type="text" class="form-control" placeholder="Antiguo codigo puc" name="old_codigo_puc" id="old_codigo_puc" />
-            </div>
-
-            <div class="col">
-                <input type="date" class="form-control" placeholder="Fecha desde" name="fecha_desde" id="fecha_desde" />
-            </div>
-
-            <div class="col">
-                <input type="date" class="form-control" placeholder="Fecha hasta" name="fecha_hasta" id="fecha_hasta" />
-            </div>
-         
-            <div class="col">
-                 <button type="button" class="btn btn-primary" onclick="setCamposReclasificarCuentas()">Crear SQL</button>
+                 <button type="button" class="btn btn-primary" onclick="setCamposDescuadre()">Crear SQL</button>
             </div>
         </div>
 
