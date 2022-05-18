@@ -1,6 +1,11 @@
 <?php 
 
 //exit('Servidor Fuera de Servicio');
+
+require_once("framework/clases/ValidaSuspension.php");
+$valida_suspension  = new ValidaSuspension();
+$valida_suspension->validateSuspension();
+
 class Main{
 
   private $mozillaVersion;
