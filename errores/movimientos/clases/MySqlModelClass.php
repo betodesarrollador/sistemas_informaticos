@@ -59,11 +59,17 @@ final class MySqlModel extends Db
             }
             
 
-            if (!$Conexion) {
+            if (!$Conexion || is_null($Conexion)) {
                 $errores .= "<br><br> Error de conexion. Base de datos : $bd  -  Usuario : $usuario -  Contrasena : $contrasena  " . mysqli_error($Conexion);
 
                 $resultado .= '"' . mysqli_error($Conexion) . '"';
             }
+
+            // Para verificar errores de conexion
+            // if(!is_null(mysqli_connect_error())) {
+            //     $errors[$i][$bd] = mysqli_connect_error();
+            //     $errors[$i]["pass"] = $contrasena;
+            // }
 
             $sql = "SELECT estado FROM $bd.empresa";
      

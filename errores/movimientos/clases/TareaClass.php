@@ -1420,8 +1420,6 @@ final class Tarea extends Controler
 
             Boostrap => 'si',
 
-            required => 'yes',
-
             size => '20',
 
             datatype => array(
