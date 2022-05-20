@@ -1,3 +1,6 @@
 [submodule "framework"]
 	path = framework
 	url = ssh://siandsi@162.241.155.145/home/siandsi/public_html/EstandarFrameworkNuevaVersion
+[submodule "nomina"]
+	path = nomina
+	url = ssh://siandsi@162.241.155.145/home/siandsi/public_html/ModuloNomina
