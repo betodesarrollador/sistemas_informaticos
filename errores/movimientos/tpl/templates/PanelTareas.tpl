@@ -340,6 +340,28 @@
 
 
 
+     {* Formulario rango de fechas *}
+<div class="container">
+<form class="form-inline">
+   <div class="form-group mx-sm-3">
+       <label for="inputEmail3" class="col-sm-4 col-form-label">Fecha inicio</label>
+       <input type="hidden"  id="id" name="id" >
+       <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" >
+
+   </div>
+   <div class="form-group mx-sm-3">
+        <label for="inputEmail3" class="col-sm-4 col-form-label">Fecha final</label>
+       <input type="date" class="form-control" id="fecha_final" name="fecha_final" >
+   </div>
+   <td width="100%" align="center">&nbsp;{$IMPRIMIR}</td>
+ </form>
+</div>
+    
+  
+    
+    
+    
+    
     <div class="row">
 
         <div class="col-md-12">
