@@ -79,6 +79,18 @@ final class PanelTareas extends Controler{
       
    }
 
+   // funcion onclickPrint  (para la impresion) 
+   protected function onclickPrint(){
+      $fecha_inicio = $_REQUEST['fecha_inicio'];
+      $fecha_final = $_REQUEST['fecha_final'];
+     
+      require_once("Imp_ReportesTareasClass.php");
+      $print = new Imp_Reporte();
+      $print -> printOut($fecha_inicio,$fecha_final,$this -> getConex());
+   }
+     
+     
+
    protected function sendCorreos($data,$i){
 
       require_once("../../../framework/clases/MailClass.php");
@@ -251,6 +263,19 @@ final class PanelTareas extends Controler{
    }
 
   protected function SetCampos(){
+   
+   $this -> Campos[imprimir] = array(
+      name   =>'imprimir',
+      id   =>'imprimir',
+      type   =>'print',
+      value   =>'Imprimir',
+      displayoptions => array(
+              form        => 0,
+              beforeprint => 'beforePrint',
+        title       => 'Impresion Factura formato',
+        width       => '800',
+        height      => '600'
+     ));
 	
 	$this -> Campos[cliente] = array(
 		name	=>'cliente',
@@ -268,6 +293,8 @@ final class PanelTareas extends Controler{
 		type	=>'text',
 		readonly=>'yes'
 	);
+
+   
 
 
 	$this -> SetVarsValidate($this -> Campos);
