@@ -61,7 +61,9 @@ final class PanelTareasLayout extends View{
       $this -> assign("CLIENTE",		$this -> objectsHtml -> GetobjectHtml($this -> fields[cliente]));	
 	   $this -> assign("PROYECTO",	$this -> objectsHtml -> GetobjectHtml($this -> fields[proyecto]));		 
 	   
-	 
+      	   // Boton imprimir
+      $this -> assign("IMPRIMIR",$this -> objectsHtml -> GetobjectHtml($this -> fields[imprimir]));
+ 
    }
 
 /*    public function setValorFacturado($valor_facturado){
