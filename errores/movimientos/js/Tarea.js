@@ -66,7 +66,7 @@ function setDataFormWithResponse() {
 
                 var observacion_cierre = data[0]['observacion_cierre'];
 
-                if(descripcion){
+                /* if(descripcion){
 
                     tinymce.get('descripcion').setContent(descripcion);
                 }
@@ -74,7 +74,7 @@ function setDataFormWithResponse() {
                 if(observacion_cierre){
 
                     tinymce.get('observacion_cierre').setContent(observacion_cierre);
-                }
+                } */
 
                 var all_clientes = data[0]['all_clientes'];
 
