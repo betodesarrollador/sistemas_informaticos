@@ -46,12 +46,12 @@
 
 <div id="convenciones">
     <div style="float:right; margin-right:-8px;">
+
 {foreach name=permisos_opcion from=$permisos item=p}
 		<div style="width:80px; float:left">
         	
-            	<input  type="checkbox" name="permiso" id="permiso_{$p.permiso_id}" value="{$p.permiso_id}" disabled>
-        	
-        	<label style="text-align:left; background:{$p.color};" for="permiso_{$p.permiso_id}">{$p.descripcion}</label>
+          	<input  type="checkbox" name="permiso" id="permiso_{$p.permiso_id}" value="{$p.permiso_id}" disabled>
+        		<label style="text-align:left; background:{$p.color};" for="permiso_{$p.permiso_id}">{$p.descripcion}</label>
     	</div>
 {/foreach}
 	</div>
@@ -59,15 +59,15 @@
 
 {if $encabezadoTree eq 1}
 <fieldset class="section" id="oficinasTree">
+ 
  <div align="center">
  <table  width="90%" id="tablePermisos">
   <tr><td align="left" style="padding-top:5px">{$OFICINASASIGNADASID}</td><td align="right">{$OTORGARDENEGAR}</td></tr>
  <tr>
  <tr><td colspan="2">&nbsp;</td></tr>
  </table>
-
- 
 </div>
+
 <table id="tree" class="treeTable" width="80%">
 <tbody>
 {/if}
