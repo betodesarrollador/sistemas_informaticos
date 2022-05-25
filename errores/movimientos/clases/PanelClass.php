@@ -138,6 +138,19 @@ final class Panel extends Controler{
 		type	=>'text',
 		readonly=>'yes'
 	);
+   // array imprimir
+   $this -> Campos[imprimir] = array(
+      name   =>'imprimir',
+      id   =>'imprimir',
+      type   =>'print',
+      value   =>'Imprimir',
+     displayoptions => array(
+              form        => 0,
+              beforeprint => 'beforePrint',
+        title       => 'Impresion Factura formato',
+        width       => '800',
+        height      => '600'
+     ));
 
 
 	$this -> SetVarsValidate($this -> Campos);
